@@ -13,3 +13,6 @@ class Robot(Sketch):
 	def loop(self):
 		# TODO
 		pass
+
+# main code:
+Robot().run()
