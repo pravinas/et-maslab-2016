@@ -16,7 +16,7 @@ class Publisher:
 
     ## Send a message
     #
-    # @param message The message to be sent
+    # @param message The message to be sent to the callback functions.
     def publish(self, message):
         self.most_recent = message
         self.notify(message)
@@ -29,7 +29,7 @@ class Publisher:
 
     ## Run all callback functions on the message
     #
-    # @param message The message to process.
+    # @param message The argument to the callback function.
     def notify(self, message):
         for callback in self.subscribers:
             callback(message)
