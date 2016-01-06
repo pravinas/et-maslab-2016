@@ -34,7 +34,6 @@ class ColorSensor():
             return True
         return False
 
-
     ## Tell if the color is in fact sensing green.
     #
     # @return true if what is being looked at is green.
