@@ -1,0 +1,29 @@
+# test_motor.py
+
+from tamproxy import Sketch, Timer
+from tamproxy.devices import Motor
+
+# Cycles a motor back and forth between -255 and 255 PWM every ~5 seconds
+
+class MotorWrite(Sketch):
+
+    def setup(self):
+        self.motor1 = Motor(self.tamp, 4, 3)
+        self.motor1.write(1,0)
+        self.motor2 = Motor(self.tamp, 6, 5)
+        self.motor2.write(1,0)
+        self.delta = 1
+        self.motorval = 0
+        self.timer = Timer()
+
+    def loop(self):
+        if (self.timer.millis() > 10):
+            self.timer.reset()
+            if abs(self.motorval) == 255: self.delta = -self.delta
+            self.motorval += self.delta
+            self.motor1.write(self.motorval>0, abs(self.motorval))
+            self.motor2.write(self.motorval>0, abs(self.motorval))
+
+if __name__ == "__main__":
+    sketch = MotorWrite()
+    sketch.run()
