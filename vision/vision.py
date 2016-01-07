@@ -41,8 +41,8 @@ class Vision():
     def __init__(self, publisher):
         publisher.subscribe(lambda x: self.loop())
         self.capture = cv2.VideoCapture(0)
-        self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 320); # X resolution
-        self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 240); # Y resolution
+        self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 160); # X resolution
+        self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 120); # Y resolution
 
     ## Turn a color image into a binary image where colors within the tolerance
     # are highlighted.
