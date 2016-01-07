@@ -24,25 +24,29 @@ class TestControl(Sketch):
 		# motor2 = right
 		# using graphical representation Ariel gave us theta v time to think about problem
 		# same timer as previous need to tweak
-		# 
+		# todo
 		if (self.timer.millis() > 10):
             self.timer.reset()
 
             # θ > 0 means need to turn left
             # θ < 0 means need to turn right
             # θ = 0 means we happy :D
+            # assumed always going forward so directions is always 1
             # changes need to be done to this below
             # need to include dampening and other stuff
-            # todo
+            # magnitude must be a function of (θ, G(if have gyro), microcontrollers, and time) 
 
             if θ > 0:
-            	self.motor1.write(self.motorval>0, abs(self.motorval))
-            	self.motor2.write(self.motorval>0, abs(self.motorval))
+            # need to make motor2 faster for some value
+            	self.motor1.write(0, abs(self.motorval))
+            	self.motor2.write(1, abs(self.motorval))
             elif θ < 0:
-            	self.motor1.write(self.motorval>0, abs(self.motorval))
-            	self.motor2.write(self.motorval>0, abs(self.motorval))
+            # need to make motor 1 faster for some value
+            	self.motor1.write(0, abs(self.motorval))
+            	self.motor2.write(1, abs(self.motorval))
             else:
-            	self.motor1.write(self.motorval>0, abs(self.motorval))
-            	self.motor2.write(self.motorval>0, abs(self.motorval))
+            # need to decide on some magnitude 
+            	self.motor1.write(0, abs(self.motorval))
+            	self.motor2.write(1, abs(self.motorval))
 
 		pass
