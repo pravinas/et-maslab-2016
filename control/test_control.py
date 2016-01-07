@@ -35,17 +35,21 @@ class TestControl(Sketch):
             # changes need to be done to this below
             # need to include dampening and other stuff
             # magnitude must be a function of (θ, G(if have gyro), microcontrollers, and time) 
+            #todo
 
             if θ > 0:
             # need to make motor2 faster for some value
+            # todo
             	self.motor1.write(0, abs(self.motorval))
             	self.motor2.write(1, abs(self.motorval))
             elif θ < 0:
             # need to make motor 1 faster for some value
+            #todo
             	self.motor1.write(0, abs(self.motorval))
             	self.motor2.write(1, abs(self.motorval))
             else:
             # need to decide on some magnitude 
+            #todo
             	self.motor1.write(0, abs(self.motorval))
             	self.motor2.write(1, abs(self.motorval))
 
