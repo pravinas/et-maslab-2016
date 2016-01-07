@@ -31,26 +31,28 @@ class TestControl(Sketch):
             # θ > 0 means need to turn left
             # θ < 0 means need to turn right
             # θ = 0 means we happy :D
+
             # assumed always going forward so directions is always 1
             # changes need to be done to this below
             # need to include dampening and other stuff
-            # magnitude must be a function of (θ, G(if have gyro), microcontrollers, and time) 
+            # assuming moving forward so magnitude has const c
+            # magnitude = c + turning magnitude (f)
             #todo
 
             if θ > 0:
             # need to make motor2 faster for some value
             # todo
-            	self.motor1.write(0, abs(self.motorval))
-            	self.motor2.write(1, abs(self.motorval))
+            	self.motor1.write(0, c )
+            	self.motor2.write(1, c + f)
             elif θ < 0:
             # need to make motor 1 faster for some value
             #todo
-            	self.motor1.write(0, abs(self.motorval))
-            	self.motor2.write(1, abs(self.motorval))
+            	self.motor1.write(0, c + f)
+            	self.motor2.write(1, c)
             else:
-            # need to decide on some magnitude 
+            # need to decide on some magnitude c
             #todo
-            	self.motor1.write(0, abs(self.motorval))
-            	self.motor2.write(1, abs(self.motorval))
+            	self.motor1.write(0, c)
+            	self.motor2.write(1, c)
 
 		pass
