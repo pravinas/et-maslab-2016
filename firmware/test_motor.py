@@ -1,5 +1,5 @@
-from ..tamproxy import Sketch, SyncedSketch, Timer
-from ..tamproxy.devices import Motor
+from tamproxy import Sketch, SyncedSketch, Timer
+from tamproxy.devices import Motor
 
 # Cycles a motor back and forth between -255 and 255 PWM every ~5 seconds
 
@@ -11,14 +11,13 @@ class MotorWrite(Sketch):
         self.motor2 = Motor(self.tamp, 5, 6)
         self.motor2.write(1,0)
         self.delta = 1
-        self.motorval = 0
+        self.motorval = 160
         self.timer = Timer()
 
     def loop(self):
-        if (self.timer.millis() > 10):
+        if (self.timer.millis() > 5000):
             self.timer.reset()
-            if abs(self.motorval) == 255: self.delta = -self.delta
-            self.motorval += self.delta
+            self.motorval = -self.motorval
             self.motor1.write(self.motorval>0, abs(self.motorval))
             self.motor2.write(self.motorval>0, abs(self.motorval))
 
