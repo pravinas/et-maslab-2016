@@ -31,13 +31,13 @@ class TestControl(Sketch):
         if (self.timer.millis() > 10):
             self.timer.reset()
     
-            if IR0 < IR1:
+            if IR0 < 15:
             # IR values will be in cm
             # todo
                 self.motor1.write(0, 50 )
                 self.motor2.write(1, 50 + 25)
 
-            elif IR0 > IR1:
+            elif IR0 > 15:
             # makes motor 1 faster for some value
             # turn left closer to wall
             #todo
