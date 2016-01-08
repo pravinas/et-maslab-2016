@@ -3,6 +3,7 @@
 # Run a sketch that tells the robot to run various control routines.
 
 import tamproxy
+from ..firmware.short_range_ir import IR
 
 class TestControl(Sketch):
     def setup(self):
@@ -17,33 +18,29 @@ class TestControl(Sketch):
         self.delta = 1
         self.motorval = 0
         self.timer = Timer()
-        
+
+    # using two IR seonsors moving 13cm approx 5in from wall
+    # made assuming both sensors are at right side 
+    # motor1 = left
+    # motor2 = right  
+    # todo
 
     def loop(self):
-        # motor1 = left
-        # motor2 = right
-        # using graphical representation Ariel gave us theta v time to think about problem
-        # same timer as previous need to tweak
-        # todo
+        # numbered IR sensors spin down from front 0,1,2,4
+        # assuming following right wall
         if (self.timer.millis() > 10):
             self.timer.reset()
-
-            # θ > 0 means need to turn left
-            # θ < 0 means need to turn right
-            # θ = 0 means we happy :D
-
-            # assumed always going forward so directions is always 1
-            # changes need to be done to this below
-            # need to include dampening and other stuff
-            #todo
-
-            if theta > 0:
+    
+            if IR0 > IR1:
+            # higher return voltage means closer to wall
             # makes motor2 faster for some value
             # todo
                 self.motor1.write(0, 50 )
                 self.motor2.write(1, 50 + 25)
-            elif theta < 0:
+
+            elif IR0 < IR1:
             # makes motor 1 faster for some value
+            # turn left closer to wall
             #todo
                 self.motor1.write(0, 50 + 25)
                 self.motor2.write(1, 50)
