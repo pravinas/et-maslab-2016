@@ -20,7 +20,7 @@ The following data should interrupt the standard routines:
   - Turn until you see a block.
 - Otherwise:
   - Move towards the largest block seen, attempting to center the block under the camera.
-- Exit when bump sensor under conveyor belt peg is hit.
+- Exit when PICKUP module initiates.
 
 Possible Failure modes:
 
@@ -28,6 +28,8 @@ Possible Failure modes:
 - The block leaves the field of view before an interrupt is processed.
 
 ### The PICKUP Module:
+
+This module launches when a block is sensed, interrupting the FIND process. TODO: How to sense block.
 
 TODO
 
