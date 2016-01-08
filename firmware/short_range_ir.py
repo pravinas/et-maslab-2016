@@ -3,7 +3,7 @@
 # Given an IR Reading, transform it into something more useful.
 # This software is specifically built for Sharp Microelectronics GP2Y0A41SK0F.
 
-from ..tamproxy.device import AnalogInput
+from tamproxy.devices import AnalogInput
 
 class IR(AnalogInput):
 
@@ -19,4 +19,7 @@ class IR(AnalogInput):
     def read_ir(self):
         raw_data = self.val
 
-        raise NotImplementedError
+        # Arcane magic was used to calibrate this. Feel free to recalibrate.
+        distance = (1.0/raw_data - 4.337e-6)/1.252e-5
+
+        return distance
