@@ -26,19 +26,18 @@ class TestControl(Sketch):
     # todo
 
     def loop(self):
-        # numbered IR sensors spin down from front 0,1,2,4
+        # assuming numbered IR sensors spin down from front 0,1,2,4
         # assuming following right wall
         if (self.timer.millis() > 10):
             self.timer.reset()
     
-            if IR0 > IR1:
-            # higher return voltage means closer to wall
-            # makes motor2 faster for some value
+            if IR0 < IR1:
+            # IR values will be in cm
             # todo
                 self.motor1.write(0, 50 )
                 self.motor2.write(1, 50 + 25)
 
-            elif IR0 < IR1:
+            elif IR0 > IR1:
             # makes motor 1 faster for some value
             # turn left closer to wall
             #todo
