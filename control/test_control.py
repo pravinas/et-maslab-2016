@@ -17,7 +17,7 @@ class TestControl(Sketch):
         self.delta = 1
         self.motorval = 0
         self.timer = Timer()
-        pass
+        
 
     def loop(self):
         # motor1 = left
@@ -35,24 +35,22 @@ class TestControl(Sketch):
             # assumed always going forward so directions is always 1
             # changes need to be done to this below
             # need to include dampening and other stuff
-            # assuming moving forward so magnitude has const c
-            # magnitude = c + turning magnitude (f)
             #todo
 
-            if θ > 0:
-            # need to make motor2 faster for some value
+            if theta > 0:
+            # makes motor2 faster for some value
             # todo
-                self.motor1.write(0, c )
-                self.motor2.write(1, c + f)
-            elif θ < 0:
-            # need to make motor 1 faster for some value
+                self.motor1.write(0, 50 )
+                self.motor2.write(1, 50 + 25)
+            elif theta < 0:
+            # makes motor 1 faster for some value
             #todo
-                self.motor1.write(0, c + f)
-                self.motor2.write(1, c)
+                self.motor1.write(0, 50 + 25)
+                self.motor2.write(1, 50)
             else:
-            # need to decide on some magnitude c
+            # goes forward
             #todo
-                self.motor1.write(0, c)
-                self.motor2.write(1, c)
+                self.motor1.write(0, 50)
+                self.motor2.write(1, 50)
 
-        pass
+        
