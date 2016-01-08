@@ -1,5 +1,5 @@
-from tamproxy import Sketch, SyncedSketch, Timer
-from tamproxy.devices import Motor
+from ..tamproxy import Sketch, SyncedSketch, Timer
+from ..tamproxy.devices import Motor
 
 # Cycles a motor back and forth between -255 and 255 PWM every ~5 seconds
 

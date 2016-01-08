@@ -4,9 +4,16 @@
 
 from tamproxy import SyncedSketch, Timer
 
-MODULE_FIND     = {num: 0, timeout: 7000}
-MODULE_PICKUP   = {num: 1, timeout: 7000}
-MODULE_DROPOFF  = {num: 2, timeout: 7000}
+# List of Modules/States
+# 
+# Properties:
+#   - num: An ID number for this module.
+#   - timeout: The maximum amount of time to spend on this module.
+#              TODO: Calibrate timeouts.
+#   - timer: The amount of time spent in this module so far.
+MODULE_FIND     = {num: 0, timeout: 7000, timer: 0}
+MODULE_PICKUP   = {num: 1, timeout: 7000, timer: 0}
+MODULE_DROPOFF  = {num: 2, timeout: 7000, timer: 0}
 
 class Robot(SyncedSketch):
 
