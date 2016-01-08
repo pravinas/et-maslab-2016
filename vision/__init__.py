@@ -1,4 +1,5 @@
 # __init__.py
 #
-# A purely syntactical file for python.
-# Do not delete this file.
+# Package vision into the whole thing.
+
+from .vision import Vision

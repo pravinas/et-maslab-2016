@@ -31,15 +31,16 @@ BLACK = Color(0, 255, 20, 255, 0, 20)       ## The color Black
 WHITE = Color(0, 255, 0, 25, 240, 255)      ## The color White
 BLUE  = Color(100, 140, 100, 200, 50, 255)  ## The color Blue
 GREEN = Color(37, 96, 50, 255, 40 255)      ## The color Green
-RED  = Color(150, 15, 50, 255, 50, 255)     ## The color Red
+RED   = Color(150, 15, 50, 255, 50, 255)     ## The color Red
 
 class Vision():
 
     ## Create an instance of the Vision module.
     #
-    # @param publisher A Publisher object which tells this module when to loop.
-    def __init__(self, publisher):
-        publisher.subscribe(lambda x: self.loop())
+    # @param myColorIsRed True if we are collecting red 
+    def __init__(self, myColorIsRed):
+        self.myColor = RED if myColorIsRed else GREEN
+        self.unColor = GREEN if myColorIsRed else RED
         self.capture = cv2.VideoCapture(0)
         self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 160); # X resolution
         self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 120); # Y resolution
@@ -70,9 +71,12 @@ class Vision():
     #
     # @param img A cleaned up binary image.
     # @return A list of BlockImg objects.
-    def findBlocksInBinaryImage(self, img):
+    def findBlocksInBinaryImage(self, img, filterStacks=False):
         image, contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         blocks = []
+
+        # TODO: Implement stack filter.
+        # TODO: Point y coordinate to the southern extreme. x can stay as is.
 
         for contour in contours:
             moment = c2.moments(contour)
@@ -85,22 +89,24 @@ class Vision():
 
     ## Subroutine of the Vision module, intended to run once every second or so.
     # 
-    # @return A tuple of two lists of BlockImg objects, from largest to smallest area.
-    #         The first list contains the green blocks, and the second list contains red.
-    def loop(self):
+    # @return   A tuple of two lists of BlockImg objects, from largest to smallest area.
+    #           The first list contains the blocks of our color, and the second list contains stacks.
+    def processImage(self):
         retval, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        greenImg = self.filterHSV(frame, GREEN)
-        redImg   = self.filterHSV(frame, RED)
+        blockImg    = self.filterHSV(frame, self.myColor)
+        stackImg    = cv2.bitwise_or(ourImg, self.filterHSV(frame, self.unColor))
 
-        greenImg = self.morph(greenImg)
-        redImg   = self.morph(redImg)
+        blockImg    = self.morph(ourImg)
+        stackImg    = self.morph(stackImg)
 
-        greenBlocks = sorted(self.findBlocksInBinaryImage(greenImg), key = lambda x: x.area, reverse = True)
-        redBlocks   = sorted(self.findBlocksInBinaryImage(redImg), key = lambda x: x.area, reverse = True)
+        blocks  = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.area, reverse = True)
+        stacks  = sorted(self.findBlocksInBinaryImage(stackImg, True), key = lambda x: x.area, reverse = True)
 
-        return (greenBlocks, redBlocks)
+        stacks = self.filterStacks()
+
+        return (blocks, stacks)
 
     ## Distinguish if the whole screen is black, for troubleshooting.
     #
