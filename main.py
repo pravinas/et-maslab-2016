@@ -7,15 +7,10 @@ from vision import Vision
 from pubsub import Publisher
 
 # List of Modules/States
-# 
-# Properties:
-#   - num: An ID number for this module.
-#   - timeout: The maximum amount of time to spend on this module.
-#              TODO: Calibrate timeouts.
-#   - timer: The amount of time spent in this module so far.
-MODULE_FIND     = {num: 0, timeout: 7000, timer: 0}
-MODULE_PICKUP   = {num: 1, timeout: 7000, timer: 0}
-MODULE_DROPOFF  = {num: 2, timeout: 7000, timer: 0}
+# TODO Document the constants here
+MODULE_FIND     = {num: 0, timeout: 7000, blocks: [], stacks: []}
+MODULE_PICKUP   = {num: 1, timeout: 7000}
+MODULE_DROPOFF  = {num: 2, timeout: 7000}
 
 RED = True
 GREEN = not RED
@@ -23,12 +18,12 @@ GREEN = not RED
 class Robot(SyncedSketch):
 
     def setup(self):
-        self.setModule(MODULE_FIND)
+        self.module = MODULE_FIND
         self.moduleTimer = Timer()
 
         self.blockColor = RED
 
-        self.vision = Vision(RED)
+        self.vision = Vision(self.blockColor)
         self.visionPublisher = Publisher()
         self.cameraTimer = Timer()
         self.cameraTimeout = 500 # Calibrate if the robot ultimately acts weird for no reason.
@@ -42,8 +37,7 @@ class Robot(SyncedSketch):
             self.runFindModule()
 
         elif (self.module[num] == MODULE_PICKUP[num]):
-            # TODO
-            pass
+            self.runPickupModule()
 
         elif (self.module[num] == MODULE_DROPOFF[num]):
             # TODO
@@ -58,22 +52,24 @@ class Robot(SyncedSketch):
     # Turn until color is detected.
     # Drive towards largest color until it is centered on the screen.
     def runFindModule(self):
-        blocks = []
-        stacks = []
+        assert MODULE_FIND = self.module
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
             self.cameraTimer.reset()
-            blocks, stacks = self.vision.processImage()
+            self.module[blocks], self.module[stacks] = self.vision.processImage()
 
         # TODO: Make this flexible whether or not we are using red or green blocks.
-        if len(blocks):
+        if len(blocks) + len(stacks) == 0:
             # TODO (High priority): Turn to look for blocks.
             # TODO (Low priority): Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
-            target = redblocks[0]
+            target = blocks[0]
             # TODO: Drive towards the target.
 
+    def runPickupModule(self):
+        # TODO
+        raise NotImplementedError
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):
@@ -87,11 +83,6 @@ class Robot(SyncedSketch):
     def checkForBlock(self):
         # TODO
         raise NotImplementedError
-
-    ## Change the active module to another one.
-    def setModule(self, module):
-        self.module = module
-        self.module[timer] = 0
 
     ## Change the active module if the timeout is reached.
     def checkTimeouts(self):
