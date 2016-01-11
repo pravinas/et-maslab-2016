@@ -1,11 +1,10 @@
 #Go_straight.py
-import math
 import tamproxy
 from ..firmware.test_gyro import GyroRead
 
 
 
-class TestControl(Sketch):
+class Go_straight(Sketch):
     def setup(self):
         # just used the code from test_motor for this part
         # assume motor 1 is left and motor 2 is right side
@@ -19,35 +18,39 @@ class TestControl(Sketch):
         self.motorval = 0
         self.timer = Timer()
 
+
     # using the gyro to correct
     # will make bot go straight 
     # motor1 = left
     # motor2 = right  
-    # todo
 
     def loop(self):
     	ki = 0
     	kd = 0
     	#this can be increased up to 255 
         base_speed = 100
-
+		
         # PID base is here
         # very simple PID controller
         # need to adjust to get propper values
+       	p = 1
+       	i = .1
+        d = .9
 
-        p = 1
-        i = .9
-        d = .1
-        #need to change to gyro value
-        err = 0 - self.gyro.val
+        if (self.timer.millis() > 4000):
+            self.timer.reset()
 
-        # proportional
-		kp = p*err
-		# integral/adding data points
-		ki = [i*err] + ki
-		# derivative new d*err - previous kd 
-		kd = [d*err] - kd
-		power = kp + ki + kd
-		self.motor1.write(0,base_speed - power)
-		self.motor2.write(1,base_speed + power)
+	        #need to change to gyro value
+    	    err = 0 - self.gyro.val
+
+	        # proportional
+			kp = p*err
+			# integral/adding data points
+			ki = [i*err] + ki
+			# derivative new d*err - previous kd 
+			kd = [d*err] - kd
+			power = kp + ki + kd
+
+			self.motor1.write(0,base_speed - power)
+			self.motor2.write(1,base_speed + power)
 
