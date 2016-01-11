@@ -35,12 +35,13 @@ class Go_straight(Sketch):
         # need to adjust to get propper values
        	p = 1
        	i = .1
-        d = .9
+        d = .5
 
-        if (self.timer.millis() > 4000):
+        if (self.timer.millis() > 2000):
             self.timer.reset()
 
-	        #need to change to gyro value
+	        # need to change to gyro value
+	        # concerned about value of err during movement
     	    err = 0 - self.gyro.val
 
 	        # proportional
