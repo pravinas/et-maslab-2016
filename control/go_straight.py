@@ -28,7 +28,7 @@ class TestControl(Sketch):
     def loop(self):
     	ki = 0
     	kd = 0
-    	#this is motorval up to 255 
+    	#this can be increased up to 255 
         base_speed = 100
 
         # PID base is here
@@ -38,8 +38,8 @@ class TestControl(Sketch):
         p = 1
         i = .9
         d = .1
-
-        err = 0 - GyroRead
+        #need to change to gyro value
+        err = 0 - self.gyro.val
 
         # proportional
 		kp = p*err
