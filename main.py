@@ -14,6 +14,10 @@ MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
 RED = True
 GREEN = not RED
+
+FORWARD = 1
+BACKWARD = 0
+
 class Robot(SyncedSketch):
 
     def setup(self):
@@ -43,14 +47,20 @@ class Robot(SyncedSketch):
         self.rightMotor = Motor(self.tamp, 5, 6)
         # Encoder object for the right motor.
         self.rightEncoder = Encoder(self.tamp, 7, 8)
+
         # Motor object representing the intake mechanism motors.
         self.intakeMotor = Motor(self.tamp, 9, 10)
         # Encoder object for the intake motor.
         self.intakeEncoder = Encoder(self.tamp, 11, 12)
+
         # Motor object representing the conveyor belt motor.
         self.conveyorMotor = Motor(self.tamp, 13, 14)
         # Encoder object for the conveyor belt motor.
         self.conveyorEncoder = Encoder(self.tamp, 15, 16)
+        # The encoder count for as far as we want the encoder to move.
+        self.conveyorEncoderLimit = 5 * 3200
+        # The speed of the conveyor belt. (0-255)
+        self.conveyorPower = 80
 
         # Start the intake motor.
         intakePower = 150
@@ -84,8 +94,8 @@ class Robot(SyncedSketch):
 
         # Check if we need to exit the module.
         if self.checkForBlock() > 0 or self.moduleTimer.millis() > self.module["timeout"]:
-            self.module = MODULE_PICKUP
-            self.moduleTimer.reset()
+            print "Going from FIND to PICKUP"
+            self.startPickupModule()
             return
 
         ## Capture an image from the camera every so often
@@ -98,14 +108,21 @@ class Robot(SyncedSketch):
 
         # Check if we see anything of interest on the screen.
         if len(blocks) + len(stacks) == 0:
-            # TODO (High priority): Turn to look for blocks.
+            # TODO (High priority): Turn to look for blocks. (Waiting for Gilbert)
             # TODO (Low priority): Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
             target = blocks[0]
             if len(blocks) == 0:
                 target = stacks[0]
-            # TODO: Do some trig to translate the BlockImg objects into angles.
-            # TODO: Drive towards the target.
+            # TODO: Do some trig to translate the BlockImg objects into angles. Need to do calibration for this.
+            # TODO: Drive towards the target. (Waiting for Gilbert)
+
+    ## Set up the beginning of the pickup process.
+    def startPickupModule(self):
+        self.module = MODULE_PICKUP
+        self.conveyorEncoder.write(0)
+        self.conveyorMotor.write(FORWARD, self.conveyorPower)
+        self.moduleTimer.reset()
 
     ## Pick up a block from the block capture mechanism.
     #
@@ -113,8 +130,27 @@ class Robot(SyncedSketch):
     # the block has moved far enough. Then move the conveyor belt back.
     def runPickupModule(self):
         assert MODULE_PICKUP == self.module
-        # TODO
-        raise NotImplementedError
+
+        # Allow timeout.
+        if self.moduleTimer.millis() > self.module["timeout"]:
+            print "Timed out from PICKUP to FIND"
+            self.module = MODULE_FIND
+            self.moduleTimer.reset()
+            return
+
+        encval = self.conveyorEncoder.val
+
+        # Move up the conveyor belt until it hits the encoder limit.
+        if encval > self.conveyorEncoderLimit:
+            self.conveyorMotor.write(BACKWARD, self.conveyorPower)
+
+        # Stop the motor when it gets to the bottom.
+        if encval < 0 and self.moduleTimer.millis() > 40:
+            self.conveyorMotor.write(BACKWARD, 0)
+            print "Going from PICKUP to FIND"
+            self.module = MODULE_FIND
+            self.moduleTimer.reset()
+            return
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):
