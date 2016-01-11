@@ -6,8 +6,7 @@ from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder
 from vision import Vision
 
-# List of Modules/States
-# TODO Document the constants here
+# List of Modules/States. Put any info that needs to persist within the state here.
 MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "blocks": [], "stacks": []}
 MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
 MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
@@ -85,6 +84,11 @@ class Robot(SyncedSketch):
             print "Unexpected module number:", self.module
             raise Exception()
 
+    ## Set up the beginning of the find process.
+    def startFindModule(self):
+        self.module = MODULE_FIND
+        self.moduleTimer.reset()
+
     ## Try to find and move towards blocks on the map.
     # 
     # Turn until color is detected.
@@ -134,8 +138,7 @@ class Robot(SyncedSketch):
         # Allow timeout.
         if self.moduleTimer.millis() > self.module["timeout"]:
             print "Timed out from PICKUP to FIND"
-            self.module = MODULE_FIND
-            self.moduleTimer.reset()
+            self.startFindModule()
             return
 
         encval = self.conveyorEncoder.val
@@ -148,8 +151,7 @@ class Robot(SyncedSketch):
         if encval < 0 and self.moduleTimer.millis() > 40:
             self.conveyorMotor.write(BACKWARD, 0)
             print "Going from PICKUP to FIND"
-            self.module = MODULE_FIND
-            self.moduleTimer.reset()
+            self.startFindModule()
             return
 
     ## Checks if all initialization processes went smoothly.

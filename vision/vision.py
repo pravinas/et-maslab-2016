@@ -27,6 +27,9 @@ class BlockImg():
         self.y = y
         self.h = h
 
+    def __str__(self):
+        return "Block: " + str((x,y,h))
+
 BLACK = Color(0, 255, 20, 255, 0, 20)       ## The color Black
 WHITE = Color(0, 255, 0, 25, 240, 255)      ## The color White
 BLUE  = Color(100, 140, 100, 200, 50, 255)  ## The color Blue
