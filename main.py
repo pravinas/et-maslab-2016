@@ -3,9 +3,8 @@
 # The main sketch for the robot's processes.
 
 from tamproxy import SyncedSketch, Timer
-from tamproxy.devices import Motor
+from tamproxy.devices import Motor, Encoder
 from vision import Vision
-from pubsub import Publisher
 
 # List of Modules/States
 # TODO Document the constants here
@@ -18,7 +17,6 @@ GREEN = not RED
 class Robot(SyncedSketch):
 
     def setup(self):
-
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
         # Timer object describing how long the current module has been running.
@@ -35,24 +33,41 @@ class Robot(SyncedSketch):
         # Time in milliseconds between pictures being taken.
         self.cameraTimeout = 500
 
+
+        # TODO: Figure out which pins are hooked up where.
         # Motor object representing the left motor.
         self.leftMotor = Motor(self.tamp, 1, 2)
+        # Encoder object for the left motor.
+        self.leftEncoder = Encoder(self.tamp, 3, 4)
         # Motor object representing the right motor.
-        self.rightMotor = Motor(self.tamp, 3, 4)
-        # TODO: Figure out which pins are hooked up where.
+        self.rightMotor = Motor(self.tamp, 5, 6)
+        # Encoder object for the right motor.
+        self.rightEncoder = Encoder(self.tamp, 7, 8)
+        # Motor object representing the intake mechanism motors.
+        self.intakeMotor = Motor(self.tamp, 9, 10)
+        # Encoder object for the intake motor.
+        self.intakeEncoder = Encoder(self.tamp, 11, 12)
+        # Motor object representing the conveyor belt motor.
+        self.conveyorMotor = Motor(self.tamp, 13, 14)
+        # Encoder object for the conveyor belt motor.
+        self.conveyorEncoder = Encoder(self.tamp, 15, 16)
+
+        # Start the intake motor.
+        intakePower = 150
+        intakeDirection = 1
+        self.intakeMotor.write(intakePower, intakeDirection)
 
         self.checkForInitializationErrors()
 
     def loop(self):
-        self.checkTimeouts()
 
-        if (self.module["num"] == MODULE_FIND["num"]):
+        if (self.module == MODULE_FIND):
             self.runFindModule()
 
-        elif (self.module["num"] == MODULE_PICKUP["num"]):
+        elif (self.module == MODULE_PICKUP):
             self.runPickupModule()
 
-        elif (self.module["num"] == MODULE_DROPOFF["num"]):
+        elif (self.module == MODULE_DROPOFF):
             # TODO
             pass
 
@@ -71,6 +86,7 @@ class Robot(SyncedSketch):
         if self.checkForBlock() > 0 or self.moduleTimer.millis() > self.module["timeout"]:
             self.module = MODULE_PICKUP
             self.moduleTimer.reset()
+            return
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
@@ -90,7 +106,10 @@ class Robot(SyncedSketch):
                 target = stacks[0]
             # TODO: Drive towards the target.
 
-
+    ## Pick up a block from the block capture mechanism.
+    #
+    # Move the conveyor belt upwards until the encoders indicate that
+    # the block has moved far enough. Then move the conveyor belt back.
     def runPickupModule(self):
         assert MODULE_PICKUP == self.module
         # TODO
@@ -106,11 +125,6 @@ class Robot(SyncedSketch):
     #         1 if the color sensor sees a red block
     #         2 if the color sensor sees a green block
     def checkForBlock(self):
-        # TODO
-        raise NotImplementedError
-
-    ## Change the active module if the "timeout" is reached.
-    def checkTimeouts(self):
         # TODO
         raise NotImplementedError
 

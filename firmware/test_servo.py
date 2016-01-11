@@ -1,26 +1,32 @@
-# test_servo.py
-#
-# A sketch to test the servo.
+from tamproxy import Sketch, SyncedSketch, Timer
+from tamproxy.devices import Servo
 
-from tamproxy import SyncedSketch, Timer
-from tamproxy.devices import AnalogOutput
 
-class TestServo(SyncedSketch):
+class ServoWrite(Sketch):
+    """Cycles a servo back and forth between 1050us and 1950us pulse widths (most servos are 1000-2000)"""
+
     def setup(self):
-        self.servo = AnalogOutput(self.tamp, 23)
+        self.servo = Servo(self.tamp, 18)
+        self.servo.write(1050)
         self.timer = Timer()
-        self.exper = [2.5,0]
-        self.times = 0
+        self.fulltime = Timer()
+        self.end = False
 
     def loop(self):
-        if self.timer.millis() > 2000:
+        if (self.timer.millis() > 2000):
             self.timer.reset()
-            print self.exper[self.times]
-            self.servo.write(self.exper[self.times])
-            self.times += 1
-        if self.times >= len(self.exper):
+            if self.end:
+                self.servo.write(1050)
+            else:
+                self.servo.write(1950)
+            self.end = not self.end
+        if self.fulltime > 20000:
             self.stop()
+            
+    def stop(self):
+        super(EncoderRead,self).stop()
+        self.tamp.clear_devices()
 
 if __name__ == "__main__":
-    sketch = TestServo(1, -0.00001, 100)
+    sketch = ServoWrite()
     sketch.run()
