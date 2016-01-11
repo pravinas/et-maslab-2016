@@ -3,43 +3,56 @@
 # The main sketch for the robot's processes.
 
 from tamproxy import SyncedSketch, Timer
+from tamproxy.devices import Motor
 from vision import Vision
 from pubsub import Publisher
 
 # List of Modules/States
 # TODO Document the constants here
-MODULE_FIND     = {num: 0, timeout: 7000, blocks: [], stacks: []}
-MODULE_PICKUP   = {num: 1, timeout: 7000}
-MODULE_DROPOFF  = {num: 2, timeout: 7000}
+MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "blocks": [], "stacks": []}
+MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
+MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
 RED = True
 GREEN = not RED
-
 class Robot(SyncedSketch):
 
     def setup(self):
+
+        # Describes which stage of the program is running.
         self.module = MODULE_FIND
+        # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
 
-        self.blockColor = RED
+        # The color of block we care about. Should be RED or GREEN
+        self.blockColor = RED   # TODO: Check which color we care about.
 
+        # Vision object to read data from the camera.
         self.vision = Vision(self.blockColor)
-        self.visionPublisher = Publisher()
+        # Timer object describing how much time has passed since the last 
+        # camera input was processed.
         self.cameraTimer = Timer()
-        self.cameraTimeout = 500 # Calibrate if the robot ultimately acts weird for no reason.
+        # Time in milliseconds between pictures being taken.
+        self.cameraTimeout = 500
+
+        # Motor object representing the left motor.
+        self.leftMotor = Motor(self.tamp, 1, 2)
+        # Motor object representing the right motor.
+        self.rightMotor = Motor(self.tamp, 3, 4)
+        # TODO: Figure out which pins are hooked up where.
 
         self.checkForInitializationErrors()
 
     def loop(self):
         self.checkTimeouts()
 
-        if (self.module[num] == MODULE_FIND[num]):
+        if (self.module["num"] == MODULE_FIND["num"]):
             self.runFindModule()
 
-        elif (self.module[num] == MODULE_PICKUP[num]):
+        elif (self.module["num"] == MODULE_PICKUP["num"]):
             self.runPickupModule()
 
-        elif (self.module[num] == MODULE_DROPOFF[num]):
+        elif (self.module["num"] == MODULE_DROPOFF["num"]):
             # TODO
             pass
 
@@ -52,22 +65,34 @@ class Robot(SyncedSketch):
     # Turn until color is detected.
     # Drive towards largest color until it is centered on the screen.
     def runFindModule(self):
-        assert MODULE_FIND = self.module
+        assert MODULE_FIND == self.module
+
+        # Check if we need to exit the module.
+        if self.checkForBlock() > 0 or self.moduleTimer.millis() > self.module["timeout"]:
+            self.module = MODULE_PICKUP
+            self.moduleTimer.reset()
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
             self.cameraTimer.reset()
-            self.module[blocks], self.module[stacks] = self.vision.processImage()
+            self.module["blocks"], self.module["stacks"] = self.vision.processImage()
 
-        # TODO: Make this flexible whether or not we are using red or green blocks.
+        blocks = self.module["blocks"]
+        stacks = self.module["stacks"]
+
+        # Check if we see anything of interest on the screen.
         if len(blocks) + len(stacks) == 0:
             # TODO (High priority): Turn to look for blocks.
             # TODO (Low priority): Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
             target = blocks[0]
+            if len(blocks) == 0:
+                target = stacks[0]
             # TODO: Drive towards the target.
 
+
     def runPickupModule(self):
+        assert MODULE_PICKUP == self.module
         # TODO
         raise NotImplementedError
 
@@ -84,7 +109,7 @@ class Robot(SyncedSketch):
         # TODO
         raise NotImplementedError
 
-    ## Change the active module if the timeout is reached.
+    ## Change the active module if the "timeout" is reached.
     def checkTimeouts(self):
         # TODO
         raise NotImplementedError
