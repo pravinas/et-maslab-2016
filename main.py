@@ -104,6 +104,7 @@ class Robot(SyncedSketch):
             target = blocks[0]
             if len(blocks) == 0:
                 target = stacks[0]
+            # TODO: Do some trig to translate the BlockImg objects into angles.
             # TODO: Drive towards the target.
 
     ## Pick up a block from the block capture mechanism.

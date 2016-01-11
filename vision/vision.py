@@ -19,13 +19,13 @@ class Color():
 # (0, 0) is the upper left hand corner of the screen.
 #
 # @param x The x coordinate of the block's center. Increases to the right.
-# @param y The y coordinate of the block's center. Increases downwards.
-# @param area The size of the block in pixels.
+# @param y The y coordinate of the block's southern extreme. Increases downwards.
+# @param h The height of the block in pixels.
 class BlockImg():
-    def __init__(self, x, y, area):
+    def __init__(self, x, y, h):
         self.x = x
         self.y = y
-        self.area = area
+        self.h = h
 
 BLACK = Color(0, 255, 20, 255, 0, 20)       ## The color Black
 WHITE = Color(0, 255, 0, 25, 240, 255)      ## The color White
@@ -71,19 +71,17 @@ class Vision():
     #
     # @param img A cleaned up binary image.
     # @return A list of BlockImg objects.
-    def findBlocksInBinaryImage(self, img, filterStacks=False):
+    def findBlocksInBinaryImage(self, img, stacksOnly=False):
         image, contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         blocks = []
 
-        # TODO: Implement stack filter.
-        # TODO: Point y coordinate to the southern extreme. x can stay as is.
-
         for contour in contours:
-            moment = c2.moments(contour)
-            x = int(M['m10']/M['m00'])
-            y = int(M['m01']/M['m00'])
-            area = cv2.contourArea(cnt)
-            blocks.append(Block(x, y, area))
+            x, y, w, h = cv2.boundingRect(contour)
+            if stacksOnly:
+                if h > 2.5 * w:
+                    blocks.append(Block(x + 0.5 * w, y + h, h))
+            else:
+                blocks.append(Block(x + 0.5 * w, y + h, h))
 
         return blocks
 
@@ -103,8 +101,6 @@ class Vision():
 
         blocks  = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.area, reverse = True)
         stacks  = sorted(self.findBlocksInBinaryImage(stackImg, True), key = lambda x: x.area, reverse = True)
-
-        stacks = self.filterStacks()
 
         return (blocks, stacks)
 
