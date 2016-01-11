@@ -26,46 +26,28 @@ class TestControl(Sketch):
     # todo
 
     def loop(self):
-
+    	ki = 0
+    	kd = 0
     	#this is motorval up to 255 
         base_speed = 100
-        #need to make added speed a function of PID
-        added_speed = 50
 
+        # PID base is here
+        # very simple PID controller
+        # need to adjust to get propper values
 
-        # not sure how gyro values will apear
-        # need to check
-
-        if (self.timer.millis() > 10000):
-        	self.timer.reset()
-        # assumes spin up is + while spin down - 
-        # this is the basic structure of what will happen
-        # only takes into account gyro values
-        # todo
-        # going to work on PID
-
-
-        if GyroRead < 0:
-        	self.motor1.write(0,base_speed)
-        	self.motor2.write(1,base_speed + added_speed)
-        elif GyroRead > 0:
-        	self.motor1.write(0,base_speed + added_speed)
-        	self.motor2.write(1,base_speed)
-        else:
-        	self.motor1.write(0,base_speed)
-        	self.motor2.write(1,base_speed)
-
-        #PID base is here
         p = 1
         i = .9
         d = .1
 
         err = 0 - GyroRead
 
+        # proportional
 		kp = p*err
-		Ki = integrate[i*err]
-		kd = differentiate[d*err]
+		# integral/adding data points
+		ki = [i*err] + ki
+		# derivative new d*err - previous kd 
+		kd = [d*err] - kd
 		power = kp + ki + kd
-		self.motor1.write(0,base_speed + power)
-		self.motor2.write(1,base_speed - power)
+		self.motor1.write(0,base_speed - power)
+		self.motor2.write(1,base_speed + power)
 
