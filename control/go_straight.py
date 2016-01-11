@@ -37,8 +37,7 @@ class Go_straight(Sketch):
        	i = .1
         d = .5
 
-        if (self.timer.millis() > 2000):
-            self.timer.reset()
+        if (self.timer.millis() < 2000):
 
 	        # need to change to gyro value
 	        # concerned about value of err during movement
