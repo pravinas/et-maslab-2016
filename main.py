@@ -84,6 +84,8 @@ class Robot(SyncedSketch):
             print "Unexpected module number:", self.module
             raise Exception()
 
+        # TODO: Passive processes, such as intake motors and interrupts.
+
     ## Set up the beginning of the find process.
     def startFindModule(self):
         self.module = MODULE_FIND
