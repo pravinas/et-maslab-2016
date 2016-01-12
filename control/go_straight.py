@@ -21,30 +21,38 @@ class Go_straight():
     def move_to_target(self, theta):
     	ki = 0
     	kd = 0
-    	#this can be increased up to 255 
+
+    	#base speed for motor turning 
         base_speed = 100
 		
-        # PID base is here
-        # very simple PID controller
-        # need to adjust to get propper values
+        # PID is here
+        # extremely simple PID controller
+        # need to tweak to get propper values
        	p = 1
        	i = .1
         d = .5
 
-        if (self.timer.millis() < 2000):
+        
+        # Will run for this amount of time before stopping
+        # should be changed to stop when reaching cube/object
+        # todo
+        while (self.timer.millis() < 2000):
 
-	        # need to change to gyro value
-	        # concerned about value of err during movement
-    	    err = 0 - self.gyro.val
+	        # error value
+    	    err = 0 - theta
 
 	        # proportional
 			kp = p*err
+
 			# integral/adding data points
 			ki = [i*err] + ki
-			# derivative new d*err - previous kd 
+		
+        	# derivative new d*err - previous kd 
 			kd = [d*err] - kd
-			power = kp + ki + kd
+		
+        	power = kp + ki + kd
 
 			self.leftMotor.write(0,base_speed - power)
 			self.rightMotor.write(1,base_speed + power)
+
 
