@@ -1,30 +1,24 @@
 #Go_straight.py
-import tamproxy
-from ..firmware.test_gyro import GyroRead
 
+class Go_straight():
 
+    ## Initialize a Go_straight object.
+    #
+    # @param left   A Motor representing the left motor.
+    # @param right  A Motor representing the right motor.
+    def __init__(self, left, right, gyro, timer):
+        self.leftMotor = left
+        self.rightMotor = right
+        self.gyro = gyro
+        self.timer = timer
+        self.timer.reset()
 
-class Go_straight(Sketch):
-    def setup(self):
-        # just used the code from test_motor for this part
-        # assume motor 1 is left and motor 2 is right side
-        # just connects to motors not sure what else to do here
-        # todo
-        self.motor1 = Motor(self.tamp, 3, 4)
-        self.motor1.write(1,0)
-        self.motor2 = Motor(self.tamp, 5, 6)
-        self.motor2.write(1,0)
-        self.delta = 1
-        self.motorval = 0
-        self.timer = Timer()
-
-
-    # using the gyro to correct
-    # will make bot go straight 
-    # motor1 = left
-    # motor2 = right  
-
-    def loop(self):
+    ## Given a target angle different from where we are currently facing,
+    #  move to face that angle.
+    #
+    # @param theta  A number proportional to the angle off from which the
+    #               robot is facing.
+    def move_to_target(self, theta):
     	ki = 0
     	kd = 0
     	#this can be increased up to 255 
@@ -52,6 +46,6 @@ class Go_straight(Sketch):
 			kd = [d*err] - kd
 			power = kp + ki + kd
 
-			self.motor1.write(0,base_speed - power)
-			self.motor2.write(1,base_speed + power)
+			self.leftMotor.write(0,base_speed - power)
+			self.rightMotor.write(1,base_speed + power)
 
