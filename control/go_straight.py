@@ -34,17 +34,19 @@ class Go_straight():
         # Will run for this amount of time before stopping
         if (self.timer.millis() < 2000):
 
-	        # need to change to gyro value
-	        # concerned about value of err during movement
-    	    err = 0 - self.gyro.val
+	        # error value
+    	    err = 0 - theta
 
 	        # proportional
 			kp = p*err
+
 			# integral/adding data points
 			ki = [i*err] + ki
-			# derivative new d*err - previous kd 
+		
+        	# derivative new d*err - previous kd 
 			kd = [d*err] - kd
-			power = kp + ki + kd
+		
+        	power = kp + ki + kd
 
 			self.leftMotor.write(0,base_speed - power)
 			self.rightMotor.write(1,base_speed + power)
