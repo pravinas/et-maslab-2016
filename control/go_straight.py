@@ -34,6 +34,8 @@ class Go_straight():
 
         
         # Will run for this amount of time before stopping
+        # should be changed to stop when reaching cube/object
+        # todo
         while (self.timer.millis() < 2000):
 
 	        # error value
@@ -52,4 +54,5 @@ class Go_straight():
 
 			self.leftMotor.write(0,base_speed - power)
 			self.rightMotor.write(1,base_speed + power)
+
 
