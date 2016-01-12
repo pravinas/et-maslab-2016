@@ -37,6 +37,7 @@ class Go_straight(Sketch):
        	i = .1
         d = .5
 
+        # Will run for this amount of time before stopping
         if (self.timer.millis() < 2000):
 
 	        # need to change to gyro value
