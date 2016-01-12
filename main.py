@@ -148,7 +148,7 @@ class Robot(SyncedSketch):
             self.conveyorMotor.write(BACKWARD, self.conveyorPower)
 
         # Stop the motor when it gets to the bottom.
-        if encval < 0 and self.moduleTimer.millis() > 40:
+        if encval < 0 and self.moduleTimer.millis() > 200:
             self.conveyorMotor.write(BACKWARD, 0)
             print "Going from PICKUP to FIND"
             self.startFindModule()

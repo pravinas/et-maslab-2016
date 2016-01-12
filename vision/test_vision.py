@@ -10,12 +10,12 @@
 from vision import Vision
 import time
 
-vision = Vision(True)
+vision = Vision(False, debug=True)
 
 if vision.isScreenBlack():
 	print "The screen appears to be black."
 
-for i in range(60):
+for i in range(20):
 	print "~~~~~~~~~"
-	print vision.processImage()
-	time.sleep(1)
+	print i, vision.processImage()
+	time.sleep(0.5)

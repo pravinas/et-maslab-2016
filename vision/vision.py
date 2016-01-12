@@ -25,28 +25,29 @@ class BlockImg():
     def __init__(self, x, y, h):
         self.x = x
         self.y = y
-        self.h = h
+        self.height = h
 
-    def __str__(self):
-        return "Block: " + str((x,y,h))
+    def __repr__(self):
+        return "Block: " + str((self.x,self.y,self.height))
 
 BLACK = Color(0, 255, 20, 255, 0, 20)       ## The color Black
 WHITE = Color(0, 255, 0, 25, 240, 255)      ## The color White
 BLUE  = Color(100, 140, 100, 200, 50, 255)  ## The color Blue
-GREEN = Color(37, 96, 50, 255, 40 255)      ## The color Green
-RED   = Color(150, 15, 50, 255, 50, 255)     ## The color Red
+GREEN = Color(37, 96, 50, 230, 40, 230)     ## The color Green
+RED   = Color(150, 15, 50, 230, 50, 230)    ## The color Red
 
 class Vision():
 
     ## Create an instance of the Vision module.
     #
     # @param myColorIsRed True if we are collecting red 
-    def __init__(self, myColorIsRed):
+    def __init__(self, myColorIsRed, debug=False):
         self.myColor = RED if myColorIsRed else GREEN
         self.unColor = GREEN if myColorIsRed else RED
         self.capture = cv2.VideoCapture(0)
-        self.capture.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 160); # X resolution
-        self.capture.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 120); # Y resolution
+        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 80); # X resolution
+        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 60); # Y resolution
+        self.debug = debug
 
     ## Turn a color image into a binary image where colors within the tolerance
     # are highlighted.
@@ -68,7 +69,7 @@ class Vision():
     # @return A cleaned up version of the input image.
     def morph(self, img):
         kernel = np.ones((5,5), np.uint8)
-        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations = 3)
 
     ## Take an input binary image and find the blocks in it.
     #
@@ -81,10 +82,10 @@ class Vision():
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             if stacksOnly:
-                if h > 2.5 * w:
-                    blocks.append(Block(x + 0.5 * w, y + h, h))
+                if h > 2.3 * w:
+                    blocks.append(BlockImg(x + 0.5 * w, y + h, h))
             else:
-                blocks.append(Block(x + 0.5 * w, y + h, h))
+                blocks.append(BlockImg(x + 0.5 * w, y + h, h))
 
         return blocks
 
@@ -96,14 +97,19 @@ class Vision():
         retval, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        blockImg    = self.filterHSV(frame, self.myColor)
-        stackImg    = cv2.bitwise_or(ourImg, self.filterHSV(frame, self.unColor))
+        blockImg = stackImg = self.filterHSV(frame, self.myColor)
+        stackImg = cv2.bitwise_or(stackImg, self.filterHSV(frame, self.unColor))
 
-        blockImg    = self.morph(ourImg)
-        stackImg    = self.morph(stackImg)
+        blockImg = self.morph(blockImg)
+        stackImg = self.morph(stackImg)
 
-        blocks  = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.area, reverse = True)
-        stacks  = sorted(self.findBlocksInBinaryImage(stackImg, True), key = lambda x: x.area, reverse = True)
+        if self.debug:
+            cv2.imwrite("frame.png", cv2.cvtColor(frame, cv2.COLOR_HSV2BGR))
+            cv2.imwrite("blockimg.png", cv2.cvtColor(blockImg, cv2.COLOR_GRAY2BGR))
+            cv2.imwrite("stackimg.png", cv2.cvtColor(stackImg, cv2.COLOR_GRAY2BGR))
+
+        blocks = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.height, reverse = True)
+        stacks = sorted(self.findBlocksInBinaryImage(stackImg, True), key = lambda x: x.height, reverse = True)
 
         return (blocks, stacks)
 
@@ -116,7 +122,7 @@ class Vision():
         blackImg = self.filterHSV(frame, BLACK)
         blackImg = self.morph(blackImg)
 
-        return len(cv2.findContours(blackImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[2]) < 2
+        return len(cv2.findContours(blackImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]) < 2
 
 
         
