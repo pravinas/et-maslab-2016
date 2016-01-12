@@ -21,18 +21,20 @@ class Go_straight():
     def move_to_target(self, theta):
     	ki = 0
     	kd = 0
-    	#this can be increased up to 255 
+
+    	#base speed for motor turning 
         base_speed = 100
 		
-        # PID base is here
-        # very simple PID controller
-        # need to adjust to get propper values
+        # PID is here
+        # extremely simple PID controller
+        # need to tweak to get propper values
        	p = 1
        	i = .1
         d = .5
 
+        
         # Will run for this amount of time before stopping
-        if (self.timer.millis() < 2000):
+        while (self.timer.millis() < 2000):
 
 	        # error value
     	    err = 0 - theta
