@@ -22,12 +22,14 @@ class Go_straight():
     	ki = 0
     	kd = 0
 
-    	#base speed for motor turning 
-        base_speed = 100
+    	# base speed for motor turning
+        # 0 for turning in place
+        base_speed = 0
 		
         # PID is here
         # extremely simple PID controller
         # need to tweak to get propper values
+        # todo
        	p = 1
        	i = .1
         d = .5
