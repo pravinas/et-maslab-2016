@@ -5,11 +5,11 @@
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder
 from vision import Vision
-from logic import findTargetFromCameraData
+from logic import Logic
 from control import GoStraight
 
 # List of Modules/States. Put any info that needs to persist within the state here.
-MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "target": None}
+MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "target": None, "updateTime": 0}
 MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
 MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
@@ -64,6 +64,8 @@ class Robot(SyncedSketch):
 
         # GoStraight object to control movement
         self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
+        # Logic processor for sensor inputs.
+        self.logic = Logic()
 
         # Start the intake motor.
         intakePower = 150
@@ -94,6 +96,7 @@ class Robot(SyncedSketch):
     def startFindModule(self):
         self.module = MODULE_FIND
         self.module["target"] = None
+        self.module["updateTime"] = 0
         self.moduleTimer.reset()
 
     ## Try to find and move towards blocks on the map.
@@ -114,14 +117,17 @@ class Robot(SyncedSketch):
         if self.cameraTimer.millis() > self.cameraTimeout:
             self.cameraTimer.reset()
 
-            target = self.module["target"] = findTargetFromCameraData(self.vision.processImage())
+            target = self.module["target"] = self.logic.findTarget(*self.vision.processImage())
+            self.module["updateTime"] = self.moduleTimer.millis()
 
         # Check if we see anything of interest on the screen.
         if target == None:
-            # TODO (High priority): Turn to look for blocks. (Waiting for Gilbert)
-            # TODO (Low priority): Make sure not to enter this subroutine when there is a block in the blind spot.
+            arbitraryTarget = 60
+            self.movement.move_to_target(arbitraryTarget)
+            # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
-            # TODO: Drive towards the target. (Waiting for Gilbert)
+            self.movement.move_to_target(target)
+            self.logic.bayesianTargetUpdate(target, self.moduleTimer.millis() - self.module["updateTime"])
 
     ## Set up the beginning of the pickup process.
     def startPickupModule(self):
