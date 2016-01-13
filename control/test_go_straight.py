@@ -9,8 +9,8 @@ from tamproxy.devices import Motor, Gyro
 class TestGoStraight(SyncedSketch):
 
     def setup(self):
-    	left = Motor(self.tamp, 1, 2)
-    	right = Motor(self.tamp, 3, 4)
+        left = Motor(self.tamp, 1, 2)
+        right = Motor(self.tamp, 3, 4)
         gyro = Gyro(self.tamp, 3, integrate=True)
         self.movement = Go_straight(left, right, gyro, Timer())
         self.timer = Timer()

@@ -19,19 +19,19 @@ class Go_straight():
     # @param theta  A number proportional to the angle off from which the
     #               robot is facing.
     def move_to_target(self, theta):
-    	ki = 0
-    	kd = 0
+        ki = 0
+        kd = 0
 
-    	# base speed for motor turning
+        # base speed for motor turning
         # 0 for turning in place
         base_speed = 0
-		
+        
         # PID is here
         # extremely simple PID controller
         # need to tweak to get propper values
         # todo
-       	p = 1
-       	i = .1
+        p = 1
+        i = .1
         d = .5
 
         
@@ -40,21 +40,23 @@ class Go_straight():
         # todo
         while (self.timer.millis() < 2000):
 
-	        # error value
-    	    err = 0 - theta
+            # error value
+            err = 0 - 50
 
-	        # proportional
-			kp = p*err
+            # proportional
+            kp = p*err
+        
+            # integral/adding data points
+            ki = [i*err] + ki
+        
+            # derivative new d*err - previous kd 
+            kd = [d*err] - kd
+        
+            power = kp + ki + kd
 
-			# integral/adding data points
-			ki = [i*err] + ki
-		
-        	# derivative new d*err - previous kd 
-			kd = [d*err] - kd
-		
-        	power = kp + ki + kd
-
-			self.leftMotor.write(0,base_speed - power)
-			self.rightMotor.write(1,base_speed + power)
+            self.leftMotor.write(0,base_speed - power)
+            self.rightMotor.write(1,base_speed + power)
+            print("power is " + power)
+            
 
 
