@@ -5,9 +5,11 @@
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder
 from vision import Vision
+from logic import Logic
+from control import GoStraight
 
 # List of Modules/States. Put any info that needs to persist within the state here.
-MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "blocks": [], "stacks": []}
+MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "target": None, "updateTime": 0}
 MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
 MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
@@ -36,7 +38,6 @@ class Robot(SyncedSketch):
         # Time in milliseconds between pictures being taken.
         self.cameraTimeout = 500
 
-
         # TODO: Figure out which pins are hooked up where.
         # Motor object representing the left motor.
         self.leftMotor = Motor(self.tamp, 1, 2)
@@ -60,6 +61,11 @@ class Robot(SyncedSketch):
         self.conveyorEncoderLimit = 5 * 3200
         # The speed of the conveyor belt. (0-255)
         self.conveyorPower = 80
+
+        # GoStraight object to control movement
+        self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
+        # Logic processor for sensor inputs.
+        self.logic = Logic()
 
         # Start the intake motor.
         intakePower = 150
@@ -89,6 +95,8 @@ class Robot(SyncedSketch):
     ## Set up the beginning of the find process.
     def startFindModule(self):
         self.module = MODULE_FIND
+        self.module["target"] = None
+        self.module["updateTime"] = 0
         self.moduleTimer.reset()
 
     ## Try to find and move towards blocks on the map.
@@ -97,6 +105,7 @@ class Robot(SyncedSketch):
     # Drive towards largest color until it is centered on the screen.
     def runFindModule(self):
         assert MODULE_FIND == self.module
+        target = self.module["target"]
 
         # Check if we need to exit the module.
         if self.checkForBlock() > 0 or self.moduleTimer.millis() > self.module["timeout"]:
@@ -107,21 +116,18 @@ class Robot(SyncedSketch):
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
             self.cameraTimer.reset()
-            self.module["blocks"], self.module["stacks"] = self.vision.processImage()
 
-        blocks = self.module["blocks"]
-        stacks = self.module["stacks"]
+            target = self.module["target"] = self.logic.findTarget(*self.vision.processImage())
+            self.module["updateTime"] = self.moduleTimer.millis()
 
         # Check if we see anything of interest on the screen.
-        if len(blocks) + len(stacks) == 0:
-            # TODO (High priority): Turn to look for blocks. (Waiting for Gilbert)
-            # TODO (Low priority): Make sure not to enter this subroutine when there is a block in the blind spot.
+        if target == None:
+            arbitraryTarget = 60
+            self.movement.move_to_target(arbitraryTarget)
+            # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
-            target = blocks[0]
-            if len(blocks) == 0:
-                target = stacks[0]
-            # TODO: Do some trig to translate the BlockImg objects into angles. Need to do calibration for this.
-            # TODO: Drive towards the target. (Waiting for Gilbert)
+            self.movement.move_to_target(target)
+            self.logic.bayesianTargetUpdate(target, self.moduleTimer.millis() - self.module["updateTime"])
 
     ## Set up the beginning of the pickup process.
     def startPickupModule(self):

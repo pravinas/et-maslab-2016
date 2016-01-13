@@ -1,15 +1,14 @@
 #Go_straight.py
 
-class Go_straight():
+class GoStraight():
 
     ## Initialize a Go_straight object.
     #
     # @param left   A Motor representing the left motor.
     # @param right  A Motor representing the right motor.
-    def __init__(self, left, right, gyro, timer):
+    def __init__(self, left, right, timer):
         self.leftMotor = left
         self.rightMotor = right
-        self.gyro = gyro
         self.timer = timer
         self.timer.reset()
 
