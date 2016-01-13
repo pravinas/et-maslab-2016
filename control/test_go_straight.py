@@ -2,7 +2,7 @@
 #
 # A test file for the control objects.
 
-from go_straight import Go_straight
+from go_straight import GoStraight
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Gyro
 
@@ -12,7 +12,7 @@ class TestGoStraight(SyncedSketch):
     	left = Motor(self.tamp, 1, 2)
     	right = Motor(self.tamp, 3, 4)
         gyro = Gyro(self.tamp, 3, integrate=True)
-        self.movement = Go_straight(left, right, gyro, Timer())
+        self.movement = GoStraight(left, right, gyro, Timer())
         self.timer = Timer()
 
     def loop(self):

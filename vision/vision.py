@@ -66,14 +66,13 @@ class Vision():
 
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
-            print h
             if stacksOnly:
                 if h > 2.3 * w:
                     blocks.append(BlockImg(x + 0.5 * w, y + h, h))
             else:
                 blocks.append(BlockImg(x + 0.5 * w, y + h, h))
 
-        return blocks
+        return sorted(blocks, key = lambda x: x.height, reverse = True)[0]
 
     ## Subroutine of the Vision module, intended to run once every second or so.
     # 
@@ -81,7 +80,6 @@ class Vision():
     #           The first list contains the blocks of our color, and the second list contains stacks.
     def processImage(self):
         retval, frame = self.capture.read()
-        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         blockImg = self.filterBGR(frame, RED if self.myColorIsRed else GREEN)
         otherImg = self.filterBGR(frame, GREEN if self.myColorIsRed else RED)
@@ -91,7 +89,6 @@ class Vision():
         stackImg = self.morph(stackImg)
 
         if self.debug:
-            #cv2.imwrite("frame.png", cv2.cvtColor(frame, cv2.COLOR_HSV2BGR))
             cv2.imwrite("frame.png", frame)
             cv2.imwrite("blockimg.png", cv2.cvtColor(blockImg, cv2.COLOR_GRAY2BGR))
             cv2.imwrite("otherimg.png", cv2.cvtColor(otherImg, cv2.COLOR_GRAY2BGR))
