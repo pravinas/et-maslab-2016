@@ -15,7 +15,7 @@ vision = Vision(False, debug=True)
 if vision.isScreenBlack():
 	print "The screen appears to be black."
 
-for i in range(20):
+for i in range(10):
 	print "~~~~~~~~~"
 	print i, vision.processImage()
 	time.sleep(0.5)

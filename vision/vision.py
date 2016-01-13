@@ -4,6 +4,7 @@
 
 import cv2
 import numpy as np
+import numpy.lib.index_tricks as ndi
 
 ## Define a color as a limit between min and max HSV.
 class Color():
@@ -42,9 +43,8 @@ class Vision():
     #
     # @param myColorIsRed True if we are collecting red 
     def __init__(self, myColorIsRed, debug=False):
-        self.myColor = RED if myColorIsRed else GREEN
-        self.unColor = GREEN if myColorIsRed else RED
-        self.capture = cv2.VideoCapture(0)
+        self.myColorIsRed = myColorIsRed
+        self.capture = cv2.VideoCapture(1)
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 80); # X resolution
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 60); # Y resolution
         self.debug = debug
@@ -63,12 +63,28 @@ class Vision():
         else:
             return cv2.inRange(img, np.array([color.h_min, color.s_min, color.v_min]), np.array([color.h_max, color.s_max, color.v_max]))
 
+    ## Ariel's algorithm for color filtering.
+    # 
+    # @param img An image array in BGR format.
+    # @param matcherFn Are we filtering red or not?
+    # @return An image array where the proper colors are highlighted.
+    def filterBGR(self, img, isRed):
+        binFilter = np.array([0,255], dtype=np.uint8)
+
+        if isRed:
+            newImg = np.choose(np.logical_and(img.T[2] > 1.3 * img.T[0], img.T[2] > 1.3 * img.T[1]).T, binFilter)
+        else: 
+            newImg = np.choose(np.logical_and(img.T[1] > 1.3 * img.T[0], img.T[1] > 1.3 * img.T[2]).T, binFilter)
+
+        return newImg
+
+
     ## Clean up a binary image array using a morphological opening function.
     #
     # @param img A binary image array
     # @return A cleaned up version of the input image.
     def morph(self, img):
-        kernel = np.ones((5,5), np.uint8)
+        kernel = np.ones((2,2), np.uint8)
         return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations = 3)
 
     ## Take an input binary image and find the blocks in it.
@@ -95,17 +111,24 @@ class Vision():
     #           The first list contains the blocks of our color, and the second list contains stacks.
     def processImage(self):
         retval, frame = self.capture.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        blockImg = stackImg = self.filterHSV(frame, self.myColor)
-        stackImg = cv2.bitwise_or(stackImg, self.filterHSV(frame, self.unColor))
+        #blockImg = self.filterHSV(frame, RED if self.myColorIsRed else GREEN)
+        #otherImg = self.filterHSV(frame, GREEN if self.myColorIsred else RED)
+
+        blockImg = self.filterBGR(frame, self.myColorIsRed)
+        otherImg = self.filterBGR(frame, not self.myColorIsRed)
+
+        stackImg = cv2.bitwise_or(otherImg, blockImg)
 
         blockImg = self.morph(blockImg)
         stackImg = self.morph(stackImg)
 
         if self.debug:
-            cv2.imwrite("frame.png", cv2.cvtColor(frame, cv2.COLOR_HSV2BGR))
+            #cv2.imwrite("frame.png", cv2.cvtColor(frame, cv2.COLOR_HSV2BGR))
+            cv2.imwrite("frame.png", frame)
             cv2.imwrite("blockimg.png", cv2.cvtColor(blockImg, cv2.COLOR_GRAY2BGR))
+            cv2.imwrite("otherimg.png", cv2.cvtColor(otherImg, cv2.COLOR_GRAY2BGR))
             cv2.imwrite("stackimg.png", cv2.cvtColor(stackImg, cv2.COLOR_GRAY2BGR))
 
         blocks = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.height, reverse = True)
@@ -118,11 +141,8 @@ class Vision():
     # @return Whether or not the whole screen is black.
     def isScreenBlack(self):
         retval, frame = self.capture.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        blackImg = self.filterHSV(frame, BLACK)
-        blackImg = self.morph(blackImg)
-
-        return len(cv2.findContours(blackImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]) < 2
+        #TODO
+        return False
 
 
         

@@ -11,19 +11,19 @@ class MotorWrite(SyncedSketch):
         self.motor2 = Motor(self.tamp, 5, 6)
         self.motor2.write(1,0)
         self.delta = 1
-        self.motorval = 160
+        self.motorval = 70
         self.timer = Timer()
         self.steps = 0
 
     def loop(self):
-        if self.steps < 4:
+        if self.steps < 2:
             if (self.timer.millis() > 5000):
                 self.timer.reset()
                 self.motorval = -self.motorval
                 self.motor1.write(self.motorval>0, abs(self.motorval))
                 self.motor2.write(self.motorval>0, abs(self.motorval))
                 self.steps += 1
-        elif self.steps < 6:
+        elif self.steps < 5:
             if (self.timer.millis() > 5000):
                 self.timer.reset()
                 self.motorval = -self.motorval
