@@ -40,7 +40,7 @@ class GoStraight():
         while (self.timer.millis() < 2000):
 
             # error value
-            err = 0 - 50
+            err = 0 - 1
 
             # proportional
             kp = p*err
@@ -50,12 +50,10 @@ class GoStraight():
         
             # derivative new d*err - previous kd 
             kd = [d*err] - kd
-        
-            power = kp + ki + kd
 
+            power = kp + ki + kd
             self.leftMotor.write(0,base_speed - power)
             self.rightMotor.write(1,base_speed + power)
-            print("power is " + power)
-            
+            print(power)
 
 
