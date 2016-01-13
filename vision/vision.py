@@ -4,17 +4,6 @@
 
 import cv2
 import numpy as np
-import numpy.lib.index_tricks as ndi
-
-## Define a color as a limit between min and max HSV.
-class Color():
-    def __init__(self, h_min, h_max, s_min, s_max, v_min, v_max):
-        self.h_min = h_min
-        self.h_max = h_max
-        self.s_min = s_min
-        self.s_max = s_max
-        self.v_min = v_min
-        self.v_max = v_max
 
 ## Define an image of a block as a location on a screen and its area.
 # (0, 0) is the upper left hand corner of the screen.
@@ -31,11 +20,9 @@ class BlockImg():
     def __repr__(self):
         return "Block: " + str((self.x,self.y,self.height))
 
-BLACK = Color(0, 255, 20, 255, 0, 20)       ## The color Black
-WHITE = Color(0, 255, 0, 25, 240, 255)      ## The color White
-BLUE  = Color(100, 140, 100, 200, 50, 255)  ## The color Blue
-GREEN = Color(37, 96, 50, 230, 40, 230)     ## The color Green
-RED   = Color(150, 15, 50, 230, 50, 230)    ## The color Red
+## Color functions: Take a numpy array as input, and return a boolean array.
+GREEN = lambda img: np.logical_and(img.T[1] > 1.1 * img.T[0], img.T[1] > 1.1 * img.T[2]).T
+RED   = lambda img: np.logical_and(img.T[2] > 1.3 * img.T[0], img.T[2] > 1.3 * img.T[1]).T
 
 class Vision():
 
@@ -49,32 +36,14 @@ class Vision():
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 60); # Y resolution
         self.debug = debug
 
-    ## Turn a color image into a binary image where colors within the tolerance
-    # are highlighted.
-    #
-    # @param img An image array.
-    # @param color The Color to filter.
-    # @return An image array where the proper colors are highlighted.
-    def filterHSV(self, img, color):
-        if (color.h_min > color.h_max):
-            out1 = cv2.inRange(img, np.array([color.h_max, color.s_min, color.v_min]), np.array([179, color.s_max, color.v_max]))
-            out2 = cv2.inRange(img, np.array([0, color.s_min, color.v_min]), np.array([color.h_min, color.s_max, color.v_max]))
-            return cv2.bitwise_or(out1, out2)
-        else:
-            return cv2.inRange(img, np.array([color.h_min, color.s_min, color.v_min]), np.array([color.h_max, color.s_max, color.v_max]))
-
     ## Ariel's algorithm for color filtering.
     # 
     # @param img An image array in BGR format.
-    # @param matcherFn Are we filtering red or not?
+    # @param matcherFn A function that turns a numpy array into a numpy with the color highlighted.
     # @return An image array where the proper colors are highlighted.
-    def filterBGR(self, img, isRed):
+    def filterBGR(self, img, matcherFn):
         binFilter = np.array([0,255], dtype=np.uint8)
-
-        if isRed:
-            newImg = np.choose(np.logical_and(img.T[2] > 1.3 * img.T[0], img.T[2] > 1.3 * img.T[1]).T, binFilter)
-        else: 
-            newImg = np.choose(np.logical_and(img.T[1] > 1.3 * img.T[0], img.T[1] > 1.3 * img.T[2]).T, binFilter)
+        newImg = np.choose(matcherFn(img), binFilter)
 
         return newImg
 
@@ -87,16 +56,17 @@ class Vision():
         kernel = np.ones((2,2), np.uint8)
         return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations = 3)
 
-    ## Take an input binary image and find the blocks in it.
+    ## Take an input binary image and find the largest block in it.
     #
     # @param img A cleaned up binary image.
     # @return A list of BlockImg objects.
-    def findBlocksInBinaryImage(self, img, stacksOnly=False):
-        image, contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    def findLargestBlock(self, img, stacksOnly=False):
+        image, contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         blocks = []
 
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
+            print h
             if stacksOnly:
                 if h > 2.3 * w:
                     blocks.append(BlockImg(x + 0.5 * w, y + h, h))
@@ -113,12 +83,8 @@ class Vision():
         retval, frame = self.capture.read()
         #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        #blockImg = self.filterHSV(frame, RED if self.myColorIsRed else GREEN)
-        #otherImg = self.filterHSV(frame, GREEN if self.myColorIsred else RED)
-
-        blockImg = self.filterBGR(frame, self.myColorIsRed)
-        otherImg = self.filterBGR(frame, not self.myColorIsRed)
-
+        blockImg = self.filterBGR(frame, RED if self.myColorIsRed else GREEN)
+        otherImg = self.filterBGR(frame, GREEN if self.myColorIsRed else RED)
         stackImg = cv2.bitwise_or(otherImg, blockImg)
 
         blockImg = self.morph(blockImg)
@@ -131,18 +97,17 @@ class Vision():
             cv2.imwrite("otherimg.png", cv2.cvtColor(otherImg, cv2.COLOR_GRAY2BGR))
             cv2.imwrite("stackimg.png", cv2.cvtColor(stackImg, cv2.COLOR_GRAY2BGR))
 
-        blocks = sorted(self.findBlocksInBinaryImage(blockImg, False), key = lambda x: x.height, reverse = True)
-        stacks = sorted(self.findBlocksInBinaryImage(stackImg, True), key = lambda x: x.height, reverse = True)
+        block = self.findLargestBlock(blockImg)
+        stack = self.findLargestBlock(stackImg)
 
-        return (blocks, stacks)
+        return (block, stack)
 
     ## Distinguish if the whole screen is black, for troubleshooting.
     #
     # @return Whether or not the whole screen is black.
     def isScreenBlack(self):
         retval, frame = self.capture.read()
-        #TODO
-        return False
+        return not np.any(frame)
 
 
         
