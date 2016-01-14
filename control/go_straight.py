@@ -57,5 +57,6 @@ class GoStraight():
                 self.leftMotor.write(0,base_speed - power)
                 self.rightMotor.write(1,base_speed + power)
                 print(power)
+        
 
 
