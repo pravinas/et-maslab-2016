@@ -40,7 +40,7 @@ class GoStraight():
         while (self.timer.millis() < 2000):
 
             # error value
-            err = 0 - 1
+            err = 0 - 50
 
             # proportional
             kp = p*err
