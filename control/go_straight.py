@@ -18,42 +18,44 @@ class GoStraight():
     # @param theta  A number proportional to the angle off from which the
     #               robot is facing.
     def move_to_target(self, theta):
-        ki = 0
-        kd = 0
+        if self.timer.millis() > 5000:
+            self.timer.reset()
+            ki = 0
+            kd = 0
 
-        # base speed for motor turning
-        # 0 for turning in place
-        base_speed = 0
-        
-        # PID is here
-        # extremely simple PID controller
-        # need to tweak to get propper values
-        # todo
-        p = 1
-        i = .1
-        d = .5
+            # base speed for motor turning
+            # 0 for turning in place
+            base_speed = 0
 
-        
-        # Will run for this amount of time before stopping
-        # should be changed to stop when reaching cube/object
-        # todo
-        while (self.timer.millis() < 2000):
+            # PID is here
+            # extremely simple PID controller
+            # need to tweak to get propper values
+            # todo
+            p = 1
+            i = .1
+            d = .5
 
-            # error value
-            err = 0 - 50
+            # Will run for this amount of time before stopping
+            # should be changed to stop when reaching cube/object
+            # todo
 
-            # proportional
-            kp = p*err
-        
-            # integral/adding data points
-            ki = [i*err] + ki
-        
-            # derivative new d*err - previous kd 
-            kd = [d*err] - kd
+            while (self.timer.millis() < 2000):
+                # error value
+                err = 0 - 50
 
-            power = kp + ki + kd
-            self.leftMotor.write(0,base_speed - power)
-            self.rightMotor.write(1,base_speed + power)
-            print(power)
+                # proportional
+                kp = p*err
+
+                # integral/adding data points
+                ki = [i*err] + ki
+
+                # derivative new d*err - previous kd 
+                kd = [d*err] - kd
+
+                power = kp + ki + kd
+
+                self.leftMotor.write(0,base_speed - power)
+                self.rightMotor.write(1,base_speed + power)
+                print(power)
 
 
