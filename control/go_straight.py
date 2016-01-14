@@ -39,9 +39,9 @@ class GoStraight():
             # should be changed to stop when reaching cube/object
             # todo
 
-            while (self.timer.millis() < 2000):
+            while self.timer.millis() < 2000:
                 # error value
-                err = 0 - 50
+                err = 0 - theta
 
                 # proportional
                 kp = p*err
