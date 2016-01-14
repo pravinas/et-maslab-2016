@@ -30,13 +30,17 @@ class Robot(SyncedSketch):
         # The color of block we care about. Should be RED or GREEN
         self.blockColor = RED   # TODO: Check which color we care about.
 
-        # Vision object to read data from the camera.
-        self.vision = Vision(self.blockColor)
+        # Width of an image taken by the camera.
+        self.cameraWidth = 80
+        # Height of an image taken by the camera.
+        self.cameraHeight = 60
         # Timer object describing how much time has passed since the last 
         # camera input was processed.
         self.cameraTimer = Timer()
         # Time in milliseconds between pictures being taken.
         self.cameraTimeout = 500
+        # Vision object to read data from the camera.
+        self.vision = Vision(self.blockColor, self.cameraWidth, self.cameraHeight)
 
         # TODO: Figure out which pins are hooked up where.
         # Motor object representing the left motor.
@@ -65,7 +69,7 @@ class Robot(SyncedSketch):
         # GoStraight object to control movement
         self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
         # Logic processor for sensor inputs.
-        self.logic = Logic()
+        self.logic = Logic(self.cameraWidth, self.cameraHeight)
 
         # Start the intake motor.
         intakePower = 150

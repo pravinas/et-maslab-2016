@@ -29,11 +29,13 @@ class Vision():
     ## Create an instance of the Vision module.
     #
     # @param myColorIsRed True if we are collecting red 
-    def __init__(self, myColorIsRed, debug=False):
+    # @param width  Width of the camera image.
+    # @param height Height of the camera image.
+    def __init__(self, myColorIsRed, width, height, debug=False):
         self.myColorIsRed = myColorIsRed
         self.capture = cv2.VideoCapture(1)
-        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 80); # X resolution
-        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 60); # Y resolution
+        self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width); # X resolution
+        self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height); # Y resolution
         self.debug = debug
 
     ## Ariel's algorithm for color filtering.
@@ -62,7 +64,7 @@ class Vision():
     # @return A list of BlockImg objects.
     def findLargestBlock(self, img, stacksOnly=False):
         image, contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        blocks = []
+        blocks = [BlockImg(0,0,0)]
 
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
