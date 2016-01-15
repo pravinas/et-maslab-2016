@@ -10,7 +10,7 @@ from control import GoStraight
 
 # List of Modules/States. Put any info that needs to persist within the state here.
 MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "target": None, "updateTime": 0}
-MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
+MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000, "blocksPickedUp": 0}
 MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
 RED = True
@@ -175,8 +175,15 @@ class Robot(SyncedSketch):
         # Stop the motor when it gets to the bottom.
         if encval < 0 and self.moduleTimer.millis() > 200:
             self.conveyorMotor.write(False, 0)
-            print "Going from PICKUP to FIND"
-            self.startFindModule()
+            self.module["blocksPickedUp"] += 1
+
+            # Switch modules
+            if self.module["blocksPickedUp"] >= 4:
+                print "Going from PICKUP to DROPOFF"
+                self.startDropoffModule()
+            else:
+                print "Going from PICKUP to FIND"
+                self.startFindModule()
             return
 
     ## Set up the beginning of the dropoff process.

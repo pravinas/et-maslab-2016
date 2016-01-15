@@ -29,10 +29,8 @@ Possible Failure modes:
 
 ### The PICKUP Module:
 
-This module launches when a block is sensed, interrupting the FIND process. TODO: How to sense block.
-
-TODO
+This module launches when a block is sensed using the color sensor, interrupting the FIND process. It uses the conveyor belt motor encoders to figure out how far it has gone, then reverses itself until the conveyor belt is back in place.
 
 ### The DROPOFF Module:
 
-TODO
+This module opens the back door and drives forward after the PICKUP module has been completed 4 times.
