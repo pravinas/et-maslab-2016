@@ -7,7 +7,7 @@ from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Gyro
 
 class TestGoStraight(SyncedSketch):
-    #got rid of gyro as GoStraight param to make work
+    
     def setup(self):
         left = Motor(self.tamp, 1, 2)
         right = Motor(self.tamp, 3, 4)
@@ -21,7 +21,7 @@ class TestGoStraight(SyncedSketch):
 
             # Intended behavior: Have the robot turn in a circle.
             # move_to_target() was not defined
-            self.movement(90)
+            self.movement.move_to_target(90)
             
 if __name__ == "__main__":
     sketch = TestGoStraight(1, -0.00001, 100)
