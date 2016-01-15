@@ -3,7 +3,7 @@
 # The main sketch for the robot's processes.
 
 from tamproxy import SyncedSketch, Timer
-from tamproxy.devices import Motor, Encoder
+from tamproxy.devices import Motor, Encoder, Servo
 from vision import Vision
 from logic import Logic
 from control import GoStraight
@@ -71,6 +71,9 @@ class Robot(SyncedSketch):
         # The speed of the conveyor belt. (0-255)
         self.conveyorPower = 130
 
+        # Servo controlling the door of the collection chamber.
+        self.backDoorServo = Servo(self.tamp, 17)
+
         # GoStraight object to control movement
         self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
         # Logic processor for sensor inputs.
@@ -110,7 +113,9 @@ class Robot(SyncedSketch):
     # 
     # Turn until color is detected.
     # Drive towards largest color until it is centered on the screen.
-    def runFindModule(self):
+    #
+    # @param arbitraryTarget    A target angle to tell the robot it wants to reach.
+    def runFindModule(self, arbitraryTarget = 60):
         assert MODULE_FIND == self.module
         target = self.module["target"]
 
@@ -135,7 +140,6 @@ class Robot(SyncedSketch):
 
         # Check if we see anything of interest on the screen.
         if target == None:
-            arbitraryTarget = 60
             self.movement.move_to_target(arbitraryTarget)
             # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
@@ -166,22 +170,36 @@ class Robot(SyncedSketch):
 
         # Move up the conveyor belt until it hits the encoder limit.
         if encval > self.conveyorEncoderLimit:
-            self.conveyorMotor.write(BACKWARD, self.conveyorPower)
+            self.conveyorMotor.write(False, self.conveyorPower)
 
         # Stop the motor when it gets to the bottom.
         if encval < 0 and self.moduleTimer.millis() > 200:
-            self.conveyorMotor.write(BACKWARD, 0)
+            self.conveyorMotor.write(False, 0)
             print "Going from PICKUP to FIND"
             self.startFindModule()
             return
 
-    ## TODO: Document this.
+    ## Set up the beginning of the dropoff process.
     def startDropoffModule(self):
-        raise NotImplementedError
+        self.module = MODULE_DROPOFF
+        self.moduleTimer.reset()
 
-    ## TODO: Document this.
-    def runDropoffModule(self):
-        raise NotImplementedError
+        # TODO: Set the servo to open.
+
+    ## Open the back door and drive "forwards," avoiding what needs to be avoided.
+    #
+    # @param waitTime   Time in ms to wait for the door to actually open.
+    def runDropoffModule(self, waitTime = 500):
+        assert MODULE_DROPOFF == self.module
+
+        # Allow timeout.
+        if self.moduleTimer.millis() > self.module["timeout"]:
+            print "Timed out from DROPOFF to FIND"
+            self.startFindModule()
+            return
+
+        if self.moduleTimer.millis() > waitTime:
+            # TODO: Drive forwards after opening the door.
 
     ## Make sure that the intake motor does not stall.
     #  If so, reverse the intake motors.
@@ -215,8 +233,8 @@ class Robot(SyncedSketch):
     ## Check what color a freshly caught block is.
     #
     # @return 0 if the color sensor does not see a block.
-    #         1 if the color sensor sees a red block
-    #         2 if the color sensor sees a green block
+    #         1 if the color sensor sees our color of block
+    #         2 if the color sensor sees not our color of block.
     def checkForBlock(self):
         # TODO
         raise NotImplementedError
