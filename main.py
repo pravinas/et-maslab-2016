@@ -14,10 +14,7 @@ MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000}
 MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
 
 RED = True
-GREEN = not RED
-
-FORWARD = 1
-BACKWARD = 0
+GREEN = False
 
 class Robot(SyncedSketch):
 
@@ -56,6 +53,14 @@ class Robot(SyncedSketch):
         self.intakeMotor = Motor(self.tamp, 9, 10)
         # Encoder object for the intake motor.
         self.intakeEncoder = Encoder(self.tamp, 11, 12)
+        # The limit point at which the motor is considered stalled.
+        self.intakeEncoderLimit = 150
+        # The speed of the intake motors.
+        self.intakePower = 150
+        # Timer object to moderate checking for intake errors.
+        self.intakeTimer = Timer()
+        # Are the intake motors going forward? True if so, False if reversing.
+        self.intakeDirection = True
 
         # Motor object representing the conveyor belt motor.
         self.conveyorMotor = Motor(self.tamp, 13, 14)
@@ -64,7 +69,7 @@ class Robot(SyncedSketch):
         # The encoder count for as far as we want the encoder to move.
         self.conveyorEncoderLimit = 5 * 3200
         # The speed of the conveyor belt. (0-255)
-        self.conveyorPower = 80
+        self.conveyorPower = 130
 
         # GoStraight object to control movement
         self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
@@ -72,9 +77,7 @@ class Robot(SyncedSketch):
         self.logic = Logic(self.cameraWidth, self.cameraHeight)
 
         # Start the intake motor.
-        intakePower = 150
-        intakeDirection = 1
-        self.intakeMotor.write(intakePower, intakeDirection)
+        self.intakeMotor.write(self.intakeDirection, self.intakePower)
 
         self.checkForInitializationErrors()
 
@@ -87,14 +90,14 @@ class Robot(SyncedSketch):
             self.runPickupModule()
 
         elif (self.module == MODULE_DROPOFF):
-            # TODO
-            pass
+            self.runDropoffModule()
 
         else:
             print "Unexpected module number:", self.module
             raise Exception()
 
-        # TODO: Passive processes, such as intake motors and interrupts.
+        # Passive processes go here.
+        self.checkForIntakeErrors()
 
     ## Set up the beginning of the find process.
     def startFindModule(self):
@@ -111,8 +114,14 @@ class Robot(SyncedSketch):
         assert MODULE_FIND == self.module
         target = self.module["target"]
 
+        # Allow timeout.
+        if self.moduleTimer.millis() > self.module["timeout"]:
+            print "Timed out from FIND to PICKUP"
+            self.startPickupModule()
+            return
+
         # Check if we need to exit the module.
-        if self.checkForBlock() > 0 or self.moduleTimer.millis() > self.module["timeout"]:
+        if self.checkForBlock() > 0 : 
             print "Going from FIND to PICKUP"
             self.startPickupModule()
             return
@@ -137,7 +146,7 @@ class Robot(SyncedSketch):
     def startPickupModule(self):
         self.module = MODULE_PICKUP
         self.conveyorEncoder.write(0)
-        self.conveyorMotor.write(FORWARD, self.conveyorPower)
+        self.conveyorMotor.write(True, self.conveyorPower)
         self.moduleTimer.reset()
 
     ## Pick up a block from the block capture mechanism.
@@ -165,6 +174,39 @@ class Robot(SyncedSketch):
             print "Going from PICKUP to FIND"
             self.startFindModule()
             return
+
+    ## TODO: Document this.
+    def startDropoffModule(self):
+        raise NotImplementedError
+
+    ## TODO: Document this.
+    def runDropoffModule(self):
+        raise NotImplementedError
+
+    ## Make sure that the intake motor does not stall.
+    #  If so, reverse the intake motors.
+    #
+    # @param checkTime  Time in ms between checking stalls.
+    # @param reverseTime    Time in ms that the intake motors will reverse if needed.
+    def checkForIntakeErrors(self, checkTime = 100, reverseTime = 2000):
+
+        if self.intakeDirection:    # We are moving forward.
+            if self.intakeTimer.millis() > checkTime:
+                self.intakeTimer.reset()
+                if self.intakeEncoder.val < self.intakeEncoderLimit: # if we're stalled
+                    self.intakeDirection = False
+                    self.intakeMotor.write(self.intakeDirection, self.intakePower)
+                else: # if we're not stalled
+                    self.intakeEncoder.write(0)
+
+        else:                       # We are reversing the motors.
+            if self.intakeTimer.millis() > reverseTime:
+                self.intakeTimer.reset()
+                self.intakeDirection = True
+                self.intakeMotor.write(self.intakeDirection, self.intakePower)
+                self.intakeEncoder.write(0)
+
+        self.intakeMotor.write(self.intakeDirection, self.intakePower)
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):
