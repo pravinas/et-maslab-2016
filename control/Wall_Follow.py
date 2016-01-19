@@ -1,18 +1,19 @@
 #Wall_Follow.py
 
-class WallFollow(self):
-	## Initialize Wall Following
-	#
+class WallFollow():
+
+    ## Initialize a WallFollow object.
+    #
     # @param left   A Motor representing the left motor.
     # @param right  A Motor representing the right motor.
     # @param timer  A Timer for moderating data taking.
-	def __init__(self,left,right,timer):
-		self.leftmotor = left
-		self.rightmotor = right
-		self.timer = timer
-		self.timer.reset()
+    def __init__(self, left, right, timer):
+        self.leftMotor = left
+        self.rightMotor = right
+        self.timer = timer
+        self.timer.reset()
 
-		# Number of values to record
+        # Number of values to record
         self.recordLen = 10
         # Record of values from youngest to oldest.
         self.record = []
@@ -22,22 +23,20 @@ class WallFollow(self):
         self.ki = 0.1
         self.kd = 0.5
 
-		
-	# Make module to give theta from LRIR inputs
-	# TODO
-
-	## Given value from LRIR sensors, makes bot move forward 
+    ## Given a distance value from LRIR0 make bot move to be 14 cm from wall.
     #
-    # @param theta A number proportional to the angle between the wall and 
-    # 				where the bot is facing
+    # @param distance a number proportional to the distance between the LRIR sensor and a wall
+    #                   
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
-	def Follow_Wall(self, theta, speed = 0):
-		if self.timer.millis() > 100:
-			self.timer.reset(0)
 
-			# error value
-            err = 0 - theta
+    def move_to_target(self, distance, speed = 0):
+        if self.timer.millis() > 100:
+            self.timer.reset()
+
+            # error value
+            # 20 from hypotenuse of 45,45,90 triangle with 14.14 long sides
+            err = 20 - distance 
 
             # Integrate over the last several timesteps.
             self.record.insert(0, err)
@@ -57,5 +56,5 @@ class WallFollow(self):
     def reset(self):
         self.timer.reset()
         self.record = []
-
+        
 
