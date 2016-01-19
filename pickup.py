@@ -22,13 +22,11 @@ class PickupModule():
     #
     # @return   The value of the next module to return to.
     def runPickupModule(self):
-        assert MODULE_PICKUP == self.module
 
         # Allow timeout.
         if self.moduleTimer.millis() > self.module["timeout"]:
             print "Timed out from PICKUP to FIND"
-            self.startFindModule()
-            return
+            return MODULE_FIND
 
         encval = self.conveyorEncoder.val
 
@@ -44,8 +42,9 @@ class PickupModule():
             # Switch modules
             if self.module["blocksPickedUp"] >= 4:
                 print "Going from PICKUP to DROPOFF"
-                self.startDropoffModule()
+                return MODULE_DROPOFF
             else:
                 print "Going from PICKUP to FIND"
-                self.startFindModule()
-            return
+                return MODULE_FIND
+        
+        return MODULE_PICKUP

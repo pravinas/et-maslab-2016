@@ -9,8 +9,7 @@ from find import FindModule
 from pickup import PickupModule
 from dropoff import DropoffModule
 
-RED = True
-GREEN = False
+from constants import *
 
 class Robot(SyncedSketch):
 
@@ -74,12 +73,24 @@ class Robot(SyncedSketch):
 
         self.updateState(self.module.run())
 
-        else:
-            print "Unexpected module number:", self.module
-            raise Exception()
-
         # Passive processes go here.
         self.checkForIntakeErrors()
+
+    ## TODO: Documentation
+    def updateState(self, module):
+        if self.module == module:
+            return
+        if module == MODULE_FIND:
+            find.start()
+            self.module = MODULE_FIND
+            return
+        if module == MODULE_PICKUP:
+            pickup.start()
+            self.module = MODULE_PICKUP
+            return
+        if module == MODULE_DROPOFF:
+            self.module = MODULE_PICKUP
+            return
 
 
     ## Make sure that the intake motor does not stall.
@@ -109,7 +120,9 @@ class Robot(SyncedSketch):
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):
-        assert not self.find.vision.isScreenBlack()
+        assert not self.find.checkForInitializationErrors()
+        assert not self.pickup.checkForInitializationErrors()
+        assert not self.dropoff.checkForInitializationErrors()
 
     ## Check what color a freshly caught block is.
     #

@@ -6,10 +6,11 @@ from tamproxy import Timer()
 from vision import Vision
 from logic import Logic
 from control import GoStraight
+from constants import *
 
 class FindModule():
 
-    def __init__(self, timer, leftMotor, rightMotor, blockColor):
+    def __init__(self, timer, leftMotor, rightMotor, blockColor, logic):
 
         # Timeout to make sure we don't run over.
         self.timeout = 7000
@@ -49,14 +50,12 @@ class FindModule():
         # Allow timeout.
         if self.timer.millis() > self.timeout:
             print "Timed out from FIND to PICKUP"
-            self.startPickupModule()
-            return
+            return MODULE_PICKUP
 
         # Check if we need to exit the module.
         if self.checkForBlock() > 0 : 
             print "Going from FIND to PICKUP"
-            self.startPickupModule()
-            return
+            return MODULE_PICKUP
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
@@ -72,3 +71,5 @@ class FindModule():
         else:
             self.movement.move_to_target(target)
             self.logic.bayesianTargetUpdate(target, self.timer.millis() - self.updateTime)
+
+        return MODULE_FIND

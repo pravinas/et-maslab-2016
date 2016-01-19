@@ -1,0 +1,8 @@
+## constants.py
+
+RED = True
+GREEN = False
+
+MODULE_FIND = 0
+MODULE_PICKUP = 1
+MODULE_DROPOFF = 2

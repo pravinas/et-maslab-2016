@@ -14,7 +14,7 @@ class Logic():
     # @param stack  The stack data that is output from the camera.
     # @return   An angle in rads corresponding to the block, if it exists, otherwise an 
     #           angle corresponding to the stack. If neither exists, return None.
-    def findTargetFromCameraData(self, block, stack):
+    def findTarget(self, block, stack):
         if block.height == 0:
             if stack.height == 0:
                 return None
