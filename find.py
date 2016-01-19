@@ -30,9 +30,6 @@ class FindModule():
         # Logic object for calculations
         self.logic = logic
 
-        # Logic processor for sensor inputs.
-        self.logic = Logic(self.vision.width, self.vision.height)
-
     
     ## Set up the beginning of the find process.
     def start(self):
