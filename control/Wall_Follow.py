@@ -12,6 +12,16 @@ class WallFollow(self):
 		self.timer = timer
 		self.timer.reset()
 
+		# Number of values to record
+        self.recordLen = 10
+        # Record of values from youngest to oldest.
+        self.record = []
+
+        # Tweak values as needed
+        self.kp = 1.0
+        self.ki = 0.1
+        self.kd = 0.5
+
 		
 	# Make module to give theta from LRIR inputs
 	# TODO
