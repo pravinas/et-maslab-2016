@@ -13,14 +13,16 @@ class WallFollow(self):
 		self.timer.reset()
 
 		
-	#IR input
-	## Given value from LRIR sensor, makes bot move forward 
+	# Make module to give theta from LRIR inputs
+	# TODO
+
+	## Given value from LRIR sensors, makes bot move forward 
     #
-    # @param LRIR  A number proportional to the distance between a wall a LRIR sensor
-    # 
+    # @param theta A number proportional to the angle between the wall and 
+    # 				where the bot is facing
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
-	def Follow_Wall(self, LRIR, speed = 0):
+	def Follow_Wall(self, theta, speed = 0):
 		if self.timer.millis() > 100:
 			self.timer.reset(0)
 
