@@ -3,11 +3,13 @@
 # Implements the PICKUP module of the competition code.
 
 class PickupModule():
-    def __init__(self, conveyorMotor, conveyorEncoder, conveyorPower, conveyorEncoderLimit):
+    def __init__(self, timer, conveyorMotor, conveyorEncoder, conveyorPower, conveyorEncoderLimit):
+        self.timer = timer
         self.conveyorMotor = conveyorMotor
         self.conveyorEncoder = conveyorEncoder
         self.conveyorPower = conveyorPower
         self.conveyorEncoderLimit = conveyorEncoderLimit
+        self.blocksPickedUp = 0
     
     ## Set up the beginning of the pickup process.
     def startPickupModule(self):
@@ -35,12 +37,12 @@ class PickupModule():
             self.conveyorMotor.write(False, self.conveyorPower)
 
         # Stop the motor when it gets to the bottom.
-        if encval < 0 and self.moduleTimer.millis() > 200:
+        if encval < 0 and self.timer.millis() > 200:
             self.conveyorMotor.write(False, 0)
-            self.module["blocksPickedUp"] += 1
+            self.blocksPickedUp += 1
 
             # Switch modules
-            if self.module["blocksPickedUp"] >= 4:
+            if self.blocksPickedUp >= 4:
                 print "Going from PICKUP to DROPOFF"
                 return MODULE_DROPOFF
             else:

@@ -5,6 +5,9 @@
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder, Servo
 
+from vision import Vision
+from logic import Logic
+
 from find import FindModule
 from pickup import PickupModule
 from dropoff import DropoffModule
@@ -56,10 +59,15 @@ class Robot(SyncedSketch):
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, self.intakePower)
 
+        # Logic object for FIND module
+        self.logic = Logic(imgWidth=80, imgHeight=60)
+        # Vision object for FIND module
+        self.vision = Vision(self.blockColor, 80, 60)
+
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
         # Runs the FIND process
-        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.blockColor)
+        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.vision, self.logic)
         # Runs the PICKUP process
         self.pickup = PickupModule(self.moduleTimer)
         # Runs the DROPOFF process

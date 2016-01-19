@@ -2,15 +2,13 @@
 #
 # Implements the FIND module of the competition code.
 
-from tamproxy import Timer()
-from vision import Vision
-from logic import Logic
+from tamproxy import Timer
 from control import GoStraight
 from constants import *
 
 class FindModule():
 
-    def __init__(self, timer, leftMotor, rightMotor, blockColor, logic):
+    def __init__(self, timer, leftMotor, rightMotor, vision, logic):
 
         # Timeout to make sure we don't run over.
         self.timeout = 7000
@@ -27,7 +25,10 @@ class FindModule():
         # Time in milliseconds between pictures being taken.
         self.cameraTimeout = 500
         # Vision object to read data from the camera.
-        self.vision = Vision(blockColor, width = 80, height = 60)
+        self.vision = vision
+
+        # Logic object for calculations
+        self.logic = logic
 
         # Logic processor for sensor inputs.
         self.logic = Logic(self.vision.width, self.vision.height)
