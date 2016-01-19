@@ -4,14 +4,10 @@
 
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder, Servo
-from vision import Vision
-from logic import Logic
-from control import GoStraight
 
-# List of Modules/States. Put any info that needs to persist within the state here.
-MODULE_FIND     = {"name": "FIND"   , "timeout": 7000, "target": None, "updateTime": 0}
-MODULE_PICKUP   = {"name": "PICKUP" , "timeout": 7000, "blocksPickedUp": 0}
-MODULE_DROPOFF  = {"name": "DROPOFF", "timeout": 7000}
+from find import FindModule
+from pickup import PickupModule
+from dropoff import DropoffModule
 
 RED = True
 GREEN = False
@@ -19,25 +15,9 @@ GREEN = False
 class Robot(SyncedSketch):
 
     def setup(self):
-        # Describes which stage of the program is running.
-        self.module = MODULE_FIND
-        # Timer object describing how long the current module has been running.
-        self.moduleTimer = Timer()
 
         # The color of block we care about. Should be RED or GREEN
         self.blockColor = RED   # TODO: Check which color we care about.
-
-        # Width of an image taken by the camera.
-        self.cameraWidth = 80
-        # Height of an image taken by the camera.
-        self.cameraHeight = 60
-        # Timer object describing how much time has passed since the last 
-        # camera input was processed.
-        self.cameraTimer = Timer()
-        # Time in milliseconds between pictures being taken.
-        self.cameraTimeout = 500
-        # Vision object to read data from the camera.
-        self.vision = Vision(self.blockColor, self.cameraWidth, self.cameraHeight)
 
         # TODO: Figure out which pins are hooked up where.
         # Motor object representing the left motor.
@@ -74,26 +54,25 @@ class Robot(SyncedSketch):
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, 17)
 
-        # GoStraight object to control movement
-        self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
-        # Logic processor for sensor inputs.
-        self.logic = Logic(self.cameraWidth, self.cameraHeight)
-
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, self.intakePower)
+
+        # Timer object describing how long the current module has been running.
+        self.moduleTimer = Timer()
+        # Runs the FIND process
+        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.blockColor)
+        # Runs the PICKUP process
+        self.pickup = PickupModule(self.moduleTimer)
+        # Runs the DROPOFF process
+        self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo)
+        # Describes which stage of the program is running.
+        self.module = MODULE_FIND
 
         self.checkForInitializationErrors()
 
     def loop(self):
 
-        if (self.module == MODULE_FIND):
-            self.runFindModule()
-
-        elif (self.module == MODULE_PICKUP):
-            self.runPickupModule()
-
-        elif (self.module == MODULE_DROPOFF):
-            self.runDropoffModule()
+        self.updateState(self.module.run())
 
         else:
             print "Unexpected module number:", self.module
@@ -102,111 +81,6 @@ class Robot(SyncedSketch):
         # Passive processes go here.
         self.checkForIntakeErrors()
 
-    ## Set up the beginning of the find process.
-    def startFindModule(self):
-        self.module = MODULE_FIND
-        self.module["target"] = None
-        self.module["updateTime"] = 0
-        self.moduleTimer.reset()
-
-    ## Try to find and move towards blocks on the map.
-    # 
-    # Turn until color is detected.
-    # Drive towards largest color until it is centered on the screen.
-    #
-    # @param arbitraryTarget    A target angle to tell the robot it wants to reach.
-    def runFindModule(self, arbitraryTarget = 60):
-        assert MODULE_FIND == self.module
-        target = self.module["target"]
-
-        # Allow timeout.
-        if self.moduleTimer.millis() > self.module["timeout"]:
-            print "Timed out from FIND to PICKUP"
-            self.startPickupModule()
-            return
-
-        # Check if we need to exit the module.
-        if self.checkForBlock() > 0 : 
-            print "Going from FIND to PICKUP"
-            self.startPickupModule()
-            return
-
-        ## Capture an image from the camera every so often
-        if self.cameraTimer.millis() > self.cameraTimeout:
-            self.cameraTimer.reset()
-
-            target = self.module["target"] = self.logic.findTarget(*self.vision.processImage())
-            self.module["updateTime"] = self.moduleTimer.millis()
-
-        # Check if we see anything of interest on the screen.
-        if target == None:
-            self.movement.move_to_target(arbitraryTarget)
-            # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
-        else:
-            self.movement.move_to_target(target)
-            self.logic.bayesianTargetUpdate(target, self.moduleTimer.millis() - self.module["updateTime"])
-
-    ## Set up the beginning of the pickup process.
-    def startPickupModule(self):
-        self.module = MODULE_PICKUP
-        self.conveyorEncoder.write(0)
-        self.conveyorMotor.write(True, self.conveyorPower)
-        self.moduleTimer.reset()
-
-    ## Pick up a block from the block capture mechanism.
-    #
-    # Move the conveyor belt upwards until the encoders indicate that
-    # the block has moved far enough. Then move the conveyor belt back.
-    def runPickupModule(self):
-        assert MODULE_PICKUP == self.module
-
-        # Allow timeout.
-        if self.moduleTimer.millis() > self.module["timeout"]:
-            print "Timed out from PICKUP to FIND"
-            self.startFindModule()
-            return
-
-        encval = self.conveyorEncoder.val
-
-        # Move up the conveyor belt until it hits the encoder limit.
-        if encval > self.conveyorEncoderLimit:
-            self.conveyorMotor.write(False, self.conveyorPower)
-
-        # Stop the motor when it gets to the bottom.
-        if encval < 0 and self.moduleTimer.millis() > 200:
-            self.conveyorMotor.write(False, 0)
-            self.module["blocksPickedUp"] += 1
-
-            # Switch modules
-            if self.module["blocksPickedUp"] >= 4:
-                print "Going from PICKUP to DROPOFF"
-                self.startDropoffModule()
-            else:
-                print "Going from PICKUP to FIND"
-                self.startFindModule()
-            return
-
-    ## Set up the beginning of the dropoff process.
-    def startDropoffModule(self):
-        self.module = MODULE_DROPOFF
-        self.moduleTimer.reset()
-
-        # TODO: Set the servo to open.
-
-    ## Open the back door and drive "forwards," avoiding what needs to be avoided.
-    #
-    # @param waitTime   Time in ms to wait for the door to actually open.
-    def runDropoffModule(self, waitTime = 500):
-        assert MODULE_DROPOFF == self.module
-
-        # Allow timeout.
-        if self.moduleTimer.millis() > self.module["timeout"]:
-            print "Timed out from DROPOFF to FIND"
-            self.startFindModule()
-            return
-
-        if self.moduleTimer.millis() > waitTime:
-            # TODO: Drive forwards after opening the door.
 
     ## Make sure that the intake motor does not stall.
     #  If so, reverse the intake motors.
@@ -235,7 +109,7 @@ class Robot(SyncedSketch):
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):
-        assert not self.vision.isScreenBlack()
+        assert not self.find.vision.isScreenBlack()
 
     ## Check what color a freshly caught block is.
     #

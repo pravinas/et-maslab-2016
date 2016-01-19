@@ -19,8 +19,14 @@ class ColorRead(SyncedSketch):
     def loop(self):
         if self.timer.millis() > 100:
             self.timer.reset()
+            print "~~~~~~~~~"
             print self.color.r, self.color.g, self.color.b, self.color.c
+            print self.calibrate_colors(self.color.r, self.color.g, self.color.b)
             print self.color.colorTemp, self.color.lux
+
+    def calibrate_colors(self, r, g, b):
+        return (int(r / 0.90), int(g / 0.45), int(b / 0.40))
+
 
 if __name__ == "__main__":
     sketch = ColorRead(1, -0.00001, 100)
