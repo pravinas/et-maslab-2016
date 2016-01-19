@@ -6,9 +6,9 @@ from tamproxy.devices import Motor
 class MotorWrite(SyncedSketch):
 
     def setup(self):
-        self.motor1 = Motor(self.tamp, 3, 4)
+        self.motor1 = Motor(self.tamp, 2, 3)
         self.motor1.write(1,0)
-        self.motor2 = Motor(self.tamp, 5, 6)
+        self.motor2 = Motor(self.tamp, 5, 4)
         self.motor2.write(1,0)
         self.delta = 1
         self.motorval = 70

@@ -34,6 +34,8 @@ class Vision():
     def __init__(self, myColorIsRed, width, height, debug=False):
         self.myColorIsRed = myColorIsRed
         self.capture = cv2.VideoCapture(1)
+        self.width = width
+        self.height = height
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width); # X resolution
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height); # Y resolution
         self.debug = debug
