@@ -1,0 +1,36 @@
+Here are the pins!
+
+0:	Right Drive Encoder Yellow
+1:	Right Drive Encoder White
+2:	Right Drive Controller Direction
+3:	Right Drive Controller PWM
+4:	Left Drive Controller PWM
+5:	Left Drive Controller Direction
+6:	Belt Motor Controller PWM
+7:	Belt Motor Controller Direction
+8:	Hugs Motor Controller Direction
+9:	Hugs Motor Controller PWM
+10:	Belt Motor Encoder Yellow
+11:	Belt Motor Encoder White
+12:	Hugs Motor Encoder Yellow
+13:	Gyro Clock
+14:	Long Distance IR
+15:	Long Distance IR
+16:	Long Distance IR
+17:	Long Distance IR
+18:	Color Sensor SCL
+19:	Color Sensor SDA
+20:	Gyro Something
+21:	Gyro Something
+22:	Gyro Something
+23:
+24:	Hugs Motor Encoder White
+25:	Servo
+26:
+27:	Left Drive Encoder Yellow
+28:	Left Drive Encoder White
+29:
+30:
+31:
+32:
+33:	Short Distance IR
