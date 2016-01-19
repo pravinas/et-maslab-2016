@@ -34,7 +34,9 @@ class PickupModule():
 
         # Move up the conveyor belt until it hits the encoder limit.
         if encval > self.conveyorEncoderLimit:
-            self.conveyorMotor.write(False, self.conveyorPower)
+            self.conveyorMotor.write(True, self.conveyorPower)
+        else:
+            self.conveyorMotor.write(False), self.conveyorPower
 
         # Stop the motor when it gets to the bottom.
         if encval < 0 and self.timer.millis() > 200:
