@@ -1,2 +1,5 @@
 test/*
 *.pyc
+firmware/*
+!firmware/*.py
+
