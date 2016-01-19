@@ -52,7 +52,6 @@ class WallFollow(self):
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
 
-            print(power)
 
     ## Reinitialize this class to start taking data over.
     def reset(self):
