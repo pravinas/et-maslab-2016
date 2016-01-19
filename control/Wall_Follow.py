@@ -24,6 +24,27 @@ class WallFollow(self):
 		if self.timer.millis() > 100:
 			self.timer.reset(0)
 
+			# error value
+            err = 0 - theta
 
+            # Integrate over the last several timesteps.
+            self.record.insert(0, err)
+            if len(self.record) > self.recordLen:
+                self.record.pop()
+
+            # Take the derivative over recorded history.
+            deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
+
+            power = self.kp * err + self.ki * sum(self.record) + kd * deriv
+
+            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
+            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+
+            print(power)
+
+    ## Reinitialize this class to start taking data over.
+    def reset(self):
+        self.timer.reset()
+        self.record = []
 
 
