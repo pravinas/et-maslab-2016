@@ -6,14 +6,14 @@ from tamproxy.devices import Motor
 class MotorWrite(SyncedSketch):
 
     def setup(self):
-        self.motor1 = Motor(self.tamp, 7, 6)
+        self.motor1 = Motor(self.tamp, 10, 9)
         self.motorval = 100
-        self.motor1.write(1,self.motorval) #0 for up, 1 for down
+        self.motor1.write(0,self.motorval) #0 for in, 1 for out
         self.timer = Timer()
 
     def loop(self):
         if self.timer.millis() > 8000:
-            self.motor1.write(0, self.motorval) #0 for up, 1 for down
+            self.motor1.write(1, self.motorval) #0 for in, 1 for out
         if self.timer.millis() > 14000:
             self.motor1.write(1, 0)
             self.stop()
