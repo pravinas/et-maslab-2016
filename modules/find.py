@@ -52,11 +52,11 @@ class FindModule(Module):
     def run(self, arbitraryTarget = 60):
         # Allow timeout.
         if self.timer.millis() > self.timeout:
-            print "Timed out from FIND to PICKUP"
-            return MODULE_PICKUP
+            print "Timed out from FIND to FOLLOW"
+            return MODULE_FOLLOW
 
         # Check if we need to exit the module.
-        if self.checkForBlock() > 0 : 
+        if self.logic.checkForBlock() > 0 : 
             print "Going from FIND to PICKUP"
             return MODULE_PICKUP
 
@@ -78,11 +78,3 @@ class FindModule(Module):
         return MODULE_FIND
 
 
-    ## Check what color a freshly caught block is.
-    #
-    # @return 0 if the color sensor does not see a block.
-    #         1 if the color sensor sees our color of block
-    #         2 if the color sensor sees not our color of block.
-    def checkForBlock(self):
-        # TODO
-        raise NotImplementedError

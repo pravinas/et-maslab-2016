@@ -20,9 +20,6 @@ class Robot(SyncedSketch):
         ####  EE SETUP  ####
         ####################
 
-        # The color of block we care about. Should be RED or GREEN
-        self.blockColor = RED   # TODO: Check which color we care about.
-
         # Motor object representing the left motor.
         self.leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         # Encoder object for the left motor.
@@ -51,15 +48,15 @@ class Robot(SyncedSketch):
 
         # Timer object to moderate checking for intake errors.
         self.intakeTimer = Timer()
-        # Are the intake motors going forward? True if so, False if reversing.
-        self.intakeDirection = True
+        # Are the intake motors reversing? True if so, False if going forwards.
+        self.intakeDirection = False
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
         # Logic object for FIND module
         self.logic = Logic(CAMERA_WIDTH, CAMERA_HEIGHT)
         # Vision object for FIND module
-        self.vision = Vision(self.blockColor, CAMERA_WIDTH, CAMERA_HEIGHT)
+        self.vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT)
 
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
@@ -116,7 +113,7 @@ class Robot(SyncedSketch):
             if self.intakeTimer.millis() > checkTime:
                 self.intakeTimer.reset()
                 if self.intakeEncoder.val < INTAKE_ENCODER_LIMIT: # if we're stalled
-                    self.intakeDirection = False
+                    self.intakeDirection = True
                     self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
                 else: # if we're not stalled
                     self.intakeEncoder.write(0)
@@ -124,7 +121,7 @@ class Robot(SyncedSketch):
         else:                       # We are reversing the motors.
             if self.intakeTimer.millis() > reverseTime:
                 self.intakeTimer.reset()
-                self.intakeDirection = True
+                self.intakeDirection = False
                 self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
                 self.intakeEncoder.write(0)
 

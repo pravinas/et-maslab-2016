@@ -55,10 +55,10 @@ SERVO_PIN   = 25
 ####  MISC CONSTANTS  ####
 ##########################
 
-# Colors
+# Colors: The one that is our color should be True, and the other False.
 
-RED = True
-GREEN = False
+RED 	= True
+GREEN 	= False
 
 # Module numbers
 
