@@ -40,3 +40,13 @@ class Logic():
     def bayesianTargetUpdate(self, target):
         # TODO: Definitely need more arguments. Need to think about how to implement.
         return target
+
+    
+    ## Check what color a freshly caught block is.
+    #
+    # @return 0 if no block is caught
+    #         1 if the color sensor sees our color of block.
+    #         2 if the color sensor sees not our color of block.
+    def checkForBlock(self):
+        # TODO: Implement block checking.
+        raise NotImplementedError

@@ -9,6 +9,8 @@ class DropoffModule(Module):
     def __init__(self, timer, servo):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
+        self.openValue = 90     # Value in degrees the servo should be when the door is open.
+        self.closedValue = 180  # Value in degrees the servo should be when the door is closed.
         self.timer = timer
         self.servo = servo
 
@@ -20,7 +22,7 @@ class DropoffModule(Module):
     ## Set up the beginning of the dropoff process.
     def start(self):
         self.timer.reset()
-        # TODO: Set the servo to open.
+        self.servo.write(self.openValue)
 
     ## Open the back door and drive "forwards," avoiding what needs to be avoided.
     #

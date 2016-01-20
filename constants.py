@@ -50,6 +50,10 @@ COLOR_SENSOR_SDA    = 19
 
 SERVO_PIN   = 25
 
+# Limit Switch
+
+LIMIT_SWITCH	= 22
+
 
 ##########################
 ####  MISC CONSTANTS  ####

@@ -22,7 +22,7 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 19:	Color Sensor SDA
 20:	
 21:	
-22:	
+22:	Limit Switch
 23: Short Distance IR
 24:	Hugs Motor Encoder White
 25:	Servo
