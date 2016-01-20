@@ -69,6 +69,8 @@ class Robot(SyncedSketch):
         self.pickup = PickupModule(self.moduleTimer, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
         self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo)
+        # Runs the FOLLOW process
+        self.follow = FollowModule(self.moduleTimer)
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
 
@@ -96,6 +98,10 @@ class Robot(SyncedSketch):
         if module == MODULE_DROPOFF:
             dropoff.start()
             self.module = MODULE_PICKUP
+            return
+        if module == MODULE_FOLLOW:
+            follow.start()
+            self.module = MODULE_FOLLOW
             return
 
 
@@ -129,6 +135,7 @@ class Robot(SyncedSketch):
         assert not self.find.checkForInitializationErrors()
         assert not self.pickup.checkForInitializationErrors()
         assert not self.dropoff.checkForInitializationErrors()
+        assert not self.follow.checkForInitializationErrors()
 
 # main code:
 if __name__ == "__main__":
