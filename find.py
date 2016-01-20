@@ -29,7 +29,6 @@ class FindModule():
 
         # Logic object for calculations
         self.logic = logic
-
     
     ## Set up the beginning of the find process.
     def start(self):
