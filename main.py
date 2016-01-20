@@ -8,9 +8,7 @@ from tamproxy.devices import Motor, Encoder, Servo
 from vision import Vision
 from logic import Logic
 
-from find import FindModule
-from pickup import PickupModule
-from dropoff import DropoffModule
+from modules import *
 
 from constants import *
 
@@ -56,7 +54,7 @@ class Robot(SyncedSketch):
         # Are the intake motors going forward? True if so, False if reversing.
         self.intakeDirection = True
         # Start the intake motor.
-        self.intakeMotor.write(self.intakeDirection, self.intakePower)
+        self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
         # Logic object for FIND module
         self.logic = Logic(CAMERA_WIDTH, CAMERA_HEIGHT)
@@ -111,9 +109,9 @@ class Robot(SyncedSketch):
         if self.intakeDirection:    # We are moving forward.
             if self.intakeTimer.millis() > checkTime:
                 self.intakeTimer.reset()
-                if self.intakeEncoder.val < self.intakeEncoderLimit: # if we're stalled
+                if self.intakeEncoder.val < INTAKE_ENCODER_LIMIT: # if we're stalled
                     self.intakeDirection = False
-                    self.intakeMotor.write(self.intakeDirection, self.intakePower)
+                    self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
                 else: # if we're not stalled
                     self.intakeEncoder.write(0)
 
@@ -121,10 +119,10 @@ class Robot(SyncedSketch):
             if self.intakeTimer.millis() > reverseTime:
                 self.intakeTimer.reset()
                 self.intakeDirection = True
-                self.intakeMotor.write(self.intakeDirection, self.intakePower)
+                self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
                 self.intakeEncoder.write(0)
 
-        self.intakeMotor.write(self.intakeDirection, self.intakePower)
+        self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
     ## Checks if all initialization processes went smoothly.
     def checkForInitializationErrors(self):

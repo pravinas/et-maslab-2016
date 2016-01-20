@@ -3,11 +3,10 @@
 # Implements the FIND module of the competition code.
 
 from tamproxy import Timer
-from ..control import GoStraight
-from module import Module
-from ..constants import *
+from control import GoStraight
+from constants import *
 
-class FindModule(Module):
+class FindModule():
 
     def __init__(self, timer, leftMotor, rightMotor, vision, logic):
 
