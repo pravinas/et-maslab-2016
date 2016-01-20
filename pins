@@ -14,10 +14,10 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 11:	Gyro DOUT/MOSI (Master Output) 
 12:	Gyro DIN/MISO (Master Input)
 13:	Gyro Clock
-14:	Long Distance IR
-15:	Long Distance IR
-16:	Long Distance IR
-17:	Long Distance IR
+14:	Long Distance IR Front Left
+15:	Long Distance IR Front Right
+16:	Long Distance IR Back Left
+17:	Long Distance IR Back Right
 18:	Color Sensor SCL
 19:	Color Sensor SDA
 20:	
