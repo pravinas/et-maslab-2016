@@ -10,9 +10,9 @@ Here are the pins!
 7:	Belt Motor Controller Direction
 8:	Hugs Motor Controller Direction
 9:	Hugs Motor Controller PWM
-10:	Belt Motor Encoder Yellow
-11:	Belt Motor Encoder White
-12:	Hugs Motor Encoder Yellow
+10:	Gyro CS (Chip Select)
+11:	Gyro DOUT/MOSI (Master Output) 
+12:	Gyro DIN/MISO (Master Input)
 13:	Gyro Clock
 14:	Long Distance IR
 15:	Long Distance IR
@@ -20,17 +20,17 @@ Here are the pins!
 17:	Long Distance IR
 18:	Color Sensor SCL
 19:	Color Sensor SDA
-20:	Gyro Something
-21:	Gyro Something
-22:	Gyro Something
-23:
+20:	
+21:	
+22:	
+23: Short Distance IR
 24:	Hugs Motor Encoder White
 25:	Servo
-26:
-27:	Left Drive Encoder Yellow
-28:	Left Drive Encoder White
-29:
-30:
+26: Hugs Motor Encoder Yellow
+27:	Belt Motor Encoder White
+28:	Belt Moter Encoder Yellow
+29: Left Drive Encoder Yellow
+30: Left Drive Encoder White
 31:
 32:
-33:	Short Distance IR
+33:	
