@@ -2,7 +2,10 @@
 #
 # Implements the PICKUP module of the competition code.
 
-class PickupModule():
+from module import Module
+from ..constants import *
+
+class PickupModule(Module):
     def __init__(self, timer, conveyorMotor, conveyorEncoder):
         self.timer = timer
         self.timeout = 7000
@@ -15,7 +18,7 @@ class PickupModule():
         return False
     
     ## Set up the beginning of the pickup process.
-    def startPickupModule(self):
+    def start(self):
         self.conveyorEncoder.write(0)
         self.conveyorMotor.write(True, CONVEYOR_POWER)
         self.moduleTimer.reset()
@@ -26,7 +29,7 @@ class PickupModule():
     # the block has moved far enough. Then move the conveyor belt back.
     #
     # @return   The value of the next module to return to.
-    def runPickupModule(self):
+    def run(self):
 
         # Allow timeout.
         if self.timer.millis() > self.timout:
@@ -36,7 +39,7 @@ class PickupModule():
         encval = self.conveyorEncoder.val
 
         # Move up the conveyor belt until it hits the encoder limit.
-        if encval > CONVEYOR_ENCODER_LIMITs:
+        if encval > CONVEYOR_ENCODER_LIMIT:
             self.conveyorMotor.write(True, CONVEYOR_POWER)
         else:
             self.conveyorMotor.write(False, CONVEYOR_POWER)
