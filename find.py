@@ -34,6 +34,7 @@ class FindModule():
     def start(self):
         self.target = None
         self.updateTime = 0
+        self.movement.reset()
         self.timer.reset()
 
     ## Try to find and move towards blocks on the map.
@@ -70,3 +71,14 @@ class FindModule():
             self.logic.bayesianTargetUpdate(target, self.timer.millis() - self.updateTime)
 
         return MODULE_FIND
+
+    
+
+    ## Check what color a freshly caught block is.
+    #
+    # @return 0 if the color sensor does not see a block.
+    #         1 if the color sensor sees our color of block
+    #         2 if the color sensor sees not our color of block.
+    def checkForBlock(self):
+        # TODO
+        raise NotImplementedError

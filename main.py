@@ -21,20 +21,19 @@ class Robot(SyncedSketch):
         # The color of block we care about. Should be RED or GREEN
         self.blockColor = RED   # TODO: Check which color we care about.
 
-        # TODO: Figure out which pins are hooked up where.
         # Motor object representing the left motor.
-        self.leftMotor = Motor(self.tamp, 1, 2)
+        self.leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         # Encoder object for the left motor.
-        self.leftEncoder = Encoder(self.tamp, 3, 4)
+        self.leftEncoder = Encoder(self.tamp, LEFT_DRIVE_ENCODER_YELLOW, LEFT_DRIVE_ENCODER_WHITE)
         # Motor object representing the right motor.
-        self.rightMotor = Motor(self.tamp, 5, 6)
+        self.rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         # Encoder object for the right motor.
-        self.rightEncoder = Encoder(self.tamp, 7, 8)
+        self.rightEncoder = Encoder(self.tamp, RIGHT_DRIVE_ENCODER_YELLOW, RIGHT_DRIVE_ENCODER_WHITE)
 
         # Motor object representing the intake mechanism motors.
-        self.intakeMotor = Motor(self.tamp, 9, 10)
+        self.intakeMotor = Motor(self.tamp, HUGS_MOTOR_CONTROLLER_DIRECTION, HUGS_MOTOR_CONTROLLER_PWM)
         # Encoder object for the intake motor.
-        self.intakeEncoder = Encoder(self.tamp, 11, 12)
+        self.intakeEncoder = Encoder(self.tamp, HUGS_MOTOR_ENCODER_YELLOW, HUGS_MOTOR_ENCODER_WHITE)
         # The limit point at which the motor is considered stalled.
         self.intakeEncoderLimit = 150
         # The speed of the intake motors.
@@ -45,16 +44,20 @@ class Robot(SyncedSketch):
         self.intakeDirection = True
 
         # Motor object representing the conveyor belt motor.
-        self.conveyorMotor = Motor(self.tamp, 13, 14)
+        self.conveyorMotor = Motor(self.tamp, BELT_MOTOR_CONTROLLER_DIRECTION, BELT_MOTOR_CONTROLLER_PWM)
         # Encoder object for the conveyor belt motor.
-        self.conveyorEncoder = Encoder(self.tamp, 15, 16)
+        self.conveyorEncoder = Encoder(self.tamp, BELT_MOTOR_ENCODER_YELLOW, BELT_MOTOR_ENCODER_WHITE)
         # The encoder count for as far as we want the encoder to move.
         self.conveyorEncoderLimit = 5 * 3200
         # The speed of the conveyor belt. (0-255)
         self.conveyorPower = 130
 
         # Servo controlling the door of the collection chamber.
-        self.backDoorServo = Servo(self.tamp, 17)
+        self.backDoorServo = Servo(self.tamp, SERVO_PIN)    #TODO: Find out servo pin number
+
+        ############################
+        ####  INTERNAL MODULES  ####
+        ############################
 
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, self.intakePower)
@@ -97,6 +100,7 @@ class Robot(SyncedSketch):
             self.module = MODULE_PICKUP
             return
         if module == MODULE_DROPOFF:
+            dropoff.start()
             self.module = MODULE_PICKUP
             return
 
