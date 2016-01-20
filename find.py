@@ -29,6 +29,10 @@ class FindModule():
 
         # Logic object for calculations
         self.logic = logic
+
+    ## Return True if there was an error in initialization, False otherwise.
+    def checkForInitializationErrors(self):
+        return self.vision.isCameraBlack()
     
     ## Set up the beginning of the find process.
     def start(self):
@@ -72,7 +76,6 @@ class FindModule():
 
         return MODULE_FIND
 
-    
 
     ## Check what color a freshly caught block is.
     #

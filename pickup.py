@@ -5,11 +5,16 @@
 class PickupModule():
     def __init__(self, timer, conveyorMotor, conveyorEncoder, conveyorPower, conveyorEncoderLimit):
         self.timer = timer
+        self.timeout = 7000
         self.conveyorMotor = conveyorMotor
         self.conveyorEncoder = conveyorEncoder
         self.conveyorPower = conveyorPower
         self.conveyorEncoderLimit = conveyorEncoderLimit
         self.blocksPickedUp = 0
+
+    ## Return True if there was an error in initialization, False otherwise.
+    def checkForInitializationErrors(self):
+        return False
     
     ## Set up the beginning of the pickup process.
     def startPickupModule(self):
@@ -26,7 +31,7 @@ class PickupModule():
     def runPickupModule(self):
 
         # Allow timeout.
-        if self.moduleTimer.millis() > self.module["timeout"]:
+        if self.timer.millis() > self.timout:
             print "Timed out from PICKUP to FIND"
             return MODULE_FIND
 

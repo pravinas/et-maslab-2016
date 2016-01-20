@@ -53,7 +53,7 @@ class Robot(SyncedSketch):
         self.conveyorPower = 130
 
         # Servo controlling the door of the collection chamber.
-        self.backDoorServo = Servo(self.tamp, SERVO_PIN)    #TODO: Find out servo pin number
+        self.backDoorServo = Servo(self.tamp, SERVO_PIN)
 
         ############################
         ####  INTERNAL MODULES  ####
@@ -87,7 +87,7 @@ class Robot(SyncedSketch):
         # Passive processes go here.
         self.checkForIntakeErrors()
 
-    ## TODO: Documentation
+    ## Switch module if necessary.
     def updateState(self, module):
         if self.module == module:
             return
@@ -110,7 +110,7 @@ class Robot(SyncedSketch):
     #
     # @param checkTime  Time in ms between checking stalls.
     # @param reverseTime    Time in ms that the intake motors will reverse if needed.
-    def checkForIntakeErrors(self, checkTime = 100, reverseTime = 2000):
+    def checkForIntakeErrors(self, checkTime = 100, reverseTime = 800):
 
         if self.intakeDirection:    # We are moving forward.
             if self.intakeTimer.millis() > checkTime:
@@ -135,15 +135,6 @@ class Robot(SyncedSketch):
         assert not self.find.checkForInitializationErrors()
         assert not self.pickup.checkForInitializationErrors()
         assert not self.dropoff.checkForInitializationErrors()
-
-    ## Check what color a freshly caught block is.
-    #
-    # @return 0 if the color sensor does not see a block.
-    #         1 if the color sensor sees our color of block
-    #         2 if the color sensor sees not our color of block.
-    def checkForBlock(self):
-        # TODO
-        raise NotImplementedError
 
 # main code:
 if __name__ == "__main__":

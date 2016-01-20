@@ -1,11 +1,15 @@
 ## constants.py
 
+# Colors
+
 RED = True
 GREEN = False
 
-MODULE_FIND = 0
-MODULE_PICKUP = 1
-MODULE_DROPOFF = 2
+# Module numbers
+
+MODULE_FIND     = 0
+MODULE_PICKUP   = 1
+MODULE_DROPOFF  = 2
 
 ################
 ####  PINS  ####
@@ -46,9 +50,13 @@ LONG_DISTANCE_IR_FL  = 14
 LONG_DISTANCE_IR_FR  = 15
 LONG_DISTANCE_IR_BL  = 16
 LONG_DISTANCE_IR_BR  = 17
-SHORT_DISTANCE_IR   = 23
+SHORT_DISTANCE_IR    = 23
 
 # Color Sensor
 
 COLOR_SENSOR_SCL    = 18
 COLOR_SENSOR_SDA    = 19
+
+# Servo
+
+SERVO_PIN   = 25

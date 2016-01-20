@@ -18,6 +18,10 @@ class ServoWrite(Sketch):
         self.end = False
 
     def loop(self):
+        self.servo.write(180)
+        if self.timer.millis() > 1000:
+            self.stop()
+        '''
         if (self.timer.millis() > 10):
             self.timer.reset()
             if self.servoval >= 180: self.delta = -1
@@ -25,6 +29,7 @@ class ServoWrite(Sketch):
             self.servoval += self.delta
             print self.servoval
             self.servo.write(abs(self.servoval))
+        '''
 
 if __name__ == "__main__":
     sketch = ServoWrite()
