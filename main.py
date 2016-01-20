@@ -18,6 +18,10 @@ class Robot(SyncedSketch):
 
     def setup(self):
 
+        ####################
+        ####  EE SETUP  ####
+        ####################
+
         # The color of block we care about. Should be RED or GREEN
         self.blockColor = RED   # TODO: Check which color we care about.
 
@@ -34,45 +38,37 @@ class Robot(SyncedSketch):
         self.intakeMotor = Motor(self.tamp, HUGS_MOTOR_CONTROLLER_DIRECTION, HUGS_MOTOR_CONTROLLER_PWM)
         # Encoder object for the intake motor.
         self.intakeEncoder = Encoder(self.tamp, HUGS_MOTOR_ENCODER_YELLOW, HUGS_MOTOR_ENCODER_WHITE)
-        # The limit point at which the motor is considered stalled.
-        self.intakeEncoderLimit = 150
-        # The speed of the intake motors.
-        self.intakePower = 150
-        # Timer object to moderate checking for intake errors.
-        self.intakeTimer = Timer()
-        # Are the intake motors going forward? True if so, False if reversing.
-        self.intakeDirection = True
 
         # Motor object representing the conveyor belt motor.
         self.conveyorMotor = Motor(self.tamp, BELT_MOTOR_CONTROLLER_DIRECTION, BELT_MOTOR_CONTROLLER_PWM)
         # Encoder object for the conveyor belt motor.
         self.conveyorEncoder = Encoder(self.tamp, BELT_MOTOR_ENCODER_YELLOW, BELT_MOTOR_ENCODER_WHITE)
-        # The encoder count for as far as we want the encoder to move.
-        self.conveyorEncoderLimit = 5 * 3200
-        # The speed of the conveyor belt. (0-255)
-        self.conveyorPower = 130
 
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
 
-        ############################
-        ####  INTERNAL MODULES  ####
-        ############################
+        #################################
+        ####  INTERNAL MODULE SETUP  ####
+        #################################
 
+        # Timer object to moderate checking for intake errors.
+        self.intakeTimer = Timer()
+        # Are the intake motors going forward? True if so, False if reversing.
+        self.intakeDirection = True
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, self.intakePower)
 
         # Logic object for FIND module
-        self.logic = Logic(imgWidth=80, imgHeight=60)
+        self.logic = Logic(CAMERA_WIDTH, CAMERA_HEIGHT)
         # Vision object for FIND module
-        self.vision = Vision(self.blockColor, 80, 60)
+        self.vision = Vision(self.blockColor, CAMERA_WIDTH, CAMERA_HEIGHT)
 
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
         # Runs the FIND process
         self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.vision, self.logic)
         # Runs the PICKUP process
-        self.pickup = PickupModule(self.moduleTimer)
+        self.pickup = PickupModule(self.moduleTimer, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
         self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo)
         # Describes which stage of the program is running.
