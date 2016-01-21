@@ -19,7 +19,7 @@ class GoStraight():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1.0
+        self.kp = 1
         self.ki = 0.1
         self.kd = 0.5
 
@@ -45,7 +45,7 @@ class GoStraight():
             # Take the derivative over recorded history.
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
-            power = self.kp * err + self.ki * sum(self.record) + kd * deriv
+            power = self.kp * err #+ self.ki * sum(self.record) + self.kd * deriv
 
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
