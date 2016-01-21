@@ -23,6 +23,7 @@ class WallFollow():
         self.ki = 0.1
         self.kd = 0.5
 
+
     ## get distance value from ir sensors
     # returns distance from edge of bot to wall
     #
@@ -32,9 +33,9 @@ class WallFollow():
     def distance(self, IR0, IR1, IR2, IR3):
 
         if IR0 + IR1 < IR2 + IR3: #if right < left, wall closer on right
-            self.distance = (IR0 + IR1)/2
+            return (IR0 + IR1)/2
         else:
-            self.distance = -(IR2 + IR3)/2 
+            return -(IR2 + IR3)/2
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
