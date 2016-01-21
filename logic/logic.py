@@ -2,11 +2,13 @@
 #
 # File for algorithms that turn sensor data into more useful information.
 from math import atan
+from ..constants import WHEEL_WIDTH
 
 class Logic():
-    def __init__(self, imgWidth, imgHeight):
+    def __init__(self, imgWidth, imgHeight, color):
         self.imgWidth = imgWidth
         self.imgHeight = imgHeight
+        self.color = color
         
     ## Given the camera data, outputs an angle at which the robot should move.
     #
@@ -39,6 +41,7 @@ class Logic():
     # @param time   The number of milliseconds that have passed since last update.
     def bayesianTargetUpdate(self, target):
         # TODO: Definitely need more arguments. Need to think about how to implement.
+        # dthetha = (drightencval - dleftencval) / WHEEL_WIDTH
         return target
 
     
@@ -48,5 +51,10 @@ class Logic():
     #         1 if the color sensor sees our color of block.
     #         2 if the color sensor sees not our color of block.
     def checkForBlock(self):
-        # TODO: Implement block checking.
-        raise NotImplementedError
+        # TODO: Use limit switch to detect if block is caught.
+        if r > 1.5*g and r > 1.5*b:
+            return "Red"
+        elif g > r and g > 1.2*b:
+            return "Green"
+        else:
+            return "No Block"

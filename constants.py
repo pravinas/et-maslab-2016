@@ -85,3 +85,6 @@ INTAKE_POWER            = 120
 CAMERA_WIDTH    = 80
 # Height of an image taken by the camera.
 CAMERA_HEIGHT   = 60
+
+# Distance between wheels in inches.
+WHEEL_WIDTH	= 12

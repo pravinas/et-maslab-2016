@@ -21,7 +21,7 @@ class PickupModule(Module):
     def start(self):
         self.conveyorEncoder.write(0)
         self.conveyorMotor.write(True, CONVEYOR_POWER)
-        self.moduleTimer.reset()
+        self.timer.reset()
 
     ## Pick up a block from the block capture mechanism.
     #
