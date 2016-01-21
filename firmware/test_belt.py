@@ -23,7 +23,7 @@ class MotorWrite(SyncedSketch):
 
     def loop(self):
         if self.timer.millis() > 8000:
-            self.motor1.write(0, self.motorval) #0 for up, 1 for down
+            self.motor1.write(1, self.motorval) #0 for up, 1 for down
         if self.timer.millis() > 14000:
             self.motor1.write(1, 0)
             self.stop()

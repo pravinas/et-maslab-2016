@@ -31,7 +31,7 @@ class ColorRead(SyncedSketch):
     def whatColorIsThis(self, r, g, b):
         if r > 1.5*g and r > 1.5*b:
             return "Red"
-        elif g > r and g > b:
+        elif g > r and g > 1.2*b:
             return "Green"
         else:
             return "No Block"
