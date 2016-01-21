@@ -2,12 +2,12 @@
 #
 # File for algorithms that turn sensor data into more useful information.
 from math import atan
-from ..constants import WHEEL_WIDTH
+from ..constants import WHEEL_WIDTH, CAMERA_WIDTH, CAMERA_HEIGHT
 
 class Logic():
-    def __init__(self, imgWidth, imgHeight, color, leftEnc, rightEnc):
-        self.imgWidth = imgWidth
-        self.imgHeight = imgHeight
+    def __init__(self, color=None, leftEnc=None, rightEnc=None):
+        self.imgWidth = CAMERA_WIDTH
+        self.imgHeight = CAMERA_HEIGHT
         self.color = color
         self.leftEnc = leftEnc
         self.rightEnc = rightEnc
