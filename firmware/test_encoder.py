@@ -4,7 +4,7 @@ from tamproxy.devices import Encoder, Motor
 
 class EncoderRead(SyncedSketch):
 
-    encoderPins = 26, 24
+    encoderPins = 24, 26
     motorPwm = 9 #green
     motorDir = 8 #yellow
 
