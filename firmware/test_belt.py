@@ -4,11 +4,11 @@ from tamproxy.devices import Motor, Encoder
 # Cycles a motor back and forth between -255 and 255 PWM every ~5 seconds
 
 # The encoder count for as far as we want the encoder to move.
-CONVEYOR_ENCODER_LIMIT  = 5 * 3200
+CONVEYOR_ENCODER_LIMIT  = 1 * 3200
 # The speed of the conveyor belt. (0-255)
 CONVEYOR_POWER          = 130
 
-class MotorWrite(SyncedSketch):
+class TestBelt(SyncedSketch):
 
     def setup(self):
         self.timer = Timer()
@@ -22,16 +22,14 @@ class MotorWrite(SyncedSketch):
         self.start()
 
     def loop(self):
-        if self.timer.millis() > 8000:
-            self.motor1.write(0, self.motorval) #0 for up, 1 for down
-        if self.timer.millis() > 14000:
-            self.motor1.write(1, 0)
-            self.stop()
+        print self.conveyorEncoder.val
+        self.runThing()
 
     ## Set up the beginning of the pickup process.
-    def start(self):
-        print self.conveyorEncoder.val
-        self.run()
+    def startThing(self):
+        self.conveyorEncoder.write(0)
+        self.conveyorMotor.write(True, CONVEYOR_POWER)
+        self.timer.reset()
 
     ## Pick up a block from the block capture mechanism.
     #
@@ -39,7 +37,7 @@ class MotorWrite(SyncedSketch):
     # the block has moved far enough. Then move the conveyor belt back.
     #
     # @return   The value of the next module to return to.
-    def run(self):
+    def runThing(self):
 
         # Allow timeout.
         if self.timer.millis() > self.timeout:
@@ -67,11 +65,11 @@ class MotorWrite(SyncedSketch):
                 print "Going from PICKUP to FIND"
                 self.stop()
         
-        return MODULE_PICKUP
+        return
 
 
 
 
 if __name__ == "__main__":
-    sketch = MotorWrite(1, -0.00001, 100)
+    sketch = TestBelt(1, -0.00001, 100)
     sketch.run()
