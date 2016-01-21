@@ -35,7 +35,8 @@ class DropoffModule(Module):
             return MODULE_FIND
 
         if self.timer.millis() > self.waitTime:
-            # TODO: Drive forwards after opening the door.
+            # TODO: drive forward a couple inches
+            self.servo.write(self.closedValue)
             raise NotImplementedError
         
         return MODULE_DROPOFF
