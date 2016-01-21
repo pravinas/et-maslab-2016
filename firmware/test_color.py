@@ -21,11 +21,20 @@ class ColorRead(SyncedSketch):
             self.timer.reset()
             print "~~~~~~~~~"
             print self.color.r, self.color.g, self.color.b, self.color.c
-            print self.calibrate_colors(self.color.r, self.color.g, self.color.b)
-            print self.color.colorTemp, self.color.lux
+            #print self.calibrate_colors(self.color.r, self.color.g, self.color.b)
+            #print self.color.colorTemp, self.color.lux
+            print self.whatColorIsThis(self.color.r, self.color.g, self.color.b)
 
     def calibrate_colors(self, r, g, b):
         return (int(r / 0.90), int(g / 0.45), int(b / 0.40))
+
+    def whatColorIsThis(self, r, g, b):
+        if r > 1.5*g and r > 1.5*b:
+            return "Red"
+        elif g > r and g > b:
+            return "Green"
+        else:
+            return "No Block"
 
 
 if __name__ == "__main__":
