@@ -2,9 +2,9 @@
 
 class WallFollow():
 
-    ## Initialize a WallFollow object.
+    ## Initialize a WallFollowing.
     #
-    # @param left   A Motor representing the left motor.
+    # @param left   A Motor representing t he left motor.
     # @param right  A Motor representing the right motor.
     # @param timer  A Timer for moderating data taking.
     def __init__(self, left, right, timer):
@@ -23,9 +23,16 @@ class WallFollow():
         self.ki = 0.1
         self.kd = 0.5
 
-    ## Given a distance value from LRIR0 make bot move to be 14 cm from wall.
+    ##get distance value from ir sensors
     #
-    # @param distance a number proportional to the distance between the LRIR sensor and a wall
+    # todo
+
+    def distance(self, irn):
+        pass
+
+    ## Given a distance value from distance make bot move to be 14 cm from wall.
+    #
+    # @param distance a number proportional to the distance between the edge of robot and wall
     #                   
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
@@ -35,7 +42,8 @@ class WallFollow():
             self.timer.reset()
 
             # error value
-            # 20 from hypotenuse of 45,45,90 triangle with 14.14 long sides
+            # 20 from hypotenuse of a 45,45,90
+            # triangle with 14.14 long sides
             err = 20 - distance 
 
             # Integrate over the last several timesteps.
