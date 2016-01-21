@@ -5,10 +5,12 @@ from math import atan
 from ..constants import WHEEL_WIDTH
 
 class Logic():
-    def __init__(self, imgWidth, imgHeight, color):
+    def __init__(self, imgWidth, imgHeight, color, leftEnc, rightEnc):
         self.imgWidth = imgWidth
         self.imgHeight = imgHeight
         self.color = color
+        self.leftEnc = leftEnc
+        self.rightEnc = rightEnc
         
     ## Given the camera data, outputs an angle at which the robot should move.
     #
@@ -38,11 +40,11 @@ class Logic():
     ## Given the current target angle, use sensor data to update.
     #
     # @param target The current target angle.
-    # @param time   The number of milliseconds that have passed since last update.
     def bayesianTargetUpdate(self, target):
-        # TODO: Definitely need more arguments. Need to think about how to implement.
-        # dthetha = (drightencval - dleftencval) / WHEEL_WIDTH
-        return target
+        out = (self.rightEnc.val - self.leftEnc.val) / WHEEL_WIDTH
+        self.rightEnc.write(0)
+        self.leftEnc.write(0)
+        return target + out
 
     
     ## Check what color a freshly caught block is.

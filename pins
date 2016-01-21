@@ -24,13 +24,13 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 21:	
 22:	Limit Switch
 23: Short Distance IR
-24:	Hugs Motor Encoder White
+24:	
 25:	Servo
-26: Hugs Motor Encoder Yellow
+26: 
 27:	Belt Motor Encoder White
 28:	Belt Moter Encoder Yellow
 29: Left Drive Encoder Yellow
 30: Left Drive Encoder White
-31:
-32:
+31: Hugs Motor Encoder Yellow
+32: Hugs Motor Encoder White
 33:	
