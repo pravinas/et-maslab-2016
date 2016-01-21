@@ -23,7 +23,8 @@ class WallFollow():
         self.ki = 0.1
         self.kd = 0.5
 
-    ##get distance value from ir sensors
+    ## get distance value from ir sensors
+    # returns distance from edge of bot to wall
     #
     # todo
 
