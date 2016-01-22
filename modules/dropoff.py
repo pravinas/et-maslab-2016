@@ -30,7 +30,7 @@ class DropoffModule(Module):
     def run(self):
 
         # Allow timeout.
-        if self.timer.millis() > self.timout:
+        if self.timer.millis() > self.timeout:
             print "Timed out from DROPOFF to FIND"
             return MODULE_FIND
 
