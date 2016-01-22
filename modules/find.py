@@ -3,9 +3,12 @@
 # Implements the FIND module of the competition code.
 
 from tamproxy import Timer
-from ..control import GoStraight
 from module import Module
-from ..constants import *
+
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from control import GoStraight
+from constants import *
 
 class FindModule(Module):
 

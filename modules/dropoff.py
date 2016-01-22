@@ -3,7 +3,10 @@
 # Implements the DROPOFF module of the competition code.
 
 from module import Module
-from ..constants import *
+
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from constants import *
 
 class DropoffModule(Module):
     def __init__(self, timer, servo, motorRight, motorLeft, doorTimer):
@@ -38,7 +41,7 @@ class DropoffModule(Module):
     def run(self):
 
         # Allow timeout.
-        if self.timer.millis() > self.timout:
+        if self.timer.millis() > self.timeout:
             print "Timed out from DROPOFF to FIND"
             return MODULE_FIND
 
@@ -54,3 +57,5 @@ class DropoffModule(Module):
                 self.motorLeft.write(0,0)
                 self.servo.write(self.closedValue)
                 return MODULE_DROPOFF
+        
+        return MODULE_DROPOFF

@@ -2,7 +2,9 @@
 #
 # File for algorithms that turn sensor data into more useful information.
 from math import atan
-from ..constants import WHEEL_WIDTH, CAMERA_WIDTH, CAMERA_HEIGHT
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from constants import *
 
 class Logic():
     def __init__(self, color=None, leftEnc=None, rightEnc=None):
