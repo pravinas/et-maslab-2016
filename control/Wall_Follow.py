@@ -1,4 +1,5 @@
 #Wall_Follow.py
+from long_range_ir import LRIR
 
 class WallFollow():
 
@@ -27,15 +28,15 @@ class WallFollow():
     ## get distance value from ir sensors
     # returns distance from edge of bot to wall
     #
-    # IR ordered from front right ascending spind down
-    # todo
+    # if statement determines which wall is nearest
+    # returns distance of side of robot to wall
 
-    def distance(self, IR0, IR1, IR2, IR3):
+    def distance(self):
 
-        if IR0 + IR1 < IR2 + IR3: #if right < left, wall closer on right
-            return (IR0 + IR1)/2
+        if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16): #if right < left, wall closer on right
+            return (LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
         else:
-            return -(IR2 + IR3)/2
+            return -(LRIR(self.tamp,14) + LRIR(self.tamp,16))/2
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -45,7 +46,7 @@ class WallFollow():
     #               speed of the robot.
 
     def move_to_target(self, distance, speed = 0):
-        if self.timer.millis() > 100:
+        if self.timer.millis() > 1000:
             self.timer.reset()
 
             # error value

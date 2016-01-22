@@ -1,4 +1,4 @@
-# test_long_range_ir.py
+# long_range_ir.py
 #
 # A sketch to test and calibrate the IR sensor.
 
