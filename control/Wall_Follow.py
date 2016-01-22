@@ -48,9 +48,12 @@ class WallFollow():
     #               speed of the robot.
 
     def followWall(self, distance, speed = 0):
+        print"followWall :D"
 
         if self.timer.millis() > 1000:
             self.timer.reset()
+
+            print"follow wall timer"
 
             # error value
             # 20 from hypotenuse of a 45,45,90
@@ -70,12 +73,10 @@ class WallFollow():
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
             '''
-            
 
+            print power
 
     ## Reinitialize this class to start taking data over.
     def reset(self):
         self.timer.reset()
         self.record = []
-        
-
