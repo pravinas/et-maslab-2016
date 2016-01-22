@@ -7,7 +7,7 @@ MODULE_PICKUP = 1
 class TestPickup(SyncedSketch):
 
     def setup(self):
-        limSwitch = DigitalInput(self.tamp, 22)
+        limSwitch = None #DigitalInput(self.tamp, 22)
         conveyorMotor = Motor(self.tamp, 7, 6)
         conveyorEncoder = Encoder(self.tamp, 28, 27)
         self.pickup = PickupModule(Timer(), limSwitch, conveyorMotor, conveyorEncoder)
