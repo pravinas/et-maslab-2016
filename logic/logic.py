@@ -2,7 +2,7 @@
 #
 # File for algorithms that turn sensor data into more useful information.
 from math import atan
-from os import sys, path
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
