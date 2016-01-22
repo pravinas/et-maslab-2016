@@ -33,10 +33,10 @@ class WallFollow():
 
     def distance(self):
 
-        if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16): #if right < left, wall closer on right
+        if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16):
             return (LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
         else:
-            return -(LRIR(self.tamp,14) + LRIR(self.tamp,16))/2
+            return -((LRIR(self.tamp,14) + LRIR(self.tamp,16)))/2
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
