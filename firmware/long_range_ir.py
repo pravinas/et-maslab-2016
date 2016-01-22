@@ -23,6 +23,7 @@ class TestIR(SyncedSketch):
             print "distance:",self.convertToDistance(raw)
             #print "average:",self.sum / self.timestep
 
+    ## Takes raw IR data and outputs centimeters
     def convertToDistance(self, raw):
         return (1.0/raw)*799400-9.119
 
