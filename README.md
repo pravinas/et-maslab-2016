@@ -29,7 +29,14 @@ Possible Failure modes:
 
 ### The PICKUP Module:
 
-This module launches when a block is sensed using the color sensor, interrupting the FIND process. It uses the conveyor belt motor encoders to figure out how far it has gone, then reverses itself until the conveyor belt is back in place.
+This module launches when a block is sensed using the color sensor, interrupting the FIND process. 
+
+- Initially, store the current encoder value and tell the motors to move the conveyor belt up.
+- Until the belt reaches the max encoder limit (+ the base value), continue to move upwards.
+- Stop the belt for a brief amount of time.
+- Move the belt downwards until either the encoder value is less than the base encoder value, or the conveyor belt limit switch is triggered.
+
+After these have all been completed in that order, either the FIND module or DROPOFF module is triggered, depending on how many blocks are in the stack.
 
 ### The DROPOFF Module:
 

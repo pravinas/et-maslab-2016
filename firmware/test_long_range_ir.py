@@ -1,11 +1,11 @@
-# test_short_range_ir.py
+# test_long_range_ir.py
 #
 # A sketch to test and calibrate the IR sensor.
 
 from tamproxy import SyncedSketch, Timer
 from short_range_ir import IR
 
-class TestIR(SyncedSketch):
+class TestIRBR(SyncedSketch):
     def setup(self):
         self.ir = IR(self.tamp, 16)
         self.sum = 0
