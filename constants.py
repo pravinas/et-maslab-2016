@@ -71,11 +71,6 @@ MODULE_PICKUP   = 1
 MODULE_DROPOFF  = 2
 MODULE_FOLLOW 	= 3
 
-# The encoder count for as far as we want the encoder to move.
-CONVEYOR_ENCODER_LIMIT  = 5 * 3200
-# The speed of the conveyor belt. (0-255)
-CONVEYOR_POWER          = 130
-
 # The limit point at which the motor is considered stalled.
 INTAKE_ENCODER_LIMIT    = 150
 # The speed of the intake motors. (0-255)
