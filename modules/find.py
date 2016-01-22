@@ -8,6 +8,7 @@ from module import Module
 from os import sys, path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from control import GoStraight
+from logic import Logic
 from constants import *
 
 class FindModule(Module):
