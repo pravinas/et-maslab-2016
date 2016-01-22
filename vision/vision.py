@@ -21,8 +21,8 @@ class BlockImg():
         return "Block: " + str((self.x,self.y,self.height))
 
 ## Color functions: Take a numpy array as input, and return a boolean array.
-GREEN = lambda img: np.logical_and(img.T[1] > 1.1 * img.T[0], img.T[1] > 1.1 * img.T[2]).T
-RED   = lambda img: np.logical_and(img.T[2] > 1.3 * img.T[0], img.T[2] > 1.3 * img.T[1]).T
+GREEN = lambda img: np.logical_and(img.T[1] > 1.1 * img.T[0], img.T[1] > 0.9 * img.T[2]).T
+RED   = lambda img: np.logical_and(img.T[2] > 1.9 * img.T[0], img.T[2] > 1.9 * img.T[1]).T
 
 class Vision():
 

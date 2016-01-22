@@ -7,7 +7,7 @@ from short_range_ir import IR
 
 class TestIR(SyncedSketch):
     def setup(self):
-        self.ir = IR(self.tamp, 17)
+        self.ir = IR(self.tamp, 16)
         self.sum = 0
         self.timer = Timer()
         self.timestep = 0

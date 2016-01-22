@@ -13,6 +13,7 @@ class Logic():
         self.color = color
         self.leftEnc = leftEnc
         self.rightEnc = rightEnc
+        self.lastTarget = 0
         
     ## Given the camera data, outputs an angle at which the robot should move.
     #
@@ -23,21 +24,21 @@ class Logic():
     def findTarget(self, block, stack):
         if block.height == 0:
             if stack.height == 0:
-                return None
+                return self.lastTarget
             else:
                 targetImg = stack
         else:
             targetImg = block
+        # Turns out we don't care about the y value. Probably.
+        # y = self.imgHeight - targetImg.y
+        x = (self.imgWidth/2 - targetImg.x)
+        
 
-        x = (self.imgWidth/2 - targetImg.x) * targetImg.y
-        y = self.imgHeight - targetImg.y
-
-
-        # TODO: This needs to be calibrated from its position on the robot itself. 
-        #       Should be a constant factor.
-        k = 1.0
-
-        return atan(k * x / y)
+        # This converts pixels to radians
+        k = .0093
+        print "x = ", x
+        self.lastTarget = atan(k*x)*180/3.14
+        return self.lastTarget
 
     ## Given the current target angle, use sensor data to update.
     #
