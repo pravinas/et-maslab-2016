@@ -3,7 +3,11 @@
 # Implements the DROPOFF module of the competition code.
 
 from module import Module
-from ..constants import *
+from os import sys, path
+
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from constants import *
 
 class DropoffModule(Module):
     def __init__(self, timer, servo):

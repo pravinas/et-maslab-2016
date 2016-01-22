@@ -1,7 +1,9 @@
 # follow.py
 
 from module import Module
-from ..constants import *
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from constants import *
 
 class FollowModule(Module):
     
