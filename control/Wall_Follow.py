@@ -4,7 +4,7 @@ class WallFollow():
 
     ## Initialize a WallFollowing.
     #
-    # @param left   A Motor representing t he left motor.
+    # @param left   A Motor representing the left motor.
     # @param right  A Motor representing the right motor.
     # @param timer  A Timer for moderating data taking.
     def __init__(self, left, right, timer):
