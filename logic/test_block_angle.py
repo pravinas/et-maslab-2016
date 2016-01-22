@@ -1,6 +1,8 @@
 ## use this file to find the angle between the robot and the block
 
 from logic import Logic
+from os import sys, path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from vision import Vision
 
 logic = Logic()
