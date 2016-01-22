@@ -28,6 +28,7 @@ class PickupModule(Module):
         self.stopT = 0              # time at which the belt stops.
         self.encmax = 5.0 * 3200    # encoder value at the top of the belt.
         self.power = 130            # power at which to drive motors.
+        self.timeout = 15000        # Time the module can spend on the module
 
         self.blocksCollected = 0
 
@@ -47,6 +48,15 @@ class PickupModule(Module):
     #
     # @return   The value of the next module to return to.
     def run(self):
+        if self.timer.millis() > self.timeout:
+            if self.blocksCollected >= 4:
+                print "Timed out from PICKUP to DROPOFF"
+                self.blocksCollected = 0
+                return MODULE_DROPOFF
+            else:
+                print "Timed out from PICKUP to FIND"
+                return MODULE_FIND
+
         if self.state == self.RAISING:
             # Check every timestep whether self.encoder.val > self.encval
             if self.encoder.val > self.encval + self.encmax:
