@@ -1,28 +1,26 @@
-## find.py
-#
-# Implements the FIND module of the competition code.
-
-from tamproxy import Timer
+from tamproxy import Timer, SyncedSketch
 from module import Module
 
-from os import sys, path
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from control import GoStraight
 from logic import Logic
 from constants import *
 
-class FindModule(Module):
 
-    def __init__(self, timer, leftMotor, rightMotor, vision, logic):
+class TestFind(SyncedSketch):
 
+    def setup(self):
         # Timeout to make sure we don't run over.
         self.timeout = 7000
 
         # Module timer
-        self.timer = timer
+        self.timer = Timer()
 
+        self.leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
+        self.rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         # GoStraight object to control movement
-        self.movement = GoStraight(leftMotor, rightMotor, Timer())
+        self.movement = GoStraight(self.leftMotor, self.rightMotor, Timer())
 
         # Timer object describing how much time has passed since the last 
         # camera input was processed.
@@ -30,30 +28,23 @@ class FindModule(Module):
         # Time in milliseconds between pictures being taken.
         self.cameraTimeout = 500
         # Vision object to read data from the camera.
-        self.vision = vision
+        self.vision = Vision()
 
         # Logic object for calculations
-        self.logic = logic
+        self.logic = Logic(True, 80, 60, debug=False) #False = green, True = red
 
-    ## Return True if there was an error in initialization, False otherwise.
-    def checkForInitializationErrors(self):
-        return self.vision.isCameraBlack()
-    
-    ## Set up the beginning of the find process.
-    def start(self):
+        self.startThing()
+
+    def loop(self):
+        self.runThing()
+
+    def startThing(self):
         self.target = None
         self.updateTime = 0
         self.movement.reset()
         self.timer.reset()
 
-    ## Try to find and move towards blocks on the map.
-    # 
-    # Turn until color is detected.
-    # Drive towards largest color until it is centered on the screen.
-    #
-    # @param arbitraryTarget    A target angle to tell the robot it wants to reach.
-    # @return   The value of the next module to return to.
-    def run(self, arbitraryTarget = 60):
+    def runThing(self):   
         # Allow timeout.
         if self.timer.millis() > self.timeout:
             print "Timed out from FIND to FOLLOW"
@@ -79,6 +70,7 @@ class FindModule(Module):
             self.movement.move_to_target(target)
             self.logic.bayesianTargetUpdate(target, self.timer.millis() - self.updateTime)
 
-        return MODULE_FIND
 
-
+if __name__ == "__main__":
+    sketch = TestFind(1, -0.00001, 100)
+    sketch.run()
