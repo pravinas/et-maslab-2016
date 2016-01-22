@@ -12,17 +12,16 @@ class DropoffModule(Module):
     def __init__(self, timer, servo, motorRight, motorLeft, doorTimer):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
-        self.openValue = 90     # Value in degrees the servo should be when the door is open.
-        self.closedValue = 180  # Value in degrees the servo should be when the door is closed.
-        self.timer = timer
-        self.servo = servo
+        self.waitTime2 = 1000   #Time in ms to wait for the robot to move forward and door to close.
+        self.openValue = 100     # Value in degrees the servo should be when the door is open.
+        self.closedValue = 172  # Value in degrees the servo should be when the door is closed.
+        self.timer = Timer()
+        self.servo = Servo(self.tamp, SERVO_PIN)
 
         self.motorRight = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         self.motorRight.write(1,0)
         self.motorLeft = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         self.motorLeft.write(1,0)
-
-        self.doorTimer = doorTimer
 
     ## Return True if there was an error in initialization, False otherwise.
     def checkForInitializationErrors(self):
@@ -43,19 +42,20 @@ class DropoffModule(Module):
         # Allow timeout.
         if self.timer.millis() > self.timeout:
             print "Timed out from DROPOFF to FIND"
+            self.motorRight.write(0,0)
+            self.motorLeft.write(0,0)
             return MODULE_FIND
 
         # After Door opens, go forward
-        if self.timer.millis() > self.waitTime:
-            self.doorTimer.reset()
+        if self.timer.millis() > self.waitTime and self.timer.millis() < self.waitTime2:
             self.motorRight.write(0,FORWARD_SPEED)
             self.motorLeft.write(0,FORWARD_SPEED)
 
-            # After robot moves forward enough, stop moving and close the door
-            if self.doorTimer.millis() > 3000:
-                self.motorRight.write(0,0)
-                self.motorLeft.write(0,0)
-                self.servo.write(self.closedValue)
-                return MODULE_DROPOFF
-        
-        return MODULE_DROPOFF
+        # After robot moves forward enough, stop moving and close the door
+        if self.timer.millis() > self.waitTime2:
+            self.motorRight.write(0,0)
+            self.motorLeft.write(0,0)
+            self.servo.write(self.closedValue)
+        #After robot finishes closing the door, go to the next module
+        if self.timer.millis() > self.waitTime + self.waitTime2:
+            return MODULE_DROPOFF
