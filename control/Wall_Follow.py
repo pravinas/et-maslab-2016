@@ -2,6 +2,11 @@
 '''
 from long_range_ir import LRIR
 '''
+from tamproxy import Timer
+import os, sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from control import GoStraight
+from constants import *
 
 class WallFollow():
 
@@ -14,7 +19,9 @@ class WallFollow():
         self.leftMotor = left
         self.rightMotor = right
         self.timer = timer
+        '''
         self.timer.reset()
+        '''
 
         # Number of values to record
         self.recordLen = 10
@@ -80,3 +87,5 @@ class WallFollow():
     def reset(self):
         self.timer.reset()
         self.record = []
+
+WallFollow(0, 0, 0)
