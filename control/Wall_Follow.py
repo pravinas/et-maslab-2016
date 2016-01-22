@@ -1,5 +1,8 @@
 #Wall_Follow.py
-from long_range_ir import LRIR
+
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from firmware.long_range_ir import LRIR
 
 class WallFollow():
 
@@ -63,9 +66,11 @@ class WallFollow():
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
             power = self.kp * err + self.ki * sum(self.record) + kd * deriv
-
+            '''
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            '''
+            print power
 
 
     ## Reinitialize this class to start taking data over.
