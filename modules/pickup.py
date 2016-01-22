@@ -68,6 +68,7 @@ class PickupModule(Module):
                 self.motor.write(0,0)
                 if self.blocksCollected >= 4:
                     print "Going from PICKUP to DROPOFF"
+                    self.blocksCollected = 0
                     return MODULE_DROPOFF
                 else:
                     print "Going from PICKUP to FIND"
@@ -75,6 +76,7 @@ class PickupModule(Module):
 
         else:
             print "Unexpected action index in PICKUP"
+            self.blocksCollected = 0
             return MODULE_DROPOFF
 
         return MODULE_PICKUP
