@@ -88,3 +88,6 @@ CAMERA_HEIGHT   = 60
 
 # Distance between wheels in inches.
 WHEEL_WIDTH	= 12
+
+#Default speed for going forward
+FORWARD_SPEED = 70

@@ -6,7 +6,7 @@ from module import Module
 from ..constants import *
 
 class DropoffModule(Module):
-    def __init__(self, timer, servo):
+    def __init__(self, timer, servo, motorRight, motorLeft, doorTimer):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
         self.openValue = 90     # Value in degrees the servo should be when the door is open.
@@ -14,13 +14,21 @@ class DropoffModule(Module):
         self.timer = timer
         self.servo = servo
 
+        self.motorRight = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
+        self.motorRight.write(1,0)
+        self.motorLeft = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
+        self.motorLeft.write(1,0)
+
+        self.doorTimer = doorTimer
+
     ## Return True if there was an error in initialization, False otherwise.
     def checkForInitializationErrors(self):
-        # TODO: Make sure servo is initialized in the "closed" position.
+        # soft TODO: Make sure servo is initialized in the "closed" position.
         return False
 
     ## Set up the beginning of the dropoff process.
     def start(self):
+        # TODO: Make sure that the cube drop-off location is actually good
         self.timer.reset()
         self.servo.write(self.openValue)
 
@@ -34,9 +42,15 @@ class DropoffModule(Module):
             print "Timed out from DROPOFF to FIND"
             return MODULE_FIND
 
+        # After Door opens, go forward
         if self.timer.millis() > self.waitTime:
-            # TODO: drive forward a couple inches
-            self.servo.write(self.closedValue)
-            raise NotImplementedError
-        
-        return MODULE_DROPOFF
+            self.doorTimer.reset()
+            self.motorRight.write(0,FORWARD_SPEED)
+            self.motorLeft.write(0,FORWARD_SPEED)
+
+            # After robot moves forward enough, stop moving and close the door
+            if self.doorTimer.millis() > 3000:
+                self.motorRight.write(0,0)
+                self.motorLeft.write(0,0)
+                self.servo.write(self.closedValue)
+                return MODULE_DROPOFF
