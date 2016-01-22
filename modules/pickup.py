@@ -18,7 +18,7 @@ class PickupModule(Module):
 
     def __init__(self, timer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
         self.timer = timer
-        self.limSwitch = conveyorLimSwitch
+        self.limSwitch = conveyorLimSwitch  # Triggered when on
         self.motor = conveyorMotor
         self.encoder = conveyorEncoder
         self.encoder.write(0)
@@ -26,7 +26,7 @@ class PickupModule(Module):
         self.encval = 0             # base encoder value when the pickup module is first called.
         self.stopTime = 500         # time in ms for the conveyor belt to stop at the top.
         self.stopT = 0              # time at which the belt stops.
-        self.encmax = 5.0 * 3200    # encoder value at the top of the belt.
+        self.encmax = 4.75 * 3200   # encoder value at the top of the belt.
         self.power = 130            # power at which to drive motors.
         self.timeout = 15000        # Time the module can spend on the module
 
@@ -68,12 +68,11 @@ class PickupModule(Module):
             # Stop for a short time
             if self.timer.millis() > self.stopT + self.stopTime:
                 self.state = self.LOWERING
-                self.motor.write(self.DOWN, self.power)
+                self.motor.write(self.BELT_DOWN, self.power)
                 self.blocksCollected += 1
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == self.LOWERING:
-            # TODO: Take limswitch into account. Shouldn't be hard?
             if self.encoder.val < self.encval:
                 self.motor.write(0,0)
                 if self.blocksCollected >= 4:
