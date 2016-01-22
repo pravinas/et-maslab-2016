@@ -1,5 +1,9 @@
 #Wall_Follow.py
 
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from firmware.long_range_ir import LRIR
+
 class WallFollow():
 
     ## Initialize a WallFollowing.
@@ -27,15 +31,15 @@ class WallFollow():
     ## get distance value from ir sensors
     # returns distance from edge of bot to wall
     #
-    # IR ordered from front right ascending spind down
-    # todo
+    # if statement determines which wall is nearest
+    # returns distance of side of robot to wall
 
-    def distance(self, IR0, IR1, IR2, IR3):
+    def distance(self):
 
-        if IR0 + IR1 < IR2 + IR3: #if right < left, wall closer on right
-            return (IR0 + IR1)/2
+        if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16):
+            return (LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
         else:
-            return -(IR2 + IR3)/2
+            return -((LRIR(self.tamp,14) + LRIR(self.tamp,16)))/2
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -45,7 +49,7 @@ class WallFollow():
     #               speed of the robot.
 
     def move_to_target(self, distance, speed = 0):
-        if self.timer.millis() > 100:
+        if self.timer.millis() > 1000:
             self.timer.reset()
 
             # error value
@@ -62,9 +66,11 @@ class WallFollow():
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
             power = self.kp * err + self.ki * sum(self.record) + kd * deriv
-
+            '''
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            '''
+            print power
 
 
     ## Reinitialize this class to start taking data over.
