@@ -1,8 +1,7 @@
 #Wall_Follow.py
-
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from firmware.long_range_ir import LRIR
+'''
+from long_range_ir import LRIR
+'''
 
 class WallFollow():
 
@@ -48,14 +47,18 @@ class WallFollow():
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
 
-    def move_to_target(self, distance, speed = 0):
+    def followWall(self, distance, speed = 0):
+        print"followWall :D"
+
         if self.timer.millis() > 1000:
             self.timer.reset()
+
+            print"follow wall timer"
 
             # error value
             # 20 from hypotenuse of a 45,45,90
             # triangle with 14.14 long sides
-            err = 20 - distance 
+            err = 20 - distance
 
             # Integrate over the last several timesteps.
             self.record.insert(0, err)
@@ -70,12 +73,10 @@ class WallFollow():
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
             '''
-            print power
 
+            print power
 
     ## Reinitialize this class to start taking data over.
     def reset(self):
         self.timer.reset()
         self.record = []
-        
-
