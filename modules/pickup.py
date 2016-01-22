@@ -3,27 +3,35 @@
 # Implements the PICKUP module of the competition code.
 
 from module import Module
-from os import sys, path
+
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
 class PickupModule(Module):
-    def __init__(self, timer, conveyorMotor, conveyorEncoder):
-        self.timer = timer
-        self.timeout = 7000
-        self.conveyorMotor = conveyorMotor
-        self.conveyorEncoder = conveyorEncoder
-        self.blocksPickedUp = 0
+    RAISING  = 0
+    STOPPING = 1
+    LOWERING = 2
+    FINISHING= 3
 
-    ## Return True if there was an error in initialization, False otherwise.
-    def checkForInitializationErrors(self):
-        return False
+    def __init__(self, timer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
+        self.timer = timer
+        self.limSwitch = conveyorLimSwitch
+        self.motor = conveyorMotor
+        self.encoder = conveyorEncoder
+        self.encoder.write(0)
+
+        self.encval = 0             # base encoder value when the pickup module is first called.
+        self.checkTime = 100        # time in ms between checking values
+        self.stopTime = 500         # time in ms for the conveyor belt to stop at the top.
+        self.encmax = 5.0 * 3200    # encoder value at the top of the belt.
+
+        self.state = RAISING
     
     ## Set up the beginning of the pickup process.
     def start(self):
-        self.conveyorEncoder.write(0)
-        self.conveyorMotor.write(True, CONVEYOR_POWER)
         self.timer.reset()
+        self.encval = self.encoder.val
 
     ## Pick up a block from the block capture mechanism.
     #
@@ -32,31 +40,14 @@ class PickupModule(Module):
     #
     # @return   The value of the next module to return to.
     def run(self):
-
-        # Allow timeout.
-        if self.timer.millis() > self.timeout:
-            print "Timed out from PICKUP to FIND"
-            return MODULE_FIND
-
-        encval = self.conveyorEncoder.val
-
-        # Move up the conveyor belt until it hits the encoder limit.
-        if encval > CONVEYOR_ENCODER_LIMIT:
-            self.conveyorMotor.write(True, CONVEYOR_POWER)
+        if self.state == RAISING:
+            raise NotImplementedError
+        elif self.state == STOPPING:
+            raise NotImplementedError
+        elif self.state == LOWERING:
+            raise NotImplementedError
+        elif self.state == FINISHING:
+            raise NotImplementedError
         else:
-            self.conveyorMotor.write(False, CONVEYOR_POWER)
-
-        # Stop the motor when it gets to the bottom.
-        if encval < 0 and self.timer.millis() > 200:
-            self.conveyorMotor.write(False, 0)
-            self.blocksPickedUp += 1
-
-            # Switch modules
-            if self.blocksPickedUp >= 4:
-                print "Going from PICKUP to DROPOFF"
-                return MODULE_DROPOFF
-            else:
-                print "Going from PICKUP to FIND"
-                return MODULE_FIND
-        
-        return MODULE_PICKUP
+            print "Unexpected action index in PICKUP"
+            return MODULE_DROPOFF
