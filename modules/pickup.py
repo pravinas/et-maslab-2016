@@ -68,7 +68,7 @@ class PickupModule(Module):
             # Stop for a short time
             if self.timer.millis() > self.stopT + self.stopTime:
                 self.state = self.LOWERING
-                self.motor.write(self.DOWN, self.power)
+                self.motor.write(self.BELT_DOWN, self.power)
                 self.blocksCollected += 1
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
