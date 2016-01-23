@@ -61,9 +61,8 @@ class WallFollow():
             print"follow wall timer"
 
             # error value
-            # 20 from hypotenuse of a 45,45,90
-            # triangle with 14.14 long sides
-            err = 20 - distance
+            # 50 from hypotenuse of a 45,45,90
+            err = 50 - distance
 
             # Integrate over the last several timesteps.
             self.record.insert(0, err)
