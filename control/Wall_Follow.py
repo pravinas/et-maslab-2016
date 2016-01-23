@@ -5,7 +5,6 @@ from tamproxy import Timer
 import os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from control import GoStraight
-from long_range_ir import LRIR
 from constants import *
 
 class WallFollow():
@@ -15,11 +14,15 @@ class WallFollow():
     # @param left   A Motor representing the left motor.
     # @param right  A Motor representing the right motor.
     # @param timer  A Timer for moderating data taking.
-    def __init__(self, left, right, timer, tamp):
+    def __init__(self, left, right, timer, ir0, ir1, ir2, ir3):
         self.leftMotor = left
         self.rightMotor = right
         self.timer = Timer()
         self.timer.reset()
+        self.ir0 = ir0
+        self.ir1 = ir1
+        self.ir2 = ir2
+        self.ir3 = ir3
 
         self.tamp = tamp
 
@@ -41,11 +44,11 @@ class WallFollow():
     # returns distance of side of robot to wall
 
     def distance(self):
-
-        if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16):
-            return (LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
+        # TODO: This is hacky. Fix it to be nice, or at least well-docced.
+        if self.ir1.read_ir() + self.ir3.read_ir() < self.ir0.read_ir() + self.ir2.read_ir():
+            return (self.ir1.read_ir() + self.ir3.read_ir())/2
         else:
-            return -((LRIR(self.tamp,14) + LRIR(self.tamp,16)))/2
+            return -((self.ir0.read_ir() + self.ir2.read_ir())/2)
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #

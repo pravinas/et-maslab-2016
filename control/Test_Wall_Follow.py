@@ -7,13 +7,18 @@
 from Wall_Follow import WallFollow
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor
+from long_range_ir import LRIR
 
 class TestWallFollow(SyncedSketch):
     
     def setup(self):
         left = Motor(self.tamp, 5, 4)
         right = Motor(self.tamp, 2, 3)
-        self.movement = WallFollow(left, right, Timer(), self.tamp)
+        ir0 = LRIR(self.tamp,14)
+        ir1 = LRIR(self.tamp,15)
+        ir2 = LRIR(self.tamp,16)
+        ir3 = LRIR(self.tamp,17)
+        self.movement = WallFollow(left, right, Timer(), ir0, ir1, ir2, ir3)
         self.timer = Timer()
 
     def loop(self):
