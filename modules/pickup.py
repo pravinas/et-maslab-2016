@@ -61,6 +61,7 @@ class PickupModule(Module):
             # Check every timestep whether self.encoder.val > self.encval
             if self.encoder.val > self.encval + self.encmax:
                 self.state = self.STOPPING
+                self.motor.write(0,0)
                 self.stopT = self.timer.millis()
                 print "STOPPING at t =", self.stopT
 
