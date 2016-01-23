@@ -11,7 +11,7 @@ class BeltMove(SyncedSketch):
         self.conveyorMotor = Motor(self.tamp, 7, 6)
 
     def loop(self):
-        self.conveyorMotor.write(DOWN, 75)
+        self.conveyorMotor.write(UP, 75)
 
 if __name__ == "__main__":
     sketch = BeltMove(1, -0.00001, 100)

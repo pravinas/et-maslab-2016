@@ -1,4 +1,5 @@
 from tamproxy import Timer, SyncedSketch
+from tamproxy.devices import Motor
 from module import Module
 from find import FindModule
 
