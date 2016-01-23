@@ -1,5 +1,5 @@
 from tamproxy import Timer, SyncedSketch
-from tamproxy.devices import Motor
+from tamproxy.devices import Motor, Color
 from module import Module
 from find import FindModule
 
@@ -16,12 +16,17 @@ class TestFind(SyncedSketch):
         leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT)
-        logic = Logic()
+        logic = Logic(color = Color(self.tamp))
 
         self.find = FindModule(Timer(), leftMotor, rightMotor, vision, logic)
         self.find.start()
 
+        self.myTimer = Timer()
+
     def loop(self):
+        if self.myTimer.millis() > 100:
+            print "hi"
+            self.myTimer.reset()
         response = self.find.run()
         if response != MODULE_FIND:
             self.stop()
