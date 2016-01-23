@@ -13,18 +13,18 @@ class TestWallFollow(SyncedSketch):
     def setup(self):
         left = Motor(self.tamp, 5, 4)
         right = Motor(self.tamp, 2, 3)
-        self.movement = WallFollow(left, right, Timer())
+        self.movement = WallFollow(left, right, Timer(), self.tamp)
         self.timer = Timer()
 
     def loop(self):
         if self.timer.millis() > 100:
             self.timer.reset()
 
-            # Intended behavior: bot will slowly turn right
+            # Intended behavior: bot will follow wall
             # IR return distance, 50 speed
 
 
-            self.movement.followWall(distance(),50)
+            self.movement.followWall(self.movement.distance(),50)
 
 
 

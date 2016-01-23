@@ -15,11 +15,13 @@ class WallFollow():
     # @param left   A Motor representing the left motor.
     # @param right  A Motor representing the right motor.
     # @param timer  A Timer for moderating data taking.
-    def __init__(self, left, right, timer):
+    def __init__(self, left, right, timer, tamp):
         self.leftMotor = left
         self.rightMotor = right
         self.timer = Timer()
         self.timer.reset()
+
+        self.tamp = tamp
 
         # Number of values to record
         self.recordLen = 10
@@ -29,7 +31,7 @@ class WallFollow():
         # Tweak values as needed
         self.kp = 0.5
         self.ki = 0.1
-        self.kd = 0.5
+        self.kd = 0.4
 
 
     ## get distance value from ir sensors
@@ -41,9 +43,9 @@ class WallFollow():
     def distance(self):
 
         if LRIR(self.tamp,15) + LRIR(self.tamp,17) < LRIR(self.tamp,14) + LRIR(self.tamp,16):
-            return -(LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
+            return (LRIR(self.tamp,15) + LRIR(self.tamp,17))/2
         else:
-            return ((LRIR(self.tamp,14) + LRIR(self.tamp,16)))/2
+            return -((LRIR(self.tamp,14) + LRIR(self.tamp,16)))/2
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -52,7 +54,7 @@ class WallFollow():
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
 
-    def followWall(self, distance, speed = 0):
+    def followWall(self, distance, speed):
 
         if self.timer.millis() > 1000:
             self.timer.reset()
@@ -72,8 +74,8 @@ class WallFollow():
 
             power = self.kp * err + self.ki * sum(self.record) + self.kd * deriv
 
-            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
-            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            self.leftMotor.write ((speed + power) > 0, min(abs(speed + power), 255))
+            self.rightMotor.write((speed - power) > 0, min(abs(speed - power), 255))
 
 
     ## Reinitialize this class to start taking data over.
