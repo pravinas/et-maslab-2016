@@ -9,7 +9,7 @@ class LRIR(AnalogInput):
 
     ## Please see the tamproxy AnalogInput class for more details.
     def __init__(self, tamproxy, pin):
-        super(IR, self).__init__(tamproxy, pin)
+        super(LRIR, self).__init__(tamproxy, pin)
         while self.id is None: pass
         self.start_continuous()
 
