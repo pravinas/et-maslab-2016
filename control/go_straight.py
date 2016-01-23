@@ -19,7 +19,7 @@ class GoStraight():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1
+        self.kp = 3.0
         self.ki = 0.1
         self.kd = 0.5
 

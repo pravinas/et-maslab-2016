@@ -15,7 +15,7 @@ class TestFind(SyncedSketch):
     def setup(self):
         leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
-        vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT)
+        vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
         logic = Logic(color = Color(self.tamp))
 
         self.find = FindModule(Timer(), leftMotor, rightMotor, vision, logic)

@@ -53,7 +53,7 @@ class FindModule(Module):
     #
     # @param arbitraryTarget    A target angle to tell the robot it wants to reach.
     # @return   The value of the next module to return to.
-    def run(self, arbitraryTarget = 60):
+    def run(self, arbitraryTarget = 0):
         # Allow timeout.
         if self.timer.millis() > self.timeout:
             print "Timed out from FIND to FOLLOW"
@@ -72,12 +72,12 @@ class FindModule(Module):
             self.updateTime = self.timer.millis()
 
         # Check if we see anything of interest on the screen.
-        if target == None:
+        if self.target == None:
             self.movement.move_to_target(arbitraryTarget)
             # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
-            self.movement.move_to_target(target)
-            self.logic.bayesianTargetUpdate(target, self.timer.millis() - self.updateTime)
+            self.movement.move_to_target(self.target)
+            self.logic.bayesianTargetUpdate(self.target, self.timer.millis() - self.updateTime)
 
         return MODULE_FIND
 
