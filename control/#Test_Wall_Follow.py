@@ -18,7 +18,10 @@ class TestWallFollow(SyncedSketch):
         if self.timer.millis() > 100:
             self.timer.reset()
 
-            # Intended behavior:
+            # Intended behavior: bot will turn right slightly
+
+            self.movement.followWall(51,50)
+
 
 
             
