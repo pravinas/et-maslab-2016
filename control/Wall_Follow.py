@@ -1,5 +1,5 @@
 #Wall_Follow.py
-#when compiled nothing happens.
+#when run returns no module long_range_ir
 
 from tamproxy import Timer
 import os, sys
@@ -73,10 +73,9 @@ class WallFollow():
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
             power = self.kp * err + self.ki * sum(self.record) + kd * deriv
-            '''
+
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
-            '''
 
             print power
 

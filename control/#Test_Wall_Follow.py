@@ -2,6 +2,8 @@
 #
 # A test file for the control objects.
 
+#When run returns no module named long_range_ir
+
 from Wall_Follow import followWall
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor
@@ -18,7 +20,8 @@ class TestWallFollow(SyncedSketch):
         if self.timer.millis() > 100:
             self.timer.reset()
 
-            # Intended behavior: bot will turn right slightly
+            # Intended behavior: bot will slowly turn right
+            # 51 distance, 50 speed
 
             self.movement.followWall(51,50)
 
