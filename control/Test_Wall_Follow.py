@@ -24,12 +24,13 @@ class TestWallFollow(SyncedSketch):
     def loop(self):
         if self.timer.millis() > 100:
             self.timer.reset()
+            print self.movement.distance()
 
             # Intended behavior: bot will follow wall
             # IR return distance, 50 speed
 
 
-            self.movement.followWall(self.movement.distance(),50)
+            self.movement.followWall(self.movement.distance(),-30)
 
 
 

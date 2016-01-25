@@ -43,10 +43,10 @@ class WallFollow():
 
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
-        if self.ir1.read_ir() + self.ir3.read_ir() < self.ir0.read_ir() + self.ir2.read_ir():
-            return (self.ir1.read_ir() + self.ir3.read_ir())/2
+        if self.ir1.read_ir()  < self.ir0.read_ir() 
+            return (self.ir1.read_ir()) 
         else:
-            return -((self.ir0.read_ir() + self.ir2.read_ir())/2)
+            return -(self.ir0.read_ir()) 
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -73,10 +73,10 @@ class WallFollow():
             # Take the derivative over recorded history.
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
-            power = self.kp * err + self.ki * sum(self.record) + self.kd * deriv
+            power = self.kp * err #+ self.ki * sum(self.record) + self.kd * deriv
 
-            self.leftMotor.write ((speed + power) > 0, min(abs(speed + power), 255))
-            self.rightMotor.write((speed - power) > 0, min(abs(speed - power), 255))
+            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
+            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
 
 
     ## Reinitialize this class to start taking data over.
