@@ -45,15 +45,14 @@ class WallFollow():
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
         #only using front right IR
-        return self.ir1.read_ir()
+        #return self.ir1.read_ir()
 
-        #bellow uses both front IRs
-        '''
+        #uses both front IRs
         if self.ir1.read_ir()  < self.ir0.read_ir() 
             return (self.ir1.read_ir()) 
         else:
             return -(self.ir0.read_ir())
-        '''
+        
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
