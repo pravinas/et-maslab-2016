@@ -41,6 +41,7 @@ class Robot(SyncedSketch):
 
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
+        self.backDoorDervo.write(172)
 
         #################################
         ####  INTERNAL MODULE SETUP  ####
@@ -51,7 +52,7 @@ class Robot(SyncedSketch):
         # Are the intake motors reversing? True if so, False if going forwards.
         self.intakeDirection = False
         # Start the intake motor.
-        self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
+        #self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
         # Logic object for FIND module
         self.logic = Logic(CAMERA_WIDTH, CAMERA_HEIGHT)
@@ -71,7 +72,7 @@ class Robot(SyncedSketch):
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
 
-        self.checkForInitializationErrors()
+        #self.checkForInitializationErrors()
 
     def loop(self):
 
