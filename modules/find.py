@@ -16,7 +16,7 @@ class FindModule(Module):
     def __init__(self, timer, leftMotor, rightMotor, vision, logic):
 
         # Timeout to make sure we don't run over.
-        self.timeout = 7000
+        self.timeout = 20000
 
         # Module timer
         self.timer = timer
@@ -28,7 +28,7 @@ class FindModule(Module):
         # camera input was processed.
         self.cameraTimer = Timer()
         # Time in milliseconds between pictures being taken.
-        self.cameraTimeout = 500
+        self.cameraTimeout = 100
         # Vision object to read data from the camera.
         self.vision = vision
 
@@ -60,9 +60,9 @@ class FindModule(Module):
             return MODULE_FOLLOW
 
         # Check if we need to exit the module.
-        if self.logic.checkForBlock() > 0 : 
-            print "Going from FIND to PICKUP"
-            return MODULE_PICKUP
+        #if self.logic.checkForBlock() > 0 : 
+        #    print "Going from FIND to PICKUP"
+        #    return MODULE_PICKUP
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
@@ -78,7 +78,7 @@ class FindModule(Module):
             # TODO: Make sure not to enter this subroutine when there is a block in the blind spot.
         else:
             self.movement.move_to_target(self.target)
-            self.logic.bayesianTargetUpdate(self.target, self.timer.millis() - self.updateTime)
+            self.logic.bayesianTargetUpdate(self.target)
 
         return MODULE_FIND
 

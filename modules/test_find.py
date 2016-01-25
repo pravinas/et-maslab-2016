@@ -27,9 +27,9 @@ class TestFind(SyncedSketch):
         self.myTimer = Timer()
 
     def loop(self):
-        if self.myTimer.millis() > 100:
-            print "hi"
-            self.myTimer.reset()
+        #if self.myTimer.millis() > 100:
+        #    print "hi"
+        #    self.myTimer.reset()
         response = self.find.run()
         if response != MODULE_FIND:
             self.stop()

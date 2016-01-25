@@ -12,7 +12,7 @@ class DropoffModule(Module):
     def __init__(self, timer, servo, motorRight, motorLeft):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
-        self.waitTime2 = 1000   #Time in ms to wait for the robot to move forward and door to close.
+        self.waitTime2 = 1500   #Time in ms to wait for the robot to move forward and door to close.
         self.openValue = 100     # Value in degrees the servo should be when the door is open.
         self.closedValue = 172  # Value in degrees the servo should be when the door is closed.
         self.timer = timer

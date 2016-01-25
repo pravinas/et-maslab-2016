@@ -14,14 +14,14 @@ class GoStraight():
         self.timer.reset()
 
         # Number of values to record
-        self.recordLen = 10
+        self.recordLen = 20
         # Record of values from youngest to oldest.
         self.record = []
 
         # Tweak values as needed
-        self.kp = 3.0
-        self.ki = 0.1
-        self.kd = 0.5
+        self.kp = 2.0
+        self.ki = 0.01
+        self.kd = 1.0
 
     ## Given a target angle different from where we are currently facing,
     #  move to face that angle.
@@ -30,7 +30,7 @@ class GoStraight():
     #               robot is facing.
     # @param speed  A value from -255 to 255 that corresponds to the general 
     #               speed of the robot.
-    def move_to_target(self, theta, speed = 0):
+    def move_to_target(self, theta, speed = -30):
         if self.timer.millis() > 100:
             self.timer.reset()
 
@@ -43,12 +43,12 @@ class GoStraight():
                 self.record.pop()
 
             # Take the derivative over recorded history.
-            deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
+            deriv = self.record[0] - self.record[4] if len(self.record) > 4 else 0
 
-            power = self.kp * err #+ self.ki * sum(self.record) + self.kd * deriv
+            power = self.kp * err + self.ki * sum(self.record) + self.kd * deriv
 
-            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
-            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            self.leftMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            self.rightMotor.write((speed - power) > 0, min(abs(speed - power), 255))
 
             print "GoStraight Power: ", power
 
