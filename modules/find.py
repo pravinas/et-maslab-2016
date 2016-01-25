@@ -66,9 +66,10 @@ class FindModule(Module):
         if self.timer.millis() > self.timeout:
             print "Timed out from FIND to FOLLOW"
             self.intakeMotor.write(0, 0)
-            return MODULE_FOLLOW
+            return MODULE_PICKUP
 
         # Check if we need to exit the module.
+        # TODO: Make this actually work
         if self.blockTimer.millis() > 100:
             self.blockTimer.reset()
             if self.logic.checkForBlock(self.color.r, self.color.g, self.color.b) > 0 : 
