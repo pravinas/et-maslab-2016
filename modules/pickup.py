@@ -27,8 +27,8 @@ class PickupModule(Module):
         self.encval = 0             # base encoder value when the pickup module is first called.
         self.stopTime = 500         # time in ms for the conveyor belt to stop at the top.
         self.stopT = 0              # time at which the belt stops.
-        self.encmax = 4.6 * 3200    # encoder value at the top of the belt.
-        self.power = 80            # power at which to drive motors.
+        self.encmax = 5.1 * 3200    # encoder value at the top of the belt.
+        self.power = 130            # power at which to drive motors.
         self.timeout = 15000        # Time the module can spend on the module
 
         self.blocksCollected = 0
@@ -75,7 +75,7 @@ class PickupModule(Module):
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == self.LOWERING:
-            if self.limTimer.millis() > 100:
+            if self.limTimer.millis() > 50:
                 self.limTimer.reset()
                 if self.limSwitch.val:
                     self.motor.write(0,0)

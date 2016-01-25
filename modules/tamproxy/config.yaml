@@ -2,7 +2,7 @@
 host:
     # fill out port to disable automatic scan
     port:                   ''
-    window_size:            12
+    window_size:            8
         # Number of packets that can be dispatched and unacklowledged at 
         # any point in time. Generally should be increased until increasing
         # it more doesn't increase the throughput much.
@@ -96,6 +96,7 @@ devices:
     gyro:
         code:           G       # 0x47
         read_code:      R       # 0x52
+        calibrate_code: C       # 0x43
     ultrasonic:
         code:           U       # 0x55
     ir:
