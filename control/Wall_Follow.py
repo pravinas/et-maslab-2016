@@ -43,17 +43,8 @@ class WallFollow():
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
-        # comment below only uses front right IR
-        # no corner problem
         # issue: drives right when approachin wall and can't follow it
-
-        # uses both front IRs returns value of nearest one
-        # calls corner if too close to wall with both IRs
-
-        if self.ir1.read_ir() + self.ir0.read_ir() < 90:
-
-            self.corner(self)
-
+        # uses both front IRs returns distance of nearest wall
         if self.ir1.read_ir()  < self.ir0.read_ir():
             #right wall nearer 
             return (self.ir1.read_ir()) 
@@ -73,23 +64,28 @@ class WallFollow():
         if self.timer.millis() > 100:
             self.timer.reset()
 
+            if self.ir1.read_ir() + self.ir0.read_ir() < 90:
+                self.corner(self)
+            
+            else:
 
-            # error value
-            # 50 from hypotenuse of a 45,45,90
-            err = 50 - distance
+                # error value
+                # 50 from hypotenuse of a 45,45,90
+                err = 50 - distance
 
-            # Integrate over the last several timesteps.
-            self.record.insert(0, err)
-            if len(self.record) > self.recordLen:
-                self.record.pop()
+                # Integrate over the last several timesteps.
+                self.record.insert(0, err)
 
-            # Take the derivative over recorded history.
-            deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
+                if len(self.record) > self.recordLen:
+                    self.record.pop()
 
-            power = self.kp * err + self.kd * deriv + self.ki * sum(self.record) 
+                # Take the derivative over recorded history.
+                deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
-            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
-            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+                power = self.kp * err + self.kd * deriv + self.ki * sum(self.record)
+
+                self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
+                self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
 
     ## Makes bot turn spinup(counter clockwise if too close to wall)
     # will stop once IR0 is significantly smaller in value than IR1
