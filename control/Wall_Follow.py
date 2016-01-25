@@ -50,7 +50,7 @@ class WallFollow():
         # uses both front IRs returns value of nearest one
         # calls corner if too close to wall with both IRs
 
-        if self.ir1.read_ir() + self.ir0.read_ir() < 50:
+        if self.ir1.read_ir() + self.ir0.read_ir() < 90:
 
             self.corner(self)
 
@@ -92,8 +92,23 @@ class WallFollow():
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
 
     ## Makes bot turn spinup(counter clockwise if too close to wall)
-    # will stop once one IR is significantly different in value than the other
+    # will stop once IR0 is significantly smaller in value than IR1
     def corner(self):
+        #not sure how to write motors
+        #todo
+
+        self.leftMotor.write (1, 255)
+        self.rightMotor.write(1, 255)
+        
+        if self.timer.millis() > 100:
+            self.timer.reset()
+
+            # once right IR is 30 cm less in value, bot will resume following wall.
+
+            if (self.ir1.read_ir() + 30) < self.ir0.read_ir():
+            
+                self.followWall(self.distance(),-30)
+
 
 
     ## Reinitialize this class to start taking data over.
