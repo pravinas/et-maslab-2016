@@ -57,7 +57,7 @@ class WallFollow():
 
     def followWall(self, distance, speed):
 
-        if self.timer.millis() > 1000:
+        if self.timer.millis() > 100:
             self.timer.reset()
 
 
