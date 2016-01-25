@@ -60,9 +60,9 @@ class FindModule(Module):
             return MODULE_FOLLOW
 
         # Check if we need to exit the module.
-        #if self.logic.checkForBlock() > 0 : 
-        #    print "Going from FIND to PICKUP"
-        #    return MODULE_PICKUP
+        if self.logic.checkForBlock() > 0 : 
+            print "Going from FIND to PICKUP"
+            return MODULE_PICKUP
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:

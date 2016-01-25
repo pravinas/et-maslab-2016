@@ -5,8 +5,8 @@ from tamproxy.devices import Motor, Encoder
 
 HUGS_MOTOR_CONTROLLER_DIRECTION     = 8
 HUGS_MOTOR_CONTROLLER_PWM           = 9
-HUGS_MOTOR_ENCODER_YELLOW           = 26
-HUGS_MOTOR_ENCODER_WHITE            = 24
+HUGS_MOTOR_ENCODER_YELLOW           = 31
+HUGS_MOTOR_ENCODER_WHITE            = 32
 
 # The limit point at which the motor is considered stalled.
 INTAKE_ENCODER_LIMIT    = 150
