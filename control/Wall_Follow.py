@@ -31,7 +31,7 @@ class WallFollow():
 
         # Tweak values as needed
         self.kp = 0.9
-        self.ki = 0.1
+        self.ki = -0.00005
         self.kd = -0.2
 
 
@@ -45,7 +45,7 @@ class WallFollow():
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
         #only using front right IR
-        #return self.ir1.read_ir()
+        return self.ir1.read_ir()
 
         #bellow uses both front IRs
         '''
@@ -80,7 +80,7 @@ class WallFollow():
             # Take the derivative over recorded history.
             deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
-            power = self.kp * err + self.kd * deriv #+ self.ki * sum(self.record) 
+            power = self.kp * err + self.kd * deriv + self.ki * sum(self.record) 
 
             self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
             self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
