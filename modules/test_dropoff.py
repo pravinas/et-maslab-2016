@@ -8,12 +8,14 @@ class TestDropoff(SyncedSketch):
 
     def setup(self):
         self.timer = Timer()
+        self.loopTimer = Timer()
         self.servo = Servo(self.tamp, SERVO_PIN)
 
         self.motorRight = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         self.motorLeft = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
+        self.encoder = Encoder(self.tamp, 0, 1)
 
-        self.dropoff = DropoffModule(self.timer, self.servo, self.motorRight, self.motorLeft)
+        self.dropoff = DropoffModule(self.timer, self.loopTimer, self.servo, self.motorRight, self.motorLeft, self.encoder)
         self.dropoff.start()
 
     def loop(self):
