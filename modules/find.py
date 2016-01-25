@@ -3,6 +3,7 @@
 # Implements the FIND module of the competition code.
 
 from tamproxy import Timer
+from tamproxy.devices import Motor, Color, Encoder
 from module import Module
 
 import sys, os
@@ -13,7 +14,7 @@ from constants import *
 
 class FindModule(Module):
 
-    def __init__(self, timer, leftMotor, rightMotor, vision, logic):
+    def __init__(self, timer, leftMotor, rightMotor, intakeMotor, vision, color, leftEncoder, rightEncoder):
 
         # Timeout to make sure we don't run over.
         self.timeout = 20000
@@ -24,6 +25,8 @@ class FindModule(Module):
         # GoStraight object to control movement
         self.movement = GoStraight(leftMotor, rightMotor, Timer())
 
+        self.intakeMotor = intakeMotor
+
         # Timer object describing how much time has passed since the last 
         # camera input was processed.
         self.cameraTimer = Timer()
@@ -32,8 +35,12 @@ class FindModule(Module):
         # Vision object to read data from the camera.
         self.vision = vision
 
+        self.blockTimer = Timer()
+
+        self.color = color
+
         # Logic object for calculations
-        self.logic = logic
+        self.logic = Logic(color, leftEnc = leftEncoder, rightEnc = rightEncoder)
 
     ## Return True if there was an error in initialization, False otherwise.
     def checkForInitializationErrors(self):
@@ -45,6 +52,7 @@ class FindModule(Module):
         self.updateTime = 0
         self.movement.reset()
         self.timer.reset()
+        self.intakeMotor.write(0, 120)
 
     ## Try to find and move towards blocks on the map.
     # 
@@ -57,20 +65,31 @@ class FindModule(Module):
         # Allow timeout.
         if self.timer.millis() > self.timeout:
             print "Timed out from FIND to FOLLOW"
+            self.intakeMotor.write(0, 0)
             return MODULE_FOLLOW
 
         # Check if we need to exit the module.
-        if self.logic.checkForBlock() > 0 : 
-            print "Going from FIND to PICKUP"
-            return MODULE_PICKUP
+        if self.blockTimer.millis() > 100:
+            self.blockTimer.reset()
+            if self.logic.checkForBlock(self.color.r, self.color.g, self.color.b) > 0 : 
+                print "Going from FIND to PICKUP"
+                self.intakeMotor.write(0, 0)
+                return MODULE_PICKUP
 
         ## Capture an image from the camera every so often
         if self.cameraTimer.millis() > self.cameraTimeout:
+            self.cameraTimeout = 100
             self.cameraTimer.reset()
 
             self.target = self.logic.findTarget(*self.vision.processImage())
             print self.target
             self.updateTime = self.timer.millis()
+
+        # just go straight for a while once alligned
+        if self.target != None:
+            if abs(self.target) < 5 and self.timer.millis() > 1000 and self.target != 0:
+                self.target = 0
+                self.cameraTimeout = 500
 
         # Check if we see anything of interest on the screen.
         if self.target == None:

@@ -18,18 +18,18 @@ class TestFind(SyncedSketch):
         leftEncoder = Encoder(self.tamp, LEFT_DRIVE_ENCODER_YELLOW, LEFT_DRIVE_ENCODER_WHITE)
         rightEncoder = Encoder(self.tamp, RIGHT_DRIVE_ENCODER_YELLOW, RIGHT_DRIVE_ENCODER_WHITE)
 
-        vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
-        logic = Logic(color = Color(self.tamp), leftEnc = leftEncoder, rightEnc = rightEncoder)
+        intakeMotor = Motor(self.tamp, HUGS_MOTOR_CONTROLLER_DIRECTION, HUGS_MOTOR_CONTROLLER_PWM)
 
-        self.find = FindModule(Timer(), leftMotor, rightMotor, vision, logic)
+        vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
+
+        color = Color(self.tamp)
+
+        self.find = FindModule(Timer(), leftMotor, rightMotor, intakeMotor, vision, color, leftEncoder, rightEncoder)
         self.find.start()
 
         self.myTimer = Timer()
 
     def loop(self):
-        #if self.myTimer.millis() > 100:
-        #    print "hi"
-        #    self.myTimer.reset()
         response = self.find.run()
         if response != MODULE_FIND:
             self.stop()
