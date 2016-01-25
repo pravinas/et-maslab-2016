@@ -48,7 +48,7 @@ class WallFollow():
         #return self.ir1.read_ir()
 
         #uses both front IRs
-        if self.ir1.read_ir()  < self.ir0.read_ir() 
+        if self.ir1.read_ir()  < self.ir0.read_ir(): 
             return (self.ir1.read_ir()) 
         else:
             return -(self.ir0.read_ir())
