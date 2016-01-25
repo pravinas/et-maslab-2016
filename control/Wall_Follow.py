@@ -64,8 +64,8 @@ class WallFollow():
         if self.timer.millis() > 100:
             self.timer.reset()
 
-            if (self.ir1.read_ir() + self.ir0.read_ir()) < 80:
-                self.corner()
+            #if (self.ir1.read_ir() + self.ir0.read_ir()) < 80:
+            #    self.corner()
 
             # error value
             # 50 from hypotenuse of a 45,45,90
