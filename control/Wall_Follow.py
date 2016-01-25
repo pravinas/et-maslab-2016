@@ -39,19 +39,19 @@ class WallFollow():
     # returns distance from edge of bot to wall
     #
     # if statement determines which wall is nearest
-    # returns distance of side of robot to wall
 
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
-        #only using front right IR
+        #comment below only uses front right IR
         #return self.ir1.read_ir()
 
         #uses both front IRs
-<<<<<<< HEAD
-        if self.ir1.read_ir()  < self.ir0.read_ir(): 
+        if self.ir1.read_ir()  < self.ir0.read_ir():
+            #right wall nearer 
             return (self.ir1.read_ir()) 
-        else:
+        else: 
+            #left wall nearer
             return -(self.ir0.read_ir())
         
 
