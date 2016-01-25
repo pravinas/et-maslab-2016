@@ -16,8 +16,9 @@ class PickupModule(Module):
     BELT_UP = False
     BELT_DOWN = True
 
-    def __init__(self, timer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
+    def __init__(self, timer, limTimer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
         self.timer = timer
+        self.limTimer = limTimer
         self.limSwitch = conveyorLimSwitch
         self.motor = conveyorMotor
         self.encoder = conveyorEncoder
@@ -26,8 +27,8 @@ class PickupModule(Module):
         self.encval = 0             # base encoder value when the pickup module is first called.
         self.stopTime = 500         # time in ms for the conveyor belt to stop at the top.
         self.stopT = 0              # time at which the belt stops.
-        self.encmax = 4.5 * 3200    # encoder value at the top of the belt.
-        self.power = 130            # power at which to drive motors.
+        self.encmax = 4.6 * 3200    # encoder value at the top of the belt.
+        self.power = 80            # power at which to drive motors.
         self.timeout = 15000        # Time the module can spend on the module
 
         self.blocksCollected = 0
@@ -74,15 +75,17 @@ class PickupModule(Module):
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == self.LOWERING:
-            if self.limSwitch.val or self.encoder.val < self.encval:
-                self.motor.write(0,0)
-                if self.blocksCollected >= 4:
-                    print "Going from PICKUP to DROPOFF"
-                    self.blocksCollected = 0
-                    return MODULE_DROPOFF
-                else:
-                    print "Going from PICKUP to FIND"
-                    return MODULE_FIND
+            if self.limTimer.millis() > 100:
+                self.limTimer.reset()
+                if self.limSwitch.val:
+                    self.motor.write(0,0)
+                    if self.blocksCollected >= 4:
+                        print "Going from PICKUP to DROPOFF"
+                        self.blocksCollected = 0
+                        return MODULE_DROPOFF
+                    else:
+                        print "Going from PICKUP to FIND"
+                        return MODULE_FIND
 
         else:
             print "Unexpected action index in PICKUP"

@@ -4,23 +4,23 @@
 
 from module import Module
 
-from os import sys, path
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
 class DropoffModule(Module):
-    def __init__(self, timer, servo, motorRight, motorLeft, doorTimer):
+    def __init__(self, timer, servo, motorRight, motorLeft):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
         self.waitTime2 = 1000   #Time in ms to wait for the robot to move forward and door to close.
         self.openValue = 100     # Value in degrees the servo should be when the door is open.
         self.closedValue = 172  # Value in degrees the servo should be when the door is closed.
-        self.timer = Timer()
-        self.servo = Servo(self.tamp, SERVO_PIN)
+        self.timer = timer
+        self.servo = servo
 
-        self.motorRight = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
+        self.motorRight = motorRight
         self.motorRight.write(1,0)
-        self.motorLeft = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
+        self.motorLeft = motorLeft
         self.motorLeft.write(1,0)
 
     ## Return True if there was an error in initialization, False otherwise.
@@ -58,4 +58,6 @@ class DropoffModule(Module):
             self.servo.write(self.closedValue)
         #After robot finishes closing the door, go to the next module
         if self.timer.millis() > self.waitTime + self.waitTime2:
-            return MODULE_DROPOFF
+            return MODULE_FIND
+
+        return MODULE_DROPOFF

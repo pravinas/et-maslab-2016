@@ -69,6 +69,7 @@ class FindModule(Module):
             self.cameraTimer.reset()
 
             self.target = self.logic.findTarget(*self.vision.processImage())
+            print self.target
             self.updateTime = self.timer.millis()
 
         # Check if we see anything of interest on the screen.
