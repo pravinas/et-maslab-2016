@@ -24,8 +24,6 @@ class WallFollow():
         self.ir2 = ir2
         self.ir3 = ir3
 
-        self.tamp = tamp
-
         # Number of values to record
         self.recordLen = 10
         # Record of values from youngest to oldest.
