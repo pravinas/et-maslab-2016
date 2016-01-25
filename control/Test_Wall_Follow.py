@@ -19,6 +19,7 @@ class TestWallFollow(SyncedSketch):
         ir2 = LRIR(self.tamp,16)
         ir3 = LRIR(self.tamp,17)
         self.movement = WallFollow(left, right, Timer(), ir0, ir1, ir2, ir3)
+
         self.timer = Timer()
 
     def loop(self):

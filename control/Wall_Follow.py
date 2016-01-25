@@ -30,7 +30,7 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 0.9
+        self.kp = 1.0
         self.ki = -0.00005
         self.kd = -0.2
 
@@ -64,12 +64,16 @@ class WallFollow():
         if self.timer.millis() > 100:
             self.timer.reset()
 
+            if (self.ir1.read_ir() + self.ir0.read_ir()) < 80:
+                self.corner()
+
             # error value
             # 50 from hypotenuse of a 45,45,90
-            err = 50 - distance
+            err = 50 - abs(distance)
 
             if distance < 0:
                 err = -err
+
 
 
             # Integrate over the last several timesteps.
@@ -94,8 +98,8 @@ class WallFollow():
         #need to tweak motors
         #todo
 
-        self.leftMotor.write (1, min(15), 255)
-        self.rightMotor.write(0, min(15), 255)
+        self.leftMotor.write (0, 15)
+        self.rightMotor.write (1, 15)
         
         if self.timer.millis() > 100:
             self.timer.reset()
@@ -103,7 +107,7 @@ class WallFollow():
 
             # once right IR is 30 cm less in value, bot will resume following wall.
 
-            if (self.ir1.read_ir() + 30) < self.ir0.read_ir():
+            if (self.ir1.read_ir() + 50) < self.ir0.read_ir():
 
             
                 self.followWall(self.distance(),-30)
