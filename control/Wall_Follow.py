@@ -64,28 +64,27 @@ class WallFollow():
         if self.timer.millis() > 100:
             self.timer.reset()
 
-            if self.ir1.read_ir() + self.ir0.read_ir() < 90:
-                self.corner(self)
-            
-            else:
+            # error value
+            # 50 from hypotenuse of a 45,45,90
+            err = 50 - distance
 
-                # error value
-                # 50 from hypotenuse of a 45,45,90
-                err = 50 - distance
+            if distance < 0:
+                err = -err
 
-                # Integrate over the last several timesteps.
-                self.record.insert(0, err)
 
-                if len(self.record) > self.recordLen:
-                    self.record.pop()
+            # Integrate over the last several timesteps.
+            self.record.insert(0, err)
 
-                # Take the derivative over recorded history.
-                deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
+            if len(self.record) > self.recordLen:
+                self.record.pop()
 
-                power = self.kp * err + self.kd * deriv + self.ki * sum(self.record)
+            # Take the derivative over recorded history.
+            deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
 
-                self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
-                self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            power = self.kp * err + self.kd * deriv + self.ki * sum(self.record)
+
+            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
+            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
 
     ## Makes bot turn spinup(counter clockwise if too close to wall)
     # will stop once IR0 is significantly smaller in value than IR1
@@ -95,15 +94,17 @@ class WallFollow():
         #need to tweak motors
         #todo
 
-        self.leftMotor.write (1, min(30), 255)
-        self.rightMotor.write(0, min(30), 255)
+        self.leftMotor.write (1, min(15), 255)
+        self.rightMotor.write(0, min(15), 255)
         
         if self.timer.millis() > 100:
             self.timer.reset()
+            print "turning"
 
             # once right IR is 30 cm less in value, bot will resume following wall.
 
             if (self.ir1.read_ir() + 30) < self.ir0.read_ir():
+
             
                 self.followWall(self.distance(),-30)
 
