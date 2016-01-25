@@ -93,6 +93,8 @@ class WallFollow():
 
     ## Makes bot turn spinup(counter clockwise if too close to wall)
     # will stop once IR0 is significantly smaller in value than IR1
+    # once reaching corner will follow wall on right, need to fix for left
+    # todo
     def corner(self):
         #not sure how to write motors
         #todo
