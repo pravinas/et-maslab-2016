@@ -29,7 +29,7 @@ class ColorRead(SyncedSketch):
         return (int(r / 0.90), int(g / 0.45), int(b / 0.40))
 
     def whatColorIsThis(self, r, g, b):
-        if r > 1.5*g and r > 1.5*b:
+        if r > 1.6*g and r > 1.6*b:
             return "Red"
         elif g > r and g > 1.2*b:
             return "Green"
