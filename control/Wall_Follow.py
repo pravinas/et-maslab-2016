@@ -96,11 +96,11 @@ class WallFollow():
     # once reaching corner will follow wall on right, need to fix for left
     # todo
     def corner(self):
-        #not sure how to write motors
+        #need to tweak motors
         #todo
 
-        self.leftMotor.write (1, 255)
-        self.rightMotor.write(1, 255)
+        self.leftMotor.write (1, min(30), 255)
+        self.rightMotor.write(0, min(30), 255)
         
         if self.timer.millis() > 100:
             self.timer.reset()
