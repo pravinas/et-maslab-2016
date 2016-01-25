@@ -46,7 +46,7 @@ class WallFollow():
         #comment below only uses front right IR
         #return self.ir1.read_ir()
 
-        #uses both front IRs
+        #uses both front IRs returns value of nearest one 
         if self.ir1.read_ir()  < self.ir0.read_ir():
             #right wall nearer 
             return (self.ir1.read_ir()) 
