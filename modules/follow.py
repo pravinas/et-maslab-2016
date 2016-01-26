@@ -29,12 +29,12 @@ class FollowModule(Module):
                 if self.blockSwitch.val:
                     print "Going from FOLLOW to CHECK"
                     return MODULE_CHECK
-                self.movement.followWall(self.movement.distance(),-FORWARD_SPEED)
+                self.movement.followWall(self.movement.distance(), FORWARD_SPEED)
 
         # turn aggressively for .3 seconds in case of being stuck
         elif self.timer.millis() < 13000:
-            self.left.write( 0, 145)
-            self.right.write( 1, 145)
+            self.left.write(BACKWARD_DIR, TURN_FAST_SPEED)
+            self.right.write(FORWARD_DIR, TURN_FAST_SPEED)
         
         # reset everything and start over
         else:

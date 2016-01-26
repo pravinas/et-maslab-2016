@@ -18,8 +18,8 @@ LEFT_DRIVE_ENCODER_WHITE            = 30
 
 BELT_MOTOR_CONTROLLER_DIRECTION     = 7
 BELT_MOTOR_CONTROLLER_PWM           = 6
-BELT_MOTOR_ENCODER_YELLOW           = 31
-BELT_MOTOR_ENCODER_WHITE            = 32
+BELT_MOTOR_ENCODER_YELLOW           = 28
+BELT_MOTOR_ENCODER_WHITE            = 27
 
 HUGS_MOTOR_CONTROLLER_DIRECTION     = 8
 HUGS_MOTOR_CONTROLLER_PWM           = 9
@@ -121,6 +121,9 @@ WHEEL_WIDTH = 12
 
 # Default speed for going forward
 FORWARD_SPEED = 50
+
+# Speed for turning suddenly
+TURN_FAST_SPEED = 145
 
 # Motor Drive Directions
 FORWARD_DIR = 0
