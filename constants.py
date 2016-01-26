@@ -56,6 +56,35 @@ CONVEYOR_LIMIT_SWITCH   = 22
 COMPETITION_MODE    = 23
 
 ##########################
+#### MODULE CONSTANTS ####
+##########################
+
+############
+## Pickup ##
+############
+
+# time in ms for the conveyor belt to stop at the top.
+PICKUP_STOP_TIME        = 500
+# Number of rotations for the conveyor belt motor to make.
+PICKUP_NUM_ROTATIONS    = 5.1
+# encoder value at the top of the belt.
+PICKUP_ENCODER_MAX      = PICKUP_NUM_ROTATIONS * 3200
+# Power to drive the conveyor belt.
+PICKUP_CONVEYOR_POWER   = 130
+# Direction for belt to go up
+PICKUP_BELT_UP = False
+# Direction for belt to go down
+PICKUP_BELT_DOWN = True
+# Timeout for entire pickup module
+PICKUP_TIMEOUT = 15000
+
+# Pickup internal state machine
+PICKUP_RAISING  = 0
+PICKUP_STOPPING = 1
+PICKUP_LOWERING = 2
+
+
+##########################
 ####  MISC CONSTANTS  ####
 ##########################
 

@@ -9,12 +9,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
 class PickupModule(Module):
-    RAISING  = 0
-    STOPPING = 1
-    LOWERING = 2
-
-    BELT_UP = False
-    BELT_DOWN = True
 
     def __init__(self, timer, limTimer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
         self.timer = timer
@@ -25,12 +19,7 @@ class PickupModule(Module):
         self.encoder.write(0)
 
         self.encval = 0             # base encoder value when the pickup module is first called.
-        self.stopTime = 500         # time in ms for the conveyor belt to stop at the top.
-        self.stopT = 0              # time at which the belt stops.
-        self.encmax = 5.1 * 3200    # encoder value at the top of the belt.
-        self.power = 130            # power at which to drive motors.
-        self.timeout = 15000        # Time the module can spend on the module
-
+        self.stopTime = 0           # time at which the belt stops.
         self.blocksCollected = 0
 
     
@@ -38,8 +27,8 @@ class PickupModule(Module):
     def start(self):
         self.timer.reset()
         self.encval = self.encoder.val
-        self.motor.write(self.BELT_UP, self.power)
-        self.state = self.RAISING
+        self.motor.write(PICKUP_BELT_UP, PICKUP_CONVEYOR_POWER)
+        self.state = PICKUP_RAISING
         print "RAISING"
 
     ## Pick up a block from the block capture mechanism.
@@ -49,7 +38,7 @@ class PickupModule(Module):
     #
     # @return   The value of the next module to return to.
     def run(self):
-        if self.timer.millis() > self.timeout:
+        if self.timer.millis() > PICKUP_TIMEOUT:
             if self.blocksCollected >= 4:
                 print "Timed out from PICKUP to DROPOFF"
                 self.blocksCollected = 0
@@ -58,23 +47,23 @@ class PickupModule(Module):
                 print "Timed out from PICKUP to FIND"
                 return MODULE_FIND
 
-        if self.state == self.RAISING:
+        if self.state == PICKUP_RAISING:
             # Check every timestep whether self.encoder.val > self.encval
-            if self.encoder.val > self.encval + self.encmax:
-                self.state = self.STOPPING
+            if self.encoder.val > self.encval + PICKUP_ENCODER_MAX:
+                self.state = PICKUP_STOPPING
                 self.motor.write(0,0)
-                self.stopT = self.timer.millis()
-                print "STOPPING at t =", self.stopT
+                self.stopTime = self.timer.millis()
+                print "STOPPING at t =", self.stopTime
 
-        elif self.state == self.STOPPING:
+        elif self.state == PICKUP_STOPPING:
             # Stop for a short time
-            if self.timer.millis() > self.stopT + self.stopTime:
-                self.state = self.LOWERING
-                self.motor.write(self.BELT_DOWN, self.power)
+            if self.timer.millis() > self.stopTime + PICKUP_STOP_TIME:
+                self.state = PICKUP_LOWERING
+                self.motor.write(PICKUP_BELT_DOWN, PICKUP_CONVEYOR_POWER)
                 self.blocksCollected += 1
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
-        elif self.state == self.LOWERING:
+        elif self.state == PICKUP_LOWERING:
             if self.limTimer.millis() > 50:
                 self.limTimer.reset()
                 if self.limSwitch.val:
