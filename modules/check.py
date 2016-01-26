@@ -33,14 +33,14 @@ class CheckModule(Module):
         if self.needToCheckColor:
             if RED and self.color.r>1.6*self.color.g and self.color.r>1.6*self.color.b:
                 print "Going from CHECK to PICKUP"
-                return PICKUP_MODULE
+                return MODULE_PICKUP
             elif RED and self.color.g>self.color.r and self.color.g>1.2*self.color.b:
                 self.wrongBlock = True
                 self.needToCheckColor = False
                 self.timer.reset()
             elif GREEN and self.color.g>self.color.r and self.color.g>1.2*self.color.b:
                 print "Going from CHECK to PICKUP"
-                return PICKUP_MODULE
+                return MODULE_PICKUP
             elif GREEN and self.color.r>1.6*self.color.g and self.color.r>1.6*self.color.b:
                 self.wrongBlock = True
                 self.needToCheckColor = False
@@ -48,7 +48,7 @@ class CheckModule(Module):
 
         # spit out the block
         if self.wrongBlock:            
-            if self.timer.millis() < 300
+            if self.timer.millis() < 300:
                 # back up and spit out block
                 self.intakeMotor.write(INTAKE_OUT,INTAKE_POWER)
                 self.leftMotor.write(BACKWARD_DIR, FORWARD_SPEED)

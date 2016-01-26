@@ -66,7 +66,7 @@ COMPETITION_MODE    = 23
 # time in ms for the conveyor belt to stop at the top.
 PICKUP_STOP_TIME        = 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS    = 5.1
+PICKUP_NUM_ROTATIONS    = 5.2
 # encoder value at the top of the belt.
 PICKUP_ENCODER_MAX      = PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt.

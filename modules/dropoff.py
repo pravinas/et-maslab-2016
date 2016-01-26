@@ -42,7 +42,7 @@ class DropoffModule(Module):
             print "Timed out from DROPOFF to FIND"
             self.motorRight.write(0,0)
             self.motorLeft.write(0,0)
-            return MODULE_FIND
+            return MODULE_FOLLOW
 
         if self.loopTimer.millis() > 100:
             self.loopTimer.reset()
@@ -59,6 +59,6 @@ class DropoffModule(Module):
 
         #After robot finishes closing the door, go to the next module
         if self.timer.millis() > 2000:
-            return MODULE_FIND
+            return MODULE_FOLLOW
 
         return MODULE_DROPOFF
