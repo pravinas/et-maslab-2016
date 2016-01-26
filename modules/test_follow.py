@@ -1,6 +1,8 @@
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from tamproxy import Timer, SyncedSketch
 from tamproxy.devices import Motor, Color, Encoder
-from module import Module
 from follow import FollowModule
 from control.long_range_ir import LRIR
 from logic import Logic
