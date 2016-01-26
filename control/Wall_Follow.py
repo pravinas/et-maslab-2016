@@ -29,7 +29,7 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1.0
+        self.kp = 1.1
         self.ki = -0.00005
         self.kd = -0.2
 
