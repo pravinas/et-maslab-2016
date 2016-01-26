@@ -52,7 +52,7 @@ SERVO_PIN   = 25
 
 # Limit Switch
 
-LIMIT_SWITCH	= 22
+CONVEYOR_LIMIT_SWITCH	= 22
 
 
 ##########################

@@ -40,9 +40,7 @@ class FindModule(Module):
         # Logic object for calculations
         self.logic = logic
 
-    ## Return True if there was an error in initialization, False otherwise.
-    def checkForInitializationErrors(self):
-        return self.vision.isCameraBlack()
+        self.target = None
     
     ## Set up the beginning of the find process.
     def start(self):
@@ -70,7 +68,7 @@ class FindModule(Module):
         # TODO: Make this actually work
         if self.blockTimer.millis() > 100:
             self.blockTimer.reset()
-            if self.logic.checkForBlock(self.color.r, self.color.g, self.color.b) > 0 : 
+            if self.logic.checkForBlock() > 0 : 
                 print "Going from FIND to PICKUP"
                 self.intakeMotor.write(0, 0)
                 return MODULE_PICKUP

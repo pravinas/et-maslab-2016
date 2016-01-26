@@ -59,11 +59,11 @@ class Logic():
     # @return 0 if no block is caught
     #         1 if the color sensor sees our color of block.
     #         2 if the color sensor sees not our color of block.
-    def checkForBlock(self, r, g, b):
+    def checkForBlock(self):
         # TODO: Use limit switch to detect if block is caught. If we're going with a limit switch.
-        if r > 1.6 * g and r > 1.6 * b:
+        if self.color.r > 1.6 * self.color.g and self.color.r > 1.6 * self.color.b:
             return 1 if RED else 2
-        elif g > r and g > 1.2 * b:
+        elif self.color.g > self.color.r and self.color.g > 1.2 * self.color.b:
             return 1 if GREEN else 2
         else:
             return 0
