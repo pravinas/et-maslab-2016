@@ -29,7 +29,7 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1.0
+        self.kp = 1.1
         self.ki = -0.00005
         self.kd = -0.2
 
@@ -45,6 +45,9 @@ class WallFollow():
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
+        return self.ir1.read_ir()
+
+        '''
         # issue: drives right when approachin wall and can't follow it
         # uses both front IRs returns distance of nearest wall
         if self.ir1.read_ir()  < self.ir0.read_ir():
@@ -53,6 +56,7 @@ class WallFollow():
         else: 
             #left wall nearer
             return -(self.ir0.read_ir())
+        '''
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -72,8 +76,8 @@ class WallFollow():
             # error value
             err = distFromWall - abs(distance)
 
-            if distance < 0:
-                err = -err
+            #if distance < 0:
+            #    err = -err
 
 
 
