@@ -23,15 +23,16 @@ class FollowModule(Module):
         self.logic = logic
         self.timeout = 15000
 
-	def checkForInitializationErrors(self):
+	#def checkForInitializationErrors(self):
 		# TODO: think of whatever should go here
-		return False
+	#	return False
 
 	def start(self):
 		self.timer.reset()
 
 	def run(self):
 		if self.timeoutTimer > self.timeout:
+			print "Timed out. Going to MODULE_FIND"
 			return MODULE_FIND
 
 		if self.timer.millis() > 100:
@@ -41,6 +42,7 @@ class FollowModule(Module):
 			if self.target != None:
 				self.leftMotor.write(0,0)
 				self.rightMotor.write(0,0)
+				print "I found a block! I'll go there now in MODULE_FIND"
 				return MODULE_FIND
 
 		return MODULE_FOLLOW
