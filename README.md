@@ -1,13 +1,12 @@
 ET's MASLAB 2016 Code Repository
 ================================
-## Note: Much of this is out of date. We are replacing the FIND module entirely with FOLLOW, and checking colors in a separate module.
-TODO: Revise this whole document.
-
+	
 Software Gameplan:
 
 The high-level logic runs a state machine with the following modules, each of which may timeout:
 
-- FIND: Search for the blocks.
+- FOLLOW: Search for the blocks.
+- CHECK: See what color an obtained block is.
 - PICKUP: Pickup the block via conveyor belt.
 - DROPOFF: Drop off the stack that has been built.
 
@@ -16,18 +15,20 @@ The following data should interrupt the standard routines:
 - The collection motors stall (i.e., a block is stuck in the collection mechanism.)
   - In this case, "spit" out the stuck block.
 
-### The FIND Module:
+### The FOLLOW Module:
 
-- If you do not see a block:
-  - Turn until you see a block.
-- Otherwise:
-  - Move towards the largest block seen, attempting to center the block under the camera.
-- Exit when PICKUP module initiates.
+- Move in some direction for some amount of time.
+- Jerk pseudorandomly and repeat.
+- Intake motors are always running.
+- Exit when block limit switch is activated.
 
 Possible Failure modes:
 
-- No block can be seen by the camera within a full rotation of the robot.
-- The block leaves the field of view before an interrupt is processed.
+- No longer actually looks for a block. We might never obtain a block. This is unlikely, and frankly a design choice.
+
+### The CHECK module:
+
+- Checks that we have the right color block, and if not, spits it out.
 
 ### The PICKUP Module:
 

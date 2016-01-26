@@ -72,11 +72,13 @@ PICKUP_ENCODER_MAX      = PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt.
 PICKUP_CONVEYOR_POWER   = 130
 # Direction for belt to go up
-PICKUP_BELT_UP = False
+PICKUP_BELT_UP          = False
 # Direction for belt to go down
-PICKUP_BELT_DOWN = True
+PICKUP_BELT_DOWN        = True
 # Timeout for entire pickup module
-PICKUP_TIMEOUT = 15000
+PICKUP_TIMEOUT          = 15000
+# The most blocks that the robot can handle
+PICKUP_MAX_BLOCKS       = 4
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0

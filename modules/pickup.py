@@ -68,7 +68,7 @@ class PickupModule(Module):
                 self.limTimer.reset()
                 if self.limSwitch.val:
                     self.motor.write(0,0)
-                    if self.blocksCollected >= 4:
+                    if self.blocksCollected >= PICKUP_MAX_BLOCK:
                         print "Going from PICKUP to DROPOFF"
                         self.blocksCollected = 0
                         return MODULE_DROPOFF
