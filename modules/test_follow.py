@@ -22,9 +22,9 @@ class TestFollow(SyncedSketch):
         irFR = LRIR(self.tamp, LONG_DISTANCE_IR_FR)
         forwardSpeed = -50
         logic = Logic()
-        vision = Vision(True, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
+        #vision = Vision(True, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
 
-        self.follow = FollowModule(timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic, vision)
+        self.follow = FollowModule(timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic)
         self.follow.start()
 
     def loop(self):
