@@ -23,9 +23,9 @@ class FollowModule(Module):
         self.logic = logic
         self.timeout = 15000
 
-	#def checkForInitializationErrors(self):
+	def checkForInitializationErrors(self):
 		# TODO: think of whatever should go here
-	#	return False
+		return False
 
 	def start(self):
 		self.timer.reset()
