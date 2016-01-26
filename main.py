@@ -6,8 +6,8 @@ from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder, Servo, Color, DigitalInput
 
 from vision import Vision
-from logic import Logic
 from control.long_range_ir import LRIR
+from control.Wall_Follow import WallFollow
 
 from modules import *
 from constants import *
@@ -17,7 +17,6 @@ from constants import *
 class Robot(SyncedSketch):
 
     def setup(self):
-
         ####################
         ####  EE SETUP  ####
         ####################
@@ -52,6 +51,7 @@ class Robot(SyncedSketch):
 
         # Limit switches
         self.conveyorLimSwitch = DigitalInput(self.tamp, CONVEYOR_LIMIT_SWITCH)
+        self.blockLimSwitch = DigitalInput(self.tamp, BLOCK_LIMIT_SWITCH)
 
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
@@ -60,7 +60,7 @@ class Robot(SyncedSketch):
         self.backDoorServo.write(self.servoPosition)
 
         # The switch that tells the program that the competition has started
-        self.competitionModeSwitch = DigitalInput(self.tamp, COMPETITIION_MODE)
+        self.competitionModeSwitch = DigitalInput(self.tamp, COMPETITION_MODE)
 
         #################################
         ####  INTERNAL MODULE SETUP  ####
@@ -73,10 +73,11 @@ class Robot(SyncedSketch):
         # Start the intake motor.
         self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
-        # Logic object for FIND module
-        self.logic = Logic(self.color, self.leftEncoder, self.rightEncoder)
-        # Vision object for FIND module
-        self.vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT)
+        # Wall Follow object
+        self.wallFollow = WallFollow(self.leftMotor, self.rightMotor, Timer(), self.irFL, self.irFR, self.irBL, self.irBR)
+
+        # A timer to make sure timesteps are only 10 times/second
+        self.bigTimer = Timer()
 
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
@@ -85,37 +86,39 @@ class Robot(SyncedSketch):
         # Runs the DROPOFF process
         self.dropoff = DropoffModule(self.moduleTimer, Timer(), self.backDoorServo, self.rightMotor, self.leftMotor, self.rightEncoder)
         # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
-        self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
-                                   self.irBL, self.irBR, self.irFL, self.irFR, 
-                                   self.logic, forwardSpeed=50)
+        self.follow = FollowModule(self.moduleTimer, Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.wallFollow, FORWARD_SPEED, self.blockLimSwitch)
         # Runs the CHECK process. TODO: pass in proper timers.
         self.check = CheckModule(Timer(), Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
         # Waits for the game to start
         self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
         # Describes which stage of the program is running.
-        self.module = MODULE_None
+        self.module = MODULE_OFF
 
     def loop(self):
-        state = -1
-        if self.module == MODULE_OFF:
-            state = self.off.run()
-        elif self.module == MODULE_CHECK:
-            state = self.check.run()
-        elif self.module == MODULE_PICKUP:
-            state = self.pickup.run()
-        elif self.module == MODULE_DROPOFF:
-            state = self.dropoff.run()
-        elif self.module == MODULE_FOLLOW:
-            state = self.follow.run()
-        else:
-            print "Attempting to run nonexistent module"
-            self.stop()
+        if self.bigTimer.millis() > 100:
+            self.bigTimer.reset()
+            print "Module Number", self.module
 
-        self.updateState(state)
+            state = -1
+            if self.module == MODULE_OFF:
+                state = self.off.run()
+            elif self.module == MODULE_CHECK:
+                state = self.check.run()
+            elif self.module == MODULE_PICKUP:
+                state = self.pickup.run()
+            elif self.module == MODULE_DROPOFF:
+                state = self.dropoff.run()
+            elif self.module == MODULE_FOLLOW:
+                state = self.follow.run()
+            else:
+                print "Attempting to run nonexistent module"
+                self.stop()
 
-        # Passive processes go here.
-        self.checkForIntakeErrors()
-        self.backDoorServo.write(self.servoPosition)
+            self.updateState(state)
+
+            # Passive processes go here.
+            self.checkForIntakeErrors()
+            self.backDoorServo.write(self.servoPosition)
 
     ## Switch module if necessary.
     def updateState(self, module):
@@ -126,7 +129,7 @@ class Robot(SyncedSketch):
             self.module = MODULE_OFF
             return
         if module == MODULE_CHECK:
-            self.find.start()
+            self.check.start()
             self.module = MODULE_CHECK
             return
         if module == MODULE_PICKUP:

@@ -29,7 +29,7 @@ class FollowModule(Module):
         if self.timer.millis() < 10000:
             if self.stepTimer.millis() > 100:
                 self.stepTimer.reset()
-                print self.blockSwitch.val
+                #print "follow blockswitch", bool(self.blockSwitch.val)
                 if self.blockSwitch.val:
                     print "Going from FOLLOW to CHECK"
                     self.intakeMotor.write(0,0)

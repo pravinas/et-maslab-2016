@@ -17,20 +17,21 @@ class OffModule(Module):
 
     ## Nothing to set up
     def start(self):
-        pass
+        self.timer.reset()
 
     ## Wait for the switch to be turned on.
     #
     # @return   The value of the next module to return to.
     def run(self):
-        if self.timer.millis() > 20000:
+        if self.timer.millis() > 60000:
             print "Competition took too long to start. Turning off."
             return -1
 
         if self.timer.millis() - self.lastTime > 100:
             self.lastTime = self.timer.millis()
-
             # Check button
+            
             if self.onSwitch.val:
+                print "following on off"
                 return MODULE_FOLLOW
         return MODULE_OFF
