@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
 class Logic():
-    def __init__(self, color=None, leftEnc=None, rightEnc=None):
+    def __init__(self, color, leftEnc, rightEnc):
         self.imgWidth = CAMERA_WIDTH
         self.imgHeight = CAMERA_HEIGHT
         self.color = color

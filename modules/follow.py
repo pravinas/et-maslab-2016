@@ -9,9 +9,9 @@ from constants import *
 
 class FollowModule(Module):
     
-    def __init__(self, timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic):
+    def __init__(self, timer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, logic, forwardSpeed):
         self.timer = timer
-        self.timeoutTimer = timeoutTimer
+        self.lastTime = 0
         self.leftMotor = leftMotor
         self.rightMotor = rightMotor
         self.irBL = irBL
@@ -29,14 +29,15 @@ class FollowModule(Module):
 
     def start(self):
         self.timer.reset()
+        self.lastTime = 0
 
     def run(self):
-        if self.timeoutTimer.millis() > self.timeout:
+        if self.timer.millis() > self.timeout:
             print "Timed out. Going to MODULE_FIND"
             return MODULE_FIND
 
-        if self.timer.millis() > 100:
-            self.timer.reset()
+        if self.timer.millis() - self.lastTime > 100:
+            self.lastTime = self.timer.millis()
             self.movement.followWall(self.movement.distance(),self.forwardSpeed)
             #self.target = self.logic.findTarget(*self.vision.processImage())
             #if self.target != None:

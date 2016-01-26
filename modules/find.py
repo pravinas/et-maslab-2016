@@ -14,7 +14,7 @@ from constants import *
 
 class FindModule(Module):
 
-    def __init__(self, timer, leftMotor, rightMotor, intakeMotor, vision, color, leftEncoder, rightEncoder):
+    def __init__(self, timer, leftMotor, rightMotor, intakeMotor, vision, logic):
 
         # Timeout to make sure we don't run over.
         self.timeout = 20000
@@ -37,10 +37,8 @@ class FindModule(Module):
 
         self.blockTimer = Timer()
 
-        self.color = color
-
         # Logic object for calculations
-        self.logic = Logic(color, leftEnc = leftEncoder, rightEnc = rightEncoder)
+        self.logic = logic
 
     ## Return True if there was an error in initialization, False otherwise.
     def checkForInitializationErrors(self):
