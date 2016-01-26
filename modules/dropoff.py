@@ -13,8 +13,6 @@ class DropoffModule(Module):
         self.timeout = 7000
         self.waitTime = 500     # Time in ms to wait for the door to actually open.
         self.loopTimer = loopTimer
-        self.openValue = 100     # Value in degrees the servo should be when the door is open.
-        self.closedValue = 172  # Value in degrees the servo should be when the door is closed.
         self.timer = timer
         self.servo = servo
         self.encoder = encoder
@@ -32,7 +30,7 @@ class DropoffModule(Module):
         self.timer.reset()
         self.loopTimer.reset()
         self.encval = self.encoder.val
-        self.servo.write(self.openValue)
+        self.servo.write(SERVO_OPEN)
 
     ## Open the back door and drive "forwards," avoiding what needs to be avoided.
     #
@@ -57,7 +55,7 @@ class DropoffModule(Module):
             if self.encoder.val > self.encmax + self.encval:
                 self.motorRight.write(0,0)
                 self.motorLeft.write(0,0)
-                self.servo.write(self.closedValue)
+                self.servo.write(SERVO_CLOSE)
 
         #After robot finishes closing the door, go to the next module
         if self.timer.millis() > 2000:

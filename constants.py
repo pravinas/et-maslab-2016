@@ -49,11 +49,11 @@ COLOR_SENSOR_SDA    = 19
 SERVO_PIN   = 25
 
 # Limit Switches
-BLOCK_LIMIT_SWITCH		= 21
-CONVEYOR_LIMIT_SWITCH	= 22
+BLOCK_LIMIT_SWITCH      = 21
+CONVEYOR_LIMIT_SWITCH   = 22
 
 # Competition Mode
-COMPETITION_MODE	= 23
+COMPETITION_MODE    = 23
 
 ##########################
 ####  MISC CONSTANTS  ####
@@ -61,15 +61,15 @@ COMPETITION_MODE	= 23
 
 # Colors: The one that is our color should be True, and the other False.
 
-RED 	= True
-GREEN 	= False
+RED     = True
+GREEN   = False
 
 # Module numbers
 
 MODULE_CHECK    = 0
 MODULE_PICKUP   = 1
 MODULE_DROPOFF  = 2
-MODULE_FOLLOW 	= 3
+MODULE_FOLLOW   = 3
 
 # The limit point at which the motor is considered stalled.
 INTAKE_ENCODER_LIMIT    = 150
@@ -82,7 +82,7 @@ CAMERA_WIDTH    = 80
 CAMERA_HEIGHT   = 60
 
 # Distance between wheels in inches.
-WHEEL_WIDTH	= 12
+WHEEL_WIDTH = 12
 
 #D efault speed for going forward
 FORWARD_SPEED = 50
@@ -90,6 +90,7 @@ FORWARD_SPEED = 50
 #Desired distance between IR and wall
 WALL_DISTANCE = 40
 
-# Convenient servo positions
-SERVO_OPEN	= 90
-SERVO_CLOSE	= 172
+# Value in degrees the servo should be when the door is open.
+SERVO_OPEN  = 100
+# Value in degrees the servo should be when the door is closed.
+SERVO_CLOSE = 172
