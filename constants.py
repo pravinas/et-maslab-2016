@@ -85,6 +85,17 @@ PICKUP_RAISING  = 0
 PICKUP_STOPPING = 1
 PICKUP_LOWERING = 2
 
+#############
+## Dropoff ##
+#############
+
+# Timeout for entire dropoff module
+DROPOFF_TIMEOUT		= 7000
+# Time in ms to wait for the door to actually open.
+DROPOFF_WAIT_TIME	= 500
+# Encoder value when needing to stop
+DROPOFF_ENC_MAX		= 2500
+
 
 ##########################
 ####  MISC CONSTANTS  ####
