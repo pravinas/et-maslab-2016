@@ -90,8 +90,8 @@ class WallFollow():
 
             power = self.kp * err + self.kd * deriv + self.ki * sum(self.record)
 
-            self.leftMotor.write ((speed - power) > 0, min(abs(speed - power), 255))
-            self.rightMotor.write((speed + power) > 0, min(abs(speed + power), 255))
+            self.leftMotor.write ((speed - power) < 0, min(abs(speed - power), 255))
+            self.rightMotor.write((speed + power) < 0, min(abs(speed + power), 255))
 
     ## Makes bot turn spinup(counter clockwise if too close to wall)
     # will stop once IR0 is significantly smaller in value than IR1
