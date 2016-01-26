@@ -3,43 +3,43 @@
 from module import Module
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from control.Wall_Follow import WallFollow
-from logic import Logic
 from constants import *
 
 class FollowModule(Module):
     
-    def __init__(self, timer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, logic, forwardSpeed):
+    def __init__(self, timer, stepTimer, leftMotor, rightMotor, wallFollow, forwardSpeed, blockSwitch):
         self.timer = timer
-        self.lastTime = 0
+        self.stepTimer = stepTimer
         self.leftMotor = leftMotor
         self.rightMotor = rightMotor
-        self.irBL = irBL
-        self.irBR = irBR
-        self.irFL = irFL
-        self.irFR = irFR
-        self.movement = WallFollow(self.leftMotor, self.rightMotor, self.timer, self.irFL, self.irFR, self.irBL, self.irBR)
+        self.movement = wallFollow
         self.forwardSpeed = forwardSpeed
-        self.logic = logic
-        self.timeout = 5000
+        self.blockSwitch = blockSwitch
+
 
     def start(self):
         self.timer.reset()
-        self.lastTime = 0
 
     def run(self):
-        if self.timer.millis() > self.timeout:
-            print "Timed out. Going to MODULE_FIND"
-            return MODULE_FIND
+        
+        # usually wall follow for 10 seconds
+        if self.timer.millis() < 10000:
+            if self.stepTimer.millis() > 100:
+                self.stepTimer.reset()
+                if self.blockSwitch.val:
+                    print "Going from FOLLOW to CHECK"
+                    return MODULE_CHECK
+                self.movement.followWall(self.movement.distance(),-FORWARD_SPEED)
 
-        if self.timer.millis() - self.lastTime > 100:
-            self.lastTime = self.timer.millis()
-            self.movement.followWall(self.movement.distance(),self.forwardSpeed)
-            #self.target = self.logic.findTarget(*self.vision.processImage())
-            #if self.target != None:
-            #    self.leftMotor.write(0,0)
-            #    self.rightMotor.write(0,0)
-            #    print "I found a block! I'll go there now in MODULE_FIND"
-            #    return MODULE_FIND
+        # turn aggressively for .3 seconds in case of being stuck
+        elif self.timer.millis() < 13000:
+            self.left.write( 0, 145)
+            self.right.write( 1, 145)
+        
+        # reset everything and start over
+        else:
+            self.timer.reset()
+            self.left.write(0,0)
+            self.right.write(0,0)
 
         return MODULE_FOLLOW
