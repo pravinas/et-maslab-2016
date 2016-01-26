@@ -91,6 +91,9 @@ WHEEL_WIDTH = 12
 # Default speed for going forward
 FORWARD_SPEED = 50
 
+# Speed for turning suddenly
+TURN_FAST_SPEED = 145
+
 # Motor Drive Directions
 FORWARD_DIR = 0
 BACKWARD_DIR = 1

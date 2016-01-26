@@ -55,7 +55,8 @@ class CheckModule(Module):
                 self.rightMotor.write(BACKWARD_DIR, FORWARD_SPEED)
             elif self.timer.millis() < 500:
                 # turn left to avoid getting back the same block
-                self.rightMotor.write(FORWARD_DIR, FORWARD_SPEED)
+                self.leftMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
+                self.rightMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
             else:
                 # Stop and go back to following
                 self.intakeMotor.write(0,0)
