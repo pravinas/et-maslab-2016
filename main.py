@@ -56,7 +56,8 @@ class Robot(SyncedSketch):
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
         # Position for servo to maintain at a given timestep.
-        self.servoPosition = 172
+        self.servoPosition = SERVO_CLOSE
+        self.backDoorServo.write(self.servoPosition)
 
         #################################
         ####  INTERNAL MODULE SETUP  ####
@@ -96,7 +97,7 @@ class Robot(SyncedSketch):
         elif self.module == MODULE_PICKUP:
             state = self.pickup.run()
         elif self.module == MODULE_DROPOFF:
-            state, self.servoPosition = self.dropoff.run()
+            state = self.dropoff.run()
         elif self.module == MODULE_FOLLOW:
             state = self.follow.run()
         else:
@@ -116,12 +117,10 @@ class Robot(SyncedSketch):
             return
         if module == MODULE_CHECK:
             self.find.start()
-            self.servoPosition = SERVO_CLOSE
             self.module = MODULE_CHECK
             return
         if module == MODULE_PICKUP:
             self.pickup.start()
-            self.servoPosition = SERVO_CLOSE
             self.module = MODULE_PICKUP
             return
         if module == MODULE_DROPOFF:
@@ -130,7 +129,6 @@ class Robot(SyncedSketch):
             return
         if module == MODULE_FOLLOW:
             self.follow.start()
-            self.servoPosition = SERVO_CLOSE
             self.module = MODULE_FOLLOW
             return
         else:
