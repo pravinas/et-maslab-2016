@@ -86,3 +86,6 @@ WHEEL_WIDTH	= 12
 
 #Default speed for going forward
 FORWARD_SPEED = 50
+
+#Desired distance between IR and wall
+WALL_DISTANCE = 40

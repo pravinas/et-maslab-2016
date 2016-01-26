@@ -4,8 +4,8 @@
 from tamproxy import Timer
 import os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from control import GoStraight
 from constants import *
+from control import GoStraight
 
 class WallFollow():
 
@@ -29,12 +29,10 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1.0
+        self.kp = .9
         self.ki = -0.00005
         self.kd = -0.2
 
-        #in cm
-        distFromWall = 45
 
 
     ## get distance value from ir sensors
@@ -74,7 +72,7 @@ class WallFollow():
             #    self.corner()
 
             # error value
-            err = distFromWall - abs(distance)
+            err = WALL_DISTANCE - abs(distance)
 
             #if distance < 0:
             #    err = -err
