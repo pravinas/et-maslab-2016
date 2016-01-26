@@ -76,6 +76,10 @@ INTAKE_ENCODER_LIMIT    = 150
 # The speed of the intake motors. (0-255)
 INTAKE_POWER            = 120
 
+# Intake directions
+INTAKE_IN = 0
+INTAKE_OUT = 1
+
 # Width of an image taken by the camera.
 CAMERA_WIDTH    = 80
 # Height of an image taken by the camera.
@@ -84,8 +88,12 @@ CAMERA_HEIGHT   = 60
 # Distance between wheels in inches.
 WHEEL_WIDTH = 12
 
-#D efault speed for going forward
+# Default speed for going forward
 FORWARD_SPEED = 50
+
+# Motor Drive Directions
+FORWARD_DIR = 0
+BACKWARD_DIR = 1
 
 #Desired distance between IR and wall
 WALL_DISTANCE = 40
