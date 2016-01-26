@@ -69,7 +69,7 @@ class WallFollow():
 
             # error value
             # 50 from hypotenuse of a 45,45,90
-            err = 50 - abs(distance)
+            err = 45 - abs(distance)
 
             if distance < 0:
                 err = -err
