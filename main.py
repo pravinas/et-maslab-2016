@@ -88,10 +88,10 @@ class Robot(SyncedSketch):
         self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
                                    self.irBL, self.irBR, self.irFL, self.irFR, 
                                    self.logic, forwardSpeed=50)
-        self.check = # TODO
+        # Runs the CHECK process. TODO: pass in proper timers.
+        self.check = CheckModule(Timer(), Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
+        # Waits for the game to start
         self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
-        # TODO: Runs the CHECK process
-        self.check = CheckModule()
         # Describes which stage of the program is running.
         self.module = MODULE_None
 
@@ -142,7 +142,7 @@ class Robot(SyncedSketch):
             self.module = MODULE_FOLLOW
             return
         else:
-            print "Attempting to run nonexistent module"
+            print "Attempting to switch to nonexistent module"
             self.stop()
 
     ## Make sure that the intake motor does not stall.

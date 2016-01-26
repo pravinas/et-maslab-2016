@@ -23,6 +23,10 @@ class OffModule(Module):
     #
     # @return   The value of the next module to return to.
     def run(self):
+        if self.timer.millis() > 20000:
+            print "Competition took too long to start. Turning off."
+            return -1
+
         if self.timer.millis() - self.lastTime > 100:
             self.lastTime = self.timer.millis()
 
