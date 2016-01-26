@@ -20,6 +20,6 @@ class LRIR(AnalogInput):
         raw_data = self.val
 
         # Arcane magic was used to calibrate this. Feel free to recalibrate.
-        distance = (1.0/raw_data)*799400-9.119
+        distance = (1.0/raw_data)*799400-9.119 if raw_data != 0 else 1000
 
         return distance
