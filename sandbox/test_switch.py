@@ -4,7 +4,7 @@ from tamproxy.devices import DigitalInput
 class SwitchRead(SyncedSketch):
 
     def setup(self):
-        self.switch = DigitalInput(self.tamp, 23)
+        self.switch = DigitalInput(self.tamp, 21)
         self.timer = Timer()
 
     def loop(self):
