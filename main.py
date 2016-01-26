@@ -102,7 +102,6 @@ class Robot(SyncedSketch):
             self.module = MODULE_FOLLOW
             return
 
-
     ## Make sure that the intake motor does not stall.
     #  If so, reverse the intake motors.
     #
