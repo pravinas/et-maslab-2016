@@ -6,6 +6,7 @@ from tamproxy.devices import Motor, Color, Encoder
 from follow import FollowModule
 from control.long_range_ir import LRIR
 from logic import Logic
+from vision import Vision
 from constants import *
 
 class TestFollow(SyncedSketch):
@@ -19,10 +20,11 @@ class TestFollow(SyncedSketch):
         irBR = LRIR(self.tamp, LONG_DISTANCE_IR_BR)
         irFL = LRIR(self.tamp, LONG_DISTANCE_IR_FL)
         irFR = LRIR(self.tamp, LONG_DISTANCE_IR_FR)
-        forwardSpeed = 50
+        forwardSpeed = -50
         logic = Logic()
+        vision = Vision(True, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
 
-        self.follow = FollowModule(timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic)
+        self.follow = FollowModule(timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic, vision)
         self.follow.start()
 
     def loop(self):

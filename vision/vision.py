@@ -33,7 +33,8 @@ class Vision():
     # @param height Height of the camera image.
     def __init__(self, myColorIsRed, width, height, debug=False):
         self.myColorIsRed = myColorIsRed
-        self.capture = cv2.VideoCapture(1)
+        # TODO: Make sure that the number below works for the given computer.
+        self.capture = cv2.VideoCapture(0)
         self.width = width
         self.height = height
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width); # X resolution
