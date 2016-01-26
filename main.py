@@ -13,7 +13,6 @@ from modules import *
 from constants import *
 
 #TODO: Get rid of excess timers
-#TODO: Drive servo closed/open each timestep
 
 class Robot(SyncedSketch):
 
@@ -56,7 +55,8 @@ class Robot(SyncedSketch):
 
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
-        self.backDoorServo.write(172)
+        # Position for servo to maintain at a given timestep.
+        self.servoPosition = 172
 
         #################################
         ####  INTERNAL MODULE SETUP  ####
@@ -76,8 +76,6 @@ class Robot(SyncedSketch):
 
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
-        # Runs the FIND process
-        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.vision, self.logic)
         # Runs the PICKUP process
         self.pickup = PickupModule(self.moduleTimer, Timer(), self.conveyorLimSwitch, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
@@ -86,17 +84,19 @@ class Robot(SyncedSketch):
         self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
                                    self.irBL, self.irBR, self.irFL, self.irFR, 
                                    self.logic, forwardSpeed=-50)
+        # TODO: Runs the CHECK process
+        self.check = CheckModule()
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
 
     def loop(self):
         state = -1
-        if self.module == MODULE_FIND:
-            state = self.find.run()
+        if self.module == MODULE_CHECK:
+            state = self.check.run()
         elif self.module == MODULE_PICKUP:
             state = self.pickup.run()
         elif self.module == MODULE_DROPOFF:
-            state = self.dropoff.run()
+            state, self.servoPosition = self.dropoff.run()
         elif self.module == MODULE_FOLLOW:
             state = self.follow.run()
         else:
@@ -107,17 +107,21 @@ class Robot(SyncedSketch):
 
         # Passive processes go here.
         self.checkForIntakeErrors()
+        self.backDoorServo.write(self.servoPosition)
+
 
     ## Switch module if necessary.
     def updateState(self, module):
         if self.module == module:
             return
-        if module == MODULE_FIND:
+        if module == MODULE_CHECK:
             self.find.start()
-            self.module = MODULE_FIND
+            self.servoPosition = SERVO_CLOSE
+            self.module = MODULE_CHECK
             return
         if module == MODULE_PICKUP:
             self.pickup.start()
+            self.servoPosition = SERVO_CLOSE
             self.module = MODULE_PICKUP
             return
         if module == MODULE_DROPOFF:
@@ -126,8 +130,12 @@ class Robot(SyncedSketch):
             return
         if module == MODULE_FOLLOW:
             self.follow.start()
+            self.servoPosition = SERVO_CLOSE
             self.module = MODULE_FOLLOW
             return
+        else:
+            print "Attempting to run nonexistent module"
+            self.stop()
 
     ## Make sure that the intake motor does not stall.
     #  If so, reverse the intake motors.

@@ -66,7 +66,7 @@ GREEN 	= False
 
 # Module numbers
 
-MODULE_FIND     = 0
+MODULE_CHECK    = 0
 MODULE_PICKUP   = 1
 MODULE_DROPOFF  = 2
 MODULE_FOLLOW 	= 3
@@ -84,8 +84,12 @@ CAMERA_HEIGHT   = 60
 # Distance between wheels in inches.
 WHEEL_WIDTH	= 12
 
-#Default speed for going forward
+#D efault speed for going forward
 FORWARD_SPEED = 50
 
 #Desired distance between IR and wall
 WALL_DISTANCE = 40
+
+# Convenient servo positions
+SERVO_OPEN	= 90
+SERVO_CLOSE	= 172
