@@ -31,18 +31,21 @@ class FollowModule(Module):
 				self.stepTimer.reset()
 				if self.blockSwitch.val:
 					print "Going from FOLLOW to CHECK"
+					self.intakeMotor.write(0,0)
+					self.leftMotor.write(0,0)
+					self.rightMotor.write(0,0)
 					return MODULE_CHECK
 				self.movement.followWall(self.movement.distance(), FORWARD_SPEED)
 
 		# turn aggressively for .3 seconds in case of being stuck
-		elif self.timer.millis() < 13000:
-			self.left.write(BACKWARD_DIR, TURN_FAST_SPEED)
-			self.right.write(FORWARD_DIR, TURN_FAST_SPEED)
+		elif self.timer.millis() < 10300:
+			self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
+			self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
 		
 		# reset everything and start over
 		else:
 			self.timer.reset()
-			self.left.write(0,0)
-			self.right.write(0,0)
+			self.leftMotor.write(0,0)
+			self.rightMotor.write(0,0)
 
 		return MODULE_FOLLOW
