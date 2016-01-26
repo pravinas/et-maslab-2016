@@ -1,5 +1,7 @@
 ET's MASLAB 2016 Code Repository
 ================================
+## Note: Much of this is out of date. We are replacing the FIND module entirely with FOLLOW, and checking colors in a separate module.
+TODO: Revise this whole document.
 
 Software Gameplan:
 
