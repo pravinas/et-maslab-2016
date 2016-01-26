@@ -26,11 +26,6 @@ class DropoffModule(Module):
         self.motorLeft = motorLeft
         self.motorLeft.write(1,0)
 
-    ## Return True if there was an error in initialization, False otherwise.
-    def checkForInitializationErrors(self):
-        # soft TODO: Make sure servo is initialized in the "closed" position.
-        return False
-
     ## Set up the beginning of the dropoff process.
     def start(self):
         # TODO: Make sure that the cube drop-off location is actually good

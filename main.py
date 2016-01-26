@@ -88,11 +88,21 @@ class Robot(SyncedSketch):
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
 
-        #self.checkForInitializationErrors()
-
     def loop(self):
+        state = -1
+        if self.module == MODULE_FIND:
+            state = self.find.run()
+        elif self.module == MODULE_PICKUP:
+            state = self.pickup.run()
+        elif self.module == MODULE_DROPOFF:
+            state = self.dropoff.run()
+        elif self.module == MODULE_FOLLOW:
+            state = self.follow.run()
+        else:
+            print "Attempting to run nonexistent module"
+            self.stop()
 
-        self.updateState(self.module.run())
+        self.updateState(state)
 
         # Passive processes go here.
         self.checkForIntakeErrors()
@@ -102,19 +112,19 @@ class Robot(SyncedSketch):
         if self.module == module:
             return
         if module == MODULE_FIND:
-            find.start()
+            self.find.start()
             self.module = MODULE_FIND
             return
         if module == MODULE_PICKUP:
-            pickup.start()
+            self.pickup.start()
             self.module = MODULE_PICKUP
             return
         if module == MODULE_DROPOFF:
-            dropoff.start()
+            self.dropoff.start()
             self.module = MODULE_PICKUP
             return
         if module == MODULE_FOLLOW:
-            follow.start()
+            self.follow.start()
             self.module = MODULE_FOLLOW
             return
 
@@ -142,13 +152,6 @@ class Robot(SyncedSketch):
                 self.intakeEncoder.write(0)
 
         self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
-
-    ## Checks if all initialization processes went smoothly.
-    def checkForInitializationErrors(self):
-        assert not self.find.checkForInitializationErrors()
-        assert not self.pickup.checkForInitializationErrors()
-        assert not self.dropoff.checkForInitializationErrors()
-        assert not self.follow.checkForInitializationErrors()
 
 # main code:
 if __name__ == "__main__":
