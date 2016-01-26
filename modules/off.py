@@ -30,8 +30,7 @@ class OffModule(Module):
         if self.timer.millis() - self.lastTime > 100:
             self.lastTime = self.timer.millis()
             # Check button
-            
+
             if self.onSwitch.val:
-                print "following on off"
                 return MODULE_FOLLOW
         return MODULE_OFF

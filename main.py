@@ -95,9 +95,9 @@ class Robot(SyncedSketch):
         self.module = MODULE_OFF
 
     def loop(self):
-        if self.bigTimer.millis() > 100:
+        if self.bigTimer.millis() > 1:
             self.bigTimer.reset()
-            print "Module Number", self.module
+            #print "Module Number", self.module
 
             state = -1
             if self.module == MODULE_OFF:

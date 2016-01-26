@@ -64,8 +64,9 @@ class PickupModule(Module):
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == PICKUP_LOWERING:
-            if self.limTimer.millis() > 50:
+            if self.limTimer.millis() > 10:
                 self.limTimer.reset()
+                #print "Pickup limswitch", self.limSwitch.val
                 if self.limSwitch.val:
                     self.motor.write(0,0)
                     if self.blocksCollected >= PICKUP_MAX_BLOCKS:
@@ -73,7 +74,7 @@ class PickupModule(Module):
                         self.blocksCollected = 0
                         return MODULE_DROPOFF
                     else:
-                        print "Going from PICKUP to FIND"
+                        print "Going from PICKUP to FOLLOW"
                         return MODULE_FOLLOW
 
         else:
