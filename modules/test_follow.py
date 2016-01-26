@@ -12,8 +12,7 @@ from constants import *
 class TestFollow(SyncedSketch):
 
     def setup(self):
-        timer = Timer()
-        timeoutTimer = Timer()
+        timer = Timer()\
         leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         irBL = LRIR(self.tamp, LONG_DISTANCE_IR_BL)
@@ -24,7 +23,7 @@ class TestFollow(SyncedSketch):
         logic = Logic()
         #vision = Vision(True, CAMERA_WIDTH, CAMERA_HEIGHT, debug=True)
 
-        self.follow = FollowModule(timer, timeoutTimer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic)
+        self.follow = FollowModule(timer, leftMotor, rightMotor, irBL, irBR, irFL, irFR, forwardSpeed, logic)
         self.follow.start()
 
     def loop(self):

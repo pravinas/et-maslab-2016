@@ -3,13 +3,13 @@
 # The main sketch for the robot's processes.
 
 from tamproxy import SyncedSketch, Timer
-from tamproxy.devices import Motor, Encoder, Servo
+from tamproxy.devices import Motor, Encoder, Servo, Color
 
 from vision import Vision
 from logic import Logic
+from control.long_range_ir import LRIR
 
 from modules import *
-
 from constants import *
 
 class Robot(SyncedSketch):
@@ -39,6 +39,15 @@ class Robot(SyncedSketch):
         # Encoder object for the conveyor belt motor.
         self.conveyorEncoder = Encoder(self.tamp, BELT_MOTOR_ENCODER_YELLOW, BELT_MOTOR_ENCODER_WHITE)
 
+        # Long range IR sensors
+        self.irBL = LRIR(self.tamp, LONG_DISTANCE_IR_BL)
+        self.irBR = LRIR(self.tamp, LONG_DISTANCE_IR_BR)
+        self.irFL = LRIR(self.tamp, LONG_DISTANCE_IR_FL)
+        self.irFR = LRIR(self.tamp, LONG_DISTANCE_IR_FR)
+
+        # Color sensor
+        self.color = Color(self.tamp)
+
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
         self.backDoorDervo.write(172)
@@ -55,7 +64,7 @@ class Robot(SyncedSketch):
         #self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
         # Logic object for FIND module
-        self.logic = Logic(CAMERA_WIDTH, CAMERA_HEIGHT)
+        self.logic = Logic(self.color, self.leftEncoder, self.rightEncoder)
         # Vision object for FIND module
         self.vision = Vision(RED, CAMERA_WIDTH, CAMERA_HEIGHT)
 
@@ -67,8 +76,10 @@ class Robot(SyncedSketch):
         self.pickup = PickupModule(self.moduleTimer, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
         self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo)
-        # Runs the FOLLOW process
-        self.follow = FollowModule(self.moduleTimer)
+        # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
+        self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
+                                   self.irBL, self.irBR, self.irFL, self.irFR, 
+                                   self.logic, forwardSpeed=-50)
         # Describes which stage of the program is running.
         self.module = MODULE_FIND
 
