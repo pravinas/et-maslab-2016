@@ -23,7 +23,7 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 20:	
 21:	Block Limit Switch
 22:	Conveyor Limit Switch
-23:	Short Distance IR
+23:	Competition Mode Button
 24:	
 25:	Servo
 26:	

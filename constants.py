@@ -39,7 +39,6 @@ LONG_DISTANCE_IR_FL  = 14
 LONG_DISTANCE_IR_FR  = 15
 LONG_DISTANCE_IR_BL  = 16
 LONG_DISTANCE_IR_BR  = 17
-SHORT_DISTANCE_IR    = 23
 
 # Color Sensor
 
@@ -47,13 +46,14 @@ COLOR_SENSOR_SCL    = 18
 COLOR_SENSOR_SDA    = 19
 
 # Servo
-
 SERVO_PIN   = 25
 
 # Limit Switches
 BLOCK_LIMIT_SWITCH		= 21
 CONVEYOR_LIMIT_SWITCH	= 22
 
+# Competition Mode
+COMPETITION_MODE	= 23
 
 ##########################
 ####  MISC CONSTANTS  ####
