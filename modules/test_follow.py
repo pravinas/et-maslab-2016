@@ -8,7 +8,7 @@ from control.long_range_ir import LRIR
 from logic import Logic
 from constants import *
 
-class TestFind(SyncedSketch):
+class TestFollow(SyncedSketch):
 
     def setup(self):
         timer = Timer()
@@ -32,5 +32,5 @@ class TestFind(SyncedSketch):
 
 
 if __name__ == "__main__":
-    sketch = TestFind(1, -0.00001, 100)
+    sketch = TestFollow(1, -0.00001, 100)
     sketch.run()
