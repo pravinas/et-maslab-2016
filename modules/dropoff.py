@@ -10,14 +10,11 @@ from constants import *
 
 class DropoffModule(Module):
     def __init__(self, timer, loopTimer, servo, motorRight, motorLeft, encoder):
-        self.timeout = 7000
-        self.waitTime = 500     # Time in ms to wait for the door to actually open.
         self.loopTimer = loopTimer
         self.timer = timer
         self.servo = servo
         self.encoder = encoder
-        self.encval = 0 #start encoder value
-        self.encmax = 2500 #encoder value when needing to stop
+        self.encval = 0 
 
         self.motorRight = motorRight
         self.motorRight.write(1,0)
@@ -38,7 +35,7 @@ class DropoffModule(Module):
     def run(self):
 
         # Allow timeout.
-        if self.timer.millis() > self.timeout:
+        if self.timer.millis() > DROPOFF_TIMEOUT:
             print "Timed out from DROPOFF to FIND"
             self.motorRight.write(0,0)
             self.motorLeft.write(0,0)
@@ -47,12 +44,12 @@ class DropoffModule(Module):
         if self.loopTimer.millis() > 100:
             self.loopTimer.reset()
             # After Door opens, go forward
-            if self.timer.millis() > self.waitTime and self.encoder.val < self.encmax + self.encval:
+            if self.timer.millis() > DROPOFF_WAIT_TIME and self.encoder.val < self.encval + DROPOFF_ENC_MAX:
                 self.motorRight.write(0,FORWARD_SPEED)
                 self.motorLeft.write(0,FORWARD_SPEED)
 
             # After robot moves forward enough, stop moving and close the door
-            if self.encoder.val > self.encmax + self.encval:
+            if self.encoder.val > self.encval + DROPOFF_ENC_MAX:
                 self.motorRight.write(0,0)
                 self.motorLeft.write(0,0)
                 self.servo.write(SERVO_CLOSE)
