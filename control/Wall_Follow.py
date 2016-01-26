@@ -21,8 +21,7 @@ class WallFollow():
         self.timer.reset()
         self.ir0 = ir0
         self.ir1 = ir1
-        self.ir2 = ir2
-        self.ir3 = ir3
+
 
         # Number of values to record
         self.recordLen = 10
@@ -34,6 +33,9 @@ class WallFollow():
         self.ki = -0.00005
         self.kd = -0.2
 
+        #in cm
+        distFromWall = 45
+
 
     ## get distance value from ir sensors
     # returns distance from edge of bot to wall
@@ -43,6 +45,9 @@ class WallFollow():
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
+        return self.ir1.read_ir()
+
+        '''
         # issue: drives right when approachin wall and can't follow it
         # uses both front IRs returns distance of nearest wall
         if self.ir1.read_ir()  < self.ir0.read_ir():
@@ -51,6 +56,7 @@ class WallFollow():
         else: 
             #left wall nearer
             return -(self.ir0.read_ir())
+        '''
 
     ## Given a distance value from distance make bot move to be 14 cm from wall.
     #
@@ -68,11 +74,10 @@ class WallFollow():
             #    self.corner()
 
             # error value
-            # 50 from hypotenuse of a 45,45,90
-            err = 45 - abs(distance)
+            err = distFromWall - abs(distance)
 
-            if distance < 0:
-                err = -err
+            #if distance < 0:
+            #    err = -err
 
 
 
@@ -94,6 +99,7 @@ class WallFollow():
     # will stop once IR0 is significantly smaller in value than IR1
     # once reaching corner will follow wall on right, need to fix for left
     # todo
+    '''
     def corner(self):
         #need to tweak motors
         #todo
@@ -111,6 +117,7 @@ class WallFollow():
 
             
                 self.followWall(self.distance(),-30)
+    '''
 
 
 
