@@ -12,6 +12,7 @@ class LRIR(AnalogInput):
         super(LRIR, self).__init__(tamproxy, pin)
         while self.id is None: pass
         self.start_continuous()
+        self.lastreading = 0
 
     ## Read the distance from the IR sensors in centimeters.
     # 
@@ -20,6 +21,7 @@ class LRIR(AnalogInput):
         raw_data = self.val
 
         # Arcane magic was used to calibrate this. Feel free to recalibrate.
-        distance = (1.0/raw_data)*799400-9.119 if raw_data != 0 else 1000
+        distance = (1.0/raw_data)*799400-9.119 if raw_data != 0 else self.lastreading
+        self.lastreading = distance
 
         return distance
