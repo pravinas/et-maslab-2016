@@ -50,8 +50,8 @@ COLOR_SENSOR_SDA    = 19
 
 SERVO_PIN   = 25
 
-# Limit Switch
-
+# Limit Switches
+BLOCK_LIMIT_SWITCH		= 21
 CONVEYOR_LIMIT_SWITCH	= 22
 
 

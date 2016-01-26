@@ -13,6 +13,7 @@ from modules import *
 from constants import *
 
 #TODO: Get rid of excess timers
+#TODO: Drive servo closed/open each timestep
 
 class Robot(SyncedSketch):
 

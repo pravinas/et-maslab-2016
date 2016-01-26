@@ -21,12 +21,12 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 18:	Color Sensor SCL
 19:	Color Sensor SDA
 20:	
-21:	
-22:	Limit Switch
-23: Short Distance IR
+21:	Block Limit Switch
+22:	Conveyor Limit Switch
+23:	Short Distance IR
 24:	
 25:	Servo
-26: 
+26:	
 27:	Belt Motor Encoder White
 28:	Belt Moter Encoder Yellow
 29: Left Drive Encoder Yellow
