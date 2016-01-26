@@ -27,8 +27,8 @@ Here are the pins! Whenever you edit this, please edit constants.py accordingly.
 24:	
 25:	Servo
 26:	
-27:	Belt Motor Encoder White
-28:	Belt Moter Encoder Yellow
+27:	Belt Motor Encoder Yellow
+28:	Belt Moter Encoder White
 29: Left Drive Encoder Yellow
 30: Left Drive Encoder White
 31: Hugs Motor Encoder Yellow

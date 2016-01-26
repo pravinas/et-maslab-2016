@@ -13,7 +13,7 @@ class TestDropoff(SyncedSketch):
 
         self.motorRight = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
         self.motorLeft = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
-        self.encoder = Encoder(self.tamp, 0, 1)
+        self.encoder = Encoder(self.tamp, RIGHT_DRIVE_ENCODER_YELLOW, RIGHT_DRIVE_ENCODER_WHITE)
 
         self.dropoff = DropoffModule(self.timer, self.loopTimer, self.servo, self.motorRight, self.motorLeft, self.encoder)
         self.dropoff.start()
