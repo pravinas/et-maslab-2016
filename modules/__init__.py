@@ -2,7 +2,7 @@
 #
 # Package modules into the whole thing.
 
-from .find import FindModule
+from .check import CheckModule
 from .follow import FollowModule
 from .pickup import PickupModule
 from .dropoff import DropoffModule
