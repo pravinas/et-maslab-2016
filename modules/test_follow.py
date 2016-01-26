@@ -16,13 +16,14 @@ class TestFollow(SyncedSketch):
         wallFollowTimer = Timer()
         leftMotor = Motor(self.tamp, LEFT_DRIVE_CONTROLLER_DIRECTION, LEFT_DRIVE_CONTROLLER_PWM)
         rightMotor = Motor(self.tamp, RIGHT_DRIVE_CONTROLLER_DIRECTION, RIGHT_DRIVE_CONTROLLER_PWM)
+        intakeMotor = Motor(self.tamp, HUGS_MOTOR_CONTROLLER_DIRECTION, HUGS_MOTOR_CONTROLLER_PWM)
         irFL = LRIR(self.tamp, LONG_DISTANCE_IR_FL)
         irFR = LRIR(self.tamp, LONG_DISTANCE_IR_FR)
         irBL = LRIR(self.tamp, LONG_DISTANCE_IR_BL)
         irBR = LRIR(self.tamp, LONG_DISTANCE_IR_BR)
         wallFollow = WallFollow(leftMotor, rightMotor, wallFollowTimer, irFL, irFR, irBL, irBR)
         blockSwitch = DigitalInput(self.tamp, BLOCK_LIMIT_SWITCH)
-        self.follow = FollowModule(timer, stepTimer, leftMotor, rightMotor, wallFollow, FORWARD_SPEED, blockSwitch)
+        self.follow = FollowModule(timer, stepTimer, leftMotor, rightMotor, intakeMotor, wallFollow, FORWARD_SPEED, blockSwitch)
         self.follow.start()
 
     def loop(self):
