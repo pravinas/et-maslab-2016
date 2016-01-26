@@ -20,11 +20,11 @@ class FollowModule(Module):
 
     def start(self):
         self.timer.reset()
-
-    def run(self):
+        self.stepTimer.reset()
         #turn intake on
         self.intakeMotor.write(INTAKE_IN, INTAKE_POWER)
 
+    def run(self):
         # usually wall follow for 10 seconds
         if self.timer.millis() < 10000:
             if self.stepTimer.millis() > 100:

@@ -3,8 +3,6 @@ from tamproxy.devices import Motor, Encoder, DigitalInput
 from pickup import PickupModule
 from constants import *
 
-MODULE_PICKUP = 1
-
 class TestPickup(SyncedSketch):
 
     def setup(self):

@@ -11,6 +11,7 @@ from constants import *
 class TestFollow(SyncedSketch):
 
     def setup(self):
+        self.ttt = Timer()
         timer = Timer()
         stepTimer = Timer()
         wallFollowTimer = Timer()
@@ -23,10 +24,14 @@ class TestFollow(SyncedSketch):
         irBR = LRIR(self.tamp, LONG_DISTANCE_IR_BR)
         wallFollow = WallFollow(leftMotor, rightMotor, wallFollowTimer, irFL, irFR, irBL, irBR)
         blockSwitch = DigitalInput(self.tamp, BLOCK_LIMIT_SWITCH)
-        self.follow = FollowModule(timer, stepTimer, leftMotor, rightMotor, intakeMotor, wallFollow, FORWARD_SPEED, blockSwitch)
+        self.blockSwitch = DigitalInput(self.tamp, 21)
+        self.follow = FollowModule(timer, stepTimer, leftMotor, rightMotor, intakeMotor, wallFollow, FORWARD_SPEED, self.blockSwitch)
         self.follow.start()
 
     def loop(self):
+        if self.ttt.millis() > 100:
+            self.ttt.reset()
+            print "sdlkf", self.blockSwitch.val
         response = self.follow.run()
         if response != MODULE_FOLLOW:
             self.stop()
