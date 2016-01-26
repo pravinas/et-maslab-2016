@@ -3,7 +3,7 @@
 # The main sketch for the robot's processes.
 
 from tamproxy import SyncedSketch, Timer
-from tamproxy.devices import Motor, Encoder, Servo, Color
+from tamproxy.devices import Motor, Encoder, Servo, Color, DigitalInput
 
 from vision import Vision
 from logic import Logic
@@ -11,6 +11,8 @@ from control.long_range_ir import LRIR
 
 from modules import *
 from constants import *
+
+#TODO: Get rid of excess timers
 
 class Robot(SyncedSketch):
 
@@ -48,9 +50,12 @@ class Robot(SyncedSketch):
         # Color sensor
         self.color = Color(self.tamp)
 
+        # Limit switches
+        self.conveyorLimSwitch = DigitalInput(self.tamp, CONVEYOR_LIMIT_SWITCH)
+
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
-        self.backDoorDervo.write(172)
+        self.backDoorServo.write(172)
 
         #################################
         ####  INTERNAL MODULE SETUP  ####
@@ -61,7 +66,7 @@ class Robot(SyncedSketch):
         # Are the intake motors reversing? True if so, False if going forwards.
         self.intakeDirection = False
         # Start the intake motor.
-        #self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
+        self.intakeMotor.write(self.intakeDirection, INTAKE_POWER)
 
         # Logic object for FIND module
         self.logic = Logic(self.color, self.leftEncoder, self.rightEncoder)
@@ -71,11 +76,11 @@ class Robot(SyncedSketch):
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
         # Runs the FIND process
-        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.vision, self.logic)
+        self.find = FindModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.vision, self.logic)
         # Runs the PICKUP process
-        self.pickup = PickupModule(self.moduleTimer, self.conveyorMotor, self.conveyorEncoder)
+        self.pickup = PickupModule(self.moduleTimer, Timer(), self.conveyorLimSwitch, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
-        self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo)
+        self.dropoff = DropoffModule(self.moduleTimer, Timer(), self.backDoorServo, self.rightMotor, self.leftMotor, self.rightEncoder)
         # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
         self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
                                    self.irBL, self.irBR, self.irFL, self.irFR, 
