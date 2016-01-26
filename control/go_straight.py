@@ -47,8 +47,8 @@ class GoStraight():
 
             power = self.kp * err + self.ki * sum(self.record) + self.kd * deriv
 
-            self.leftMotor.write((speed + power) > 0, min(abs(speed + power), 255))
-            self.rightMotor.write((speed - power) > 0, min(abs(speed - power), 255))
+            self.leftMotor.write((speed + power) < 0, min(abs(speed + power), 255))
+            self.rightMotor.write((speed - power) < 0, min(abs(speed - power), 255))
 
             print "GoStraight Power: ", power
 
