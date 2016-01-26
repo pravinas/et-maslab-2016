@@ -31,7 +31,7 @@ class TestWallFollow(SyncedSketch):
             # IR return distance, 50 speed
 
 
-            self.movement.followWall(self.movement.distance(),-40)
+            self.movement.followWall(self.movement.distance(),-35)
 
 
 
