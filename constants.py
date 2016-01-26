@@ -97,10 +97,11 @@ GREEN   = False
 
 # Module numbers
 
-MODULE_CHECK    = 0
-MODULE_PICKUP   = 1
-MODULE_DROPOFF  = 2
-MODULE_FOLLOW   = 3
+MODULE_OFF      = 0
+MODULE_FOLLOW   = 1
+MODULE_CHECK    = 2
+MODULE_PICKUP   = 3
+MODULE_DROPOFF  = 4
 
 # The limit point at which the motor is considered stalled.
 INTAKE_ENCODER_LIMIT    = 150

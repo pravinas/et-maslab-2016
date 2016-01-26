@@ -59,6 +59,9 @@ class Robot(SyncedSketch):
         self.servoPosition = SERVO_CLOSE
         self.backDoorServo.write(self.servoPosition)
 
+        # The switch that tells the program that the competition has started
+        self.competitionModeSwitch = DigitalInput(self.tamp, COMPETITIION_MODE)
+
         #################################
         ####  INTERNAL MODULE SETUP  ####
         #################################
@@ -84,15 +87,19 @@ class Robot(SyncedSketch):
         # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
         self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, 
                                    self.irBL, self.irBR, self.irFL, self.irFR, 
-                                   self.logic, forwardSpeed=-50)
+                                   self.logic, forwardSpeed=50)
+        self.check = # TODO
+        self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
         # TODO: Runs the CHECK process
         self.check = CheckModule()
         # Describes which stage of the program is running.
-        self.module = MODULE_FIND
+        self.module = MODULE_None
 
     def loop(self):
         state = -1
-        if self.module == MODULE_CHECK:
+        if self.module == MODULE_OFF:
+            state = self.off.run()
+        elif self.module == MODULE_CHECK:
             state = self.check.run()
         elif self.module == MODULE_PICKUP:
             state = self.pickup.run()
@@ -110,10 +117,13 @@ class Robot(SyncedSketch):
         self.checkForIntakeErrors()
         self.backDoorServo.write(self.servoPosition)
 
-
     ## Switch module if necessary.
     def updateState(self, module):
         if self.module == module:
+            return
+        if module == MODULE_OFF:
+            self.off.start()
+            self.module = MODULE_OFF
             return
         if module == MODULE_CHECK:
             self.find.start()
