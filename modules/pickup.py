@@ -25,8 +25,8 @@ class PickupModule(Module):
     ## Set up the beginning of the pickup process.
     def start(self):
         self.timer.reset()
-        self.encval = self.encoder.val
-        self.motor.write(PICKUP_BELT_UP, PICKUP_CONVEYOR_POWER)
+        #self.encval = self.encoder.val
+        self.motor.write(PICKUP_BELT_UP, PICKUP_CONVEYOR_POWER_RAISE)
         self.state = PICKUP_RAISING
         print "RAISING"
 
@@ -48,7 +48,7 @@ class PickupModule(Module):
 
         if self.state == PICKUP_RAISING:
             # Check every timestep whether self.encoder.val > self.encval
-            if self.encoder.val > self.encval + PICKUP_ENCODER_MAX:
+            if self.encoder.val > PICKUP_ENCODER_MAX: #self.encval + PICKUP_ENCODER_MAX:
                 self.state = PICKUP_STOPPING
                 self.motor.write(0,0)
                 self.stopTime = self.timer.millis()
@@ -58,13 +58,15 @@ class PickupModule(Module):
             # Stop for a short time
             if self.timer.millis() > self.stopTime + PICKUP_STOP_TIME:
                 self.state = PICKUP_LOWERING
-                self.motor.write(PICKUP_BELT_DOWN, PICKUP_CONVEYOR_POWER)
+                self.motor.write(PICKUP_BELT_DOWN, PICKUP_CONVEYOR_POWER_LOWER)
                 self.blocksCollected += 1
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == PICKUP_LOWERING:
             #print "Pickup limswitch", self.limSwitch.val
-            if self.limSwitch.val:
+            if self.limSwitch.val or self.encoder.val < self.encval + 100:
+                print "limswitch", bool(self.limSwitch.val)
+                print "encoder base, current", self.encval, self.encoder.val
                 self.motor.write(0,0)
                 if self.blocksCollected >= PICKUP_MAX_BLOCKS:
                     print "Going from PICKUP to DROPOFF"

@@ -11,7 +11,7 @@ class A():
 class SwitchRead(SyncedSketch):
 
     def setup(self):
-        self.switch = A(DigitalInput(self.tamp, 23))
+        self.switch = A(DigitalInput(self.tamp, 21))
         self.timer = Timer()
         self.ttt = Timer()
 

@@ -64,21 +64,23 @@ COMPETITION_MODE    = 23
 ############
 
 # time in ms for the conveyor belt to stop at the top.
-PICKUP_STOP_TIME        = 500
+PICKUP_STOP_TIME        		= 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS    = 5.2
+PICKUP_NUM_ROTATIONS    		= 5.2
 # encoder value at the top of the belt.
-PICKUP_ENCODER_MAX      = PICKUP_NUM_ROTATIONS * 3200
-# Power to drive the conveyor belt.
-PICKUP_CONVEYOR_POWER   = 130
+PICKUP_ENCODER_MAX      		= PICKUP_NUM_ROTATIONS * 3200
+# Power to drive the conveyor belt up.
+PICKUP_CONVEYOR_POWER_RAISE		= 130
+# Power to drive the conveyor belt down.
+PICKUP_CONVEYOR_POWER_LOWER		= 130
 # Direction for belt to go up
-PICKUP_BELT_UP          = False
+PICKUP_BELT_UP          		= False
 # Direction for belt to go down
-PICKUP_BELT_DOWN        = True
+PICKUP_BELT_DOWN        		= True
 # Timeout for entire pickup module
-PICKUP_TIMEOUT          = 15000
+PICKUP_TIMEOUT          		= 15000
 # The most blocks that the robot can handle
-PICKUP_MAX_BLOCKS       = 4
+PICKUP_MAX_BLOCKS       		= 4
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0

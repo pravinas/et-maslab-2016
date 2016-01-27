@@ -26,6 +26,7 @@ class DropoffModule(Module):
         self.timer.reset()
         self.encval = self.encoder.val
         self.servo.write(SERVO_OPEN)
+        print "door open"
 
     ## Open the back door and drive "forwards," avoiding what needs to be avoided.
     #
