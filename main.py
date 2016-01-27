@@ -55,9 +55,8 @@ class Robot(SyncedSketch):
 
         # Servo controlling the door of the collection chamber.
         self.backDoorServo = Servo(self.tamp, SERVO_PIN)
-        # Position for servo to maintain at a given timestep.
-        self.servoPosition = SERVO_CLOSE
-        self.backDoorServo.write(self.servoPosition)
+        # Make sure the door is closed
+        self.backDoorServo.write(SERVO_CLOSE)
 
         # The switch that tells the program that the competition has started
         self.competitionModeSwitch = DigitalInput(self.tamp, COMPETITION_MODE)
@@ -118,8 +117,9 @@ class Robot(SyncedSketch):
             self.updateState(state)
 
             # Passive processes go here.
-            self.checkForIntakeErrors()
-            self.backDoorServo.write(self.servoPosition)
+            # Lotta thinks these are useless and only cause weird timing issues
+            # self.checkForIntakeErrors()
+            # self.backDoorServo.write(SERVO_CLOSE)
 
     ## Switch module if necessary.
     def updateState(self, module):
