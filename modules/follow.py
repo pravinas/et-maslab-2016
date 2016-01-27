@@ -23,8 +23,8 @@ class FollowModule(Module):
         self.intakeMotor.write(INTAKE_IN, INTAKE_POWER)
 
     def run(self):
-        # usually wall follow for 10 seconds
-        if self.timer.millis() < 10000:
+        # usually wall follow for a few seconds
+        if self.timer.millis() < FOLLOW_WALL_TIME:
             #print "follow blockswitch", bool(self.blockSwitch.val)
             if self.blockSwitch.val:
                 print "Going from FOLLOW to CHECK"
@@ -35,8 +35,8 @@ class FollowModule(Module):
             self.movement.followWall(self.movement.distance(), FORWARD_SPEED)
 
         # turn aggressively for .3 seconds in case of being stuck
-        elif self.timer.millis() < 10300:
-            print sel.timer.millis()
+        elif self.timer.millis() < FOLLOW_TURN_TIME:
+            print self.timer.millis()
             self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
             self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
         

@@ -98,6 +98,23 @@ DROPOFF_WAIT_TIME	= 500
 # Encoder value when needing to stop
 DROPOFF_ENC_MAX		= 2500
 
+############
+## Follow ##
+############
+
+# Time in ms to follow the wall
+FOLLOW_WALL_TIME = 7000
+# Timestamp at which to stop turning
+FOLLOW_TURN_TIME = FOLLOW_WALL_TIME + 500
+
+###########
+## Check ##
+###########
+
+# Time in ms to run the intakes backwards for an incorrect block.
+CHECK_SPIT_TIME = 500
+# Timestamp at which to stop turning
+CHECK_TURN_TIME = CHECK_SPIT_TIME + 500s
 
 ##########################
 ####  MISC CONSTANTS  ####
