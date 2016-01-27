@@ -36,6 +36,7 @@ class FollowModule(Module):
 
         # turn aggressively for .3 seconds in case of being stuck
         elif self.timer.millis() < 10300:
+            print sel.timer.millis()
             self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
             self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
         

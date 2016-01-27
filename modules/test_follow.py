@@ -22,17 +22,17 @@ class TestFollow(SyncedSketch):
         irFR = LRIR(self.tamp, LONG_DISTANCE_IR_FR)
         irBL = LRIR(self.tamp, LONG_DISTANCE_IR_BL)
         irBR = LRIR(self.tamp, LONG_DISTANCE_IR_BR)
-        wallFollow = WallFollow(leftMotor, rightMotor, wallFollowTimer, irFL, irFR, irBL, irBR)
+        self.wallFollow = WallFollow(leftMotor, rightMotor, wallFollowTimer, irFL, irFR, irBL, irBR)
         blockSwitch = DigitalInput(self.tamp, BLOCK_LIMIT_SWITCH)
         self.blockSwitch = DigitalInput(self.tamp, 21)
-        self.follow = FollowModule(timer, stepTimer, leftMotor, rightMotor, intakeMotor, wallFollow, FORWARD_SPEED, self.blockSwitch)
+        self.follow = FollowModule(timer, leftMotor, rightMotor, intakeMotor, self.wallFollow, FORWARD_SPEED, self.blockSwitch)
         self.follow.start()
 
     def loop(self):
+        response = self.follow.run()
         if self.ttt.millis() > 100:
             self.ttt.reset()
-            print "sdlkf", self.blockSwitch.val
-        response = self.follow.run()
+            print self.wallFollow.distance()
         if response != MODULE_FOLLOW:
             self.stop()
 
