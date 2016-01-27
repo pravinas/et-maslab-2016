@@ -64,7 +64,7 @@ class PickupModule(Module):
 
         elif self.state == PICKUP_LOWERING:
             #print "Pickup limswitch", self.limSwitch.val
-            if self.limSwitch.val or self.encoder.val < self.encval + 200:
+            if self.limSwitch.val:# or self.encoder.val < self.encval + 200:
                 print "limswitch", bool(self.limSwitch.val)
                 print "encoder base, current", self.encval, self.encoder.val
                 self.motor.write(0,0)
