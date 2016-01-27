@@ -10,9 +10,8 @@ from constants import *
 
 class PickupModule(Module):
 
-    def __init__(self, timer, limTimer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
+    def __init__(self, timer, conveyorLimSwitch, conveyorMotor, conveyorEncoder):
         self.timer = timer
-        self.limTimer = limTimer
         self.limSwitch = conveyorLimSwitch
         self.motor = conveyorMotor
         self.encoder = conveyorEncoder
@@ -39,7 +38,7 @@ class PickupModule(Module):
     # @return   The value of the next module to return to.
     def run(self):
         if self.timer.millis() > PICKUP_TIMEOUT:
-            if self.blocksCollected >= 4:
+            if self.blocksCollected >= PICKUP_MAX_BLOCKS:
                 print "Timed out from PICKUP to DROPOFF"
                 self.blocksCollected = 0
                 return MODULE_DROPOFF
@@ -64,18 +63,16 @@ class PickupModule(Module):
                 print "LOWERING with", self.blocksCollected, "blocks inside"
 
         elif self.state == PICKUP_LOWERING:
-            if self.limTimer.millis() > 10:
-                self.limTimer.reset()
-                #print "Pickup limswitch", self.limSwitch.val
-                if self.limSwitch.val:
-                    self.motor.write(0,0)
-                    if self.blocksCollected >= PICKUP_MAX_BLOCKS:
-                        print "Going from PICKUP to DROPOFF"
-                        self.blocksCollected = 0
-                        return MODULE_DROPOFF
-                    else:
-                        print "Going from PICKUP to FOLLOW"
-                        return MODULE_FOLLOW
+            #print "Pickup limswitch", self.limSwitch.val
+            if self.limSwitch.val:
+                self.motor.write(0,0)
+                if self.blocksCollected >= PICKUP_MAX_BLOCKS:
+                    print "Going from PICKUP to DROPOFF"
+                    self.blocksCollected = 0
+                    return MODULE_DROPOFF
+                else:
+                    print "Going from PICKUP to FOLLOW"
+                    return MODULE_FOLLOW
 
         else:
             print "Unexpected action index in PICKUP"

@@ -78,24 +78,25 @@ class Robot(SyncedSketch):
 
         # A timer to make sure timesteps are only 10 times/second
         self.bigTimer = Timer()
-
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
+
         # Runs the PICKUP process
-        self.pickup = PickupModule(self.moduleTimer, Timer(), self.conveyorLimSwitch, self.conveyorMotor, self.conveyorEncoder)
+        self.pickup = PickupModule(self.moduleTimer, self.conveyorLimSwitch, self.conveyorMotor, self.conveyorEncoder)
         # Runs the DROPOFF process
-        self.dropoff = DropoffModule(self.moduleTimer, Timer(), self.backDoorServo, self.rightMotor, self.leftMotor, self.rightEncoder)
+        self.dropoff = DropoffModule(self.moduleTimer, self.backDoorServo, self.rightMotor, self.leftMotor, self.rightEncoder)
         # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
-        self.follow = FollowModule(self.moduleTimer, Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.wallFollow, FORWARD_SPEED, self.blockLimSwitch)
+        self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.wallFollow, FORWARD_SPEED, self.blockLimSwitch)
         # Runs the CHECK process. TODO: pass in proper timers.
         self.check = CheckModule(Timer(), Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
         # Waits for the game to start
         self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
+
         # Describes which stage of the program is running.
         self.module = MODULE_OFF
 
     def loop(self):
-        if self.bigTimer.millis() > 1:
+        if self.bigTimer.millis() > 100:
             self.bigTimer.reset()
             #print "Module Number", self.module
 
@@ -124,23 +125,23 @@ class Robot(SyncedSketch):
     def updateState(self, module):
         if self.module == module:
             return
-        if module == MODULE_OFF:
+        elif module == MODULE_OFF:
             self.off.start()
             self.module = MODULE_OFF
             return
-        if module == MODULE_CHECK:
+        elif module == MODULE_CHECK:
             self.check.start()
             self.module = MODULE_CHECK
             return
-        if module == MODULE_PICKUP:
+        elif module == MODULE_PICKUP:
             self.pickup.start()
             self.module = MODULE_PICKUP
             return
-        if module == MODULE_DROPOFF:
+        elif module == MODULE_DROPOFF:
             self.dropoff.start()
-            self.module = MODULE_PICKUP
+            self.module = MODULE_DROPOFF
             return
-        if module == MODULE_FOLLOW:
+        elif module == MODULE_FOLLOW:
             self.follow.start()
             self.module = MODULE_FOLLOW
             return

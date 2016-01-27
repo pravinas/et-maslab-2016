@@ -90,7 +90,7 @@ PICKUP_LOWERING = 2
 #############
 
 # Timeout for entire dropoff module
-DROPOFF_TIMEOUT		= 7000
+DROPOFF_TIMEOUT		= 2000
 # Time in ms to wait for the door to actually open.
 DROPOFF_WAIT_TIME	= 500
 # Encoder value when needing to stop

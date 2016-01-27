@@ -9,8 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from constants import *
 
 class DropoffModule(Module):
-    def __init__(self, timer, loopTimer, servo, motorRight, motorLeft, encoder):
-        self.loopTimer = loopTimer
+    def __init__(self, timer, servo, motorRight, motorLeft, encoder):
         self.timer = timer
         self.servo = servo
         self.encoder = encoder
@@ -25,7 +24,6 @@ class DropoffModule(Module):
     def start(self):
         # TODO: Make sure that the cube drop-off location is actually good
         self.timer.reset()
-        self.loopTimer.reset()
         self.encval = self.encoder.val
         self.servo.write(SERVO_OPEN)
 
@@ -36,26 +34,21 @@ class DropoffModule(Module):
 
         # Allow timeout.
         if self.timer.millis() > DROPOFF_TIMEOUT:
-            print "Timed out from DROPOFF to FIND"
+            print "Timed out from DROPOFF to FOLLOW"
             self.motorRight.write(0,0)
             self.motorLeft.write(0,0)
+            self.servo.write(SERVO_CLOSE)
             return MODULE_FOLLOW
 
-        if self.loopTimer.millis() > 100:
-            self.loopTimer.reset()
-            # After Door opens, go forward
-            if self.timer.millis() > DROPOFF_WAIT_TIME and self.encoder.val < self.encval + DROPOFF_ENC_MAX:
-                self.motorRight.write(0,FORWARD_SPEED)
-                self.motorLeft.write(0,FORWARD_SPEED)
+        if self.timer.millis() > DROPOFF_WAIT_TIME and self.encoder.val < self.encval + DROPOFF_ENC_MAX:
+            self.motorRight.write(0,FORWARD_SPEED)
+            self.motorLeft.write(0,FORWARD_SPEED)
 
-            # After robot moves forward enough, stop moving and close the door
-            if self.encoder.val > self.encval + DROPOFF_ENC_MAX:
-                self.motorRight.write(0,0)
-                self.motorLeft.write(0,0)
-                self.servo.write(SERVO_CLOSE)
+        # After robot moves forward enough, stop moving and close the door
+        if self.encoder.val > self.encval + DROPOFF_ENC_MAX:
+            self.motorRight.write(0,0)
+            self.motorLeft.write(0,0)
+            self.servo.write(SERVO_CLOSE)
 
-        #After robot finishes closing the door, go to the next module
-        if self.timer.millis() > 2000:
-            return MODULE_FOLLOW
 
         return MODULE_DROPOFF
