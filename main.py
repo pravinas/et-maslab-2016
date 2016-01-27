@@ -87,7 +87,7 @@ class Robot(SyncedSketch):
         # Runs the FOLLOW process TODO: Fix forward to actually mean forward.
         self.follow = FollowModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.wallFollow, FORWARD_SPEED, self.blockLimSwitch)
         # Runs the CHECK process. TODO: pass in proper timers.
-        self.check = CheckModule(Timer(), Timer(), self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
+        self.check = CheckModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
         # Waits for the game to start
         self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
 
