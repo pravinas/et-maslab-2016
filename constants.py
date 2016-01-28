@@ -70,9 +70,9 @@ PICKUP_NUM_ROTATIONS    		= 5.0
 # encoder value at the top of the belt.
 PICKUP_ENCODER_MAX      		= PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt up.
-PICKUP_CONVEYOR_POWER_RAISE		= 130
+PICKUP_CONVEYOR_POWER_RAISE		= 170
 # Power to drive the conveyor belt down.
-PICKUP_CONVEYOR_POWER_LOWER		= 130
+PICKUP_CONVEYOR_POWER_LOWER		= 140
 # Direction for belt to go up
 PICKUP_BELT_UP          		= False
 # Direction for belt to go down
