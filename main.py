@@ -5,7 +5,6 @@
 from tamproxy import SyncedSketch, Timer
 from tamproxy.devices import Motor, Encoder, Servo, Color, DigitalInput
 
-from vision import Vision
 from control.long_range_ir import LRIR
 from control.Wall_Follow import WallFollow
 
