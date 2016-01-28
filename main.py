@@ -108,7 +108,8 @@ class Robot(SyncedSketch):
             elif self.module == MODULE_PICKUP:
                 state = self.pickup.run()
             elif self.module == MODULE_DROPOFF:
-                state = self.dropoff.run()
+                self.module = MODULE_FOLLOW
+                state = self.follow.run()
             elif self.module == MODULE_FOLLOW:
                 state = self.follow.run()
             else:
