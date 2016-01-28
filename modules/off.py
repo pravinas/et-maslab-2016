@@ -25,12 +25,13 @@ class OffModule(Module):
     def run(self):
         if self.timer.millis() > 60000:
             print "Competition took too long to start. Turning off."
-            return -1
+            return MODULE_END
 
         if self.timer.millis() - self.lastTime > 100:
             self.lastTime = self.timer.millis()
             # Check button
 
             if self.onSwitch.val:
+                self.timer.reset()
                 return MODULE_FOLLOW
         return MODULE_OFF
