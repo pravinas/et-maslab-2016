@@ -66,7 +66,7 @@ COMPETITION_MODE    = 23
 # time in ms for the conveyor belt to stop at the top.
 PICKUP_STOP_TIME        		= 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS    		= 5.2
+PICKUP_NUM_ROTATIONS    		= 5.0
 # encoder value at the top of the belt.
 PICKUP_ENCODER_MAX      		= PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt up.
@@ -114,7 +114,7 @@ FOLLOW_TURN_TIME = FOLLOW_WALL_TIME + 500
 # Time in ms to run the intakes backwards for an incorrect block.
 CHECK_SPIT_TIME = 500
 # Timestamp at which to stop turning
-CHECK_TURN_TIME = CHECK_SPIT_TIME + 500s
+CHECK_TURN_TIME = CHECK_SPIT_TIME + 500
 
 ##########################
 ####  MISC CONSTANTS  ####
