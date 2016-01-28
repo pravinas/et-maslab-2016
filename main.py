@@ -75,9 +75,11 @@ class Robot(SyncedSketch):
         self.wallFollow = WallFollow(self.leftMotor, self.rightMotor, Timer(), self.irFL, self.irFR, self.irBL, self.irBR)
 
         # A timer to make sure timesteps are only 10 times/second
-        self.bigTimer = Timer()
+        self.timestepTimer = Timer()
         # Timer object describing how long the current module has been running.
         self.moduleTimer = Timer()
+        # Timer for the whole game
+        self.gameTimer = Timer()
 
         # Runs the PICKUP process
         self.pickup = PickupModule(self.moduleTimer, self.conveyorLimSwitch, self.conveyorMotor, self.conveyorEncoder)
@@ -88,14 +90,14 @@ class Robot(SyncedSketch):
         # Runs the CHECK process. TODO: pass in proper timers.
         self.check = CheckModule(self.moduleTimer, self.leftMotor, self.rightMotor, self.intakeMotor, self.color)
         # Waits for the game to start
-        self.off = OffModule(self.moduleTimer, self.competitionModeSwitch)
+        self.off = OffModule(self.gameTimer, self.competitionModeSwitch)
 
         # Describes which stage of the program is running.
         self.module = MODULE_OFF
 
     def loop(self):
-        if self.bigTimer.millis() > 100:
-            self.bigTimer.reset()
+        if self.timestepTimer.millis() > 100:
+            self.timestepTimer.reset()
             #print "Module Number", self.module
 
             state = -1
@@ -115,10 +117,11 @@ class Robot(SyncedSketch):
 
             self.updateState(state)
 
-            # Passive processes go here.
-            # Lotta thinks these are useless and only cause weird timing issues
-            # self.checkForIntakeErrors()
-            # self.backDoorServo.write(SERVO_CLOSE)
+        if self.gameTimer.millis() > GAME_LENGTH:
+            self.module = MODULE_END
+            self.backDoorServo.write(SERVO_OPEN)
+            self.stop()
+            return
 
     ## Switch module if necessary.
     def updateState(self, module):

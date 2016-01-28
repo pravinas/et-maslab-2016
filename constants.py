@@ -66,13 +66,13 @@ COMPETITION_MODE    = 23
 # time in ms for the conveyor belt to stop at the top.
 PICKUP_STOP_TIME        		= 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS    		= 5.0
+PICKUP_NUM_ROTATIONS    		= 5.2
 # encoder value at the top of the belt.
 PICKUP_ENCODER_MAX      		= PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt up.
-PICKUP_CONVEYOR_POWER_RAISE		= 170
+PICKUP_CONVEYOR_POWER_RAISE		= 130
 # Power to drive the conveyor belt down.
-PICKUP_CONVEYOR_POWER_LOWER		= 140
+PICKUP_CONVEYOR_POWER_LOWER		= 130
 # Direction for belt to go up
 PICKUP_BELT_UP          		= False
 # Direction for belt to go down
@@ -80,7 +80,7 @@ PICKUP_BELT_DOWN        		= True
 # Timeout for entire pickup module
 PICKUP_TIMEOUT          		= 15000
 # The most blocks that the robot can handle
-PICKUP_MAX_BLOCKS       		= 4
+PICKUP_MAX_BLOCKS       		= 100
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0
@@ -127,6 +127,7 @@ GREEN   = False
 
 # Module numbers
 
+MODULE_END		= -1
 MODULE_OFF      = 0
 MODULE_FOLLOW   = 1
 MODULE_CHECK    = 2
@@ -167,3 +168,6 @@ WALL_DISTANCE = 40
 SERVO_OPEN  = 100
 # Value in degrees the servo should be when the door is closed.
 SERVO_CLOSE = 172
+
+# Length of game in ms.
+GAME_LENGTH = 180000
