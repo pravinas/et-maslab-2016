@@ -80,7 +80,7 @@ PICKUP_BELT_DOWN        		= True
 # Timeout for entire pickup module
 PICKUP_TIMEOUT          		= 15000
 # The most blocks that the robot can handle
-PICKUP_MAX_BLOCKS       		= 100
+PICKUP_MAX_BLOCKS       		= 7
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0

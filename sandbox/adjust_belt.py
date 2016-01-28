@@ -8,7 +8,7 @@ class BeltMove(SyncedSketch):
 
     def setup(self):
         # Motor object representing the conveyor belt motor.
-        self.limSwitch = DigitalInput(self.tamp, 22)
+        self.limSwitch = DigitalInput(self.tamp, 23)
         self.conveyorMotor = Motor(self.tamp, 7, 6)
         self.timer = Timer()
 
@@ -17,6 +17,7 @@ class BeltMove(SyncedSketch):
         	self.timer.reset()
 	    	if self.limSwitch.val:
 	    		self.conveyorMotor.write(UP, 0)
+                self.stop()
 	    	else:
 	    		self.conveyorMotor.write(DOWN, 80)
 
