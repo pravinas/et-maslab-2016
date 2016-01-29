@@ -105,11 +105,11 @@ DROPOFF_ENC_MAX     = 2500
 # Time in ms to follow the wall
 FOLLOW_WALL_TIME    = 7000
 # Timestamp at which to stop turning
-FOLLOW_TURN_TIME    = 0 #300
+FOLLOW_TURN_TIME    = 400
 # Speed at which the robot backs up.
 FOLLOW_BACKUP_SPEED = 90
 # Time for which the robot backs up.
-FOLLOW_BACK_TIME    = 0 #500
+FOLLOW_BACK_TIME    = 500
 
 ###########
 ## Check ##
