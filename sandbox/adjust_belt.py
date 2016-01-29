@@ -17,7 +17,7 @@ class BeltMove(SyncedSketch):
         	self.timer.reset()
 	    	if self.limSwitch.val:
 	    		self.conveyorMotor.write(UP, 0)
-                self.stop()
+                        self.stop()
 	    	else:
 	    		self.conveyorMotor.write(DOWN, 80)
 

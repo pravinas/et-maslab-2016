@@ -30,8 +30,8 @@ class WallFollow():
 
         # Tweak values as needed
         self.kp = .9
-        self.ki = -0.00005
-        self.kd = -0.2
+        self.ki = 0 #-0.00005
+        self.kd = 0 #-0.2
 
 
 

@@ -162,7 +162,7 @@ FORWARD_DIR = 0
 BACKWARD_DIR = 1
 
 #Desired distance between IR and wall
-WALL_DISTANCE = 40
+WALL_DISTANCE = 30
 
 # Value in degrees the servo should be when the door is open.
 SERVO_OPEN  = 100
