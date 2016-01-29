@@ -68,7 +68,7 @@ class WallFollow():
     def followWall(self, distance, speed):
         if self.timer.millis() > 100:
             self.timer.reset()
-            print distance
+            #print distance
 
             #if (self.ir1.read_ir() + self.ir0.read_ir()) < 80:
             #    self.corner()

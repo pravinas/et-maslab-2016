@@ -66,7 +66,7 @@ COMPETITION_MODE    = 23
 # time in ms for the conveyor belt to stop at the top.
 PICKUP_STOP_TIME                = 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS            = 5.2
+PICKUP_NUM_ROTATIONS            = 5.5
 # encoder value at the top of the belt.
 PICKUP_ENCODER_MAX              = PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt up.
@@ -80,7 +80,7 @@ PICKUP_BELT_DOWN                = True
 # Timeout for entire pickup module
 PICKUP_TIMEOUT                  = 15000
 # The most blocks that the robot can handle
-PICKUP_MAX_BLOCKS               = 7
+PICKUP_MAX_BLOCKS               = 100
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0
@@ -109,7 +109,7 @@ FOLLOW_TURN_TIME    = 400
 # Speed at which the robot backs up.
 FOLLOW_BACKUP_SPEED = 90
 # Time for which the robot backs up.
-FOLLOW_BACK_TIME    = 500
+FOLLOW_BACK_TIME    = 400
 
 ###########
 ## Check ##
@@ -126,8 +126,8 @@ CHECK_TURN_TIME = 500
 
 # Colors: The one that is our color should be True, and the other False.
 
-RED     = True
-GREEN   = False
+RED     = False
+GREEN   = True
 
 # Module numbers
 

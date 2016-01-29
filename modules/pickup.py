@@ -25,7 +25,7 @@ class PickupModule(Module):
     ## Set up the beginning of the pickup process.
     def start(self):
         self.timer.reset()
-        #self.encval = self.encoder.val
+        self.encval = self.encoder.val
         self.motor.write(PICKUP_BELT_UP, PICKUP_CONVEYOR_POWER_RAISE)
         self.state = PICKUP_RAISING
         print "RAISING"
@@ -64,7 +64,7 @@ class PickupModule(Module):
 
         elif self.state == PICKUP_LOWERING:
             #print "Pickup limswitch", self.limSwitch.val
-            if self.encoder.val < 0 or self.timer.millis() > self.stopTime + 4500:
+            if self.encoder.val < self.encval or self.timer.millis() > self.stopTime + 4500:
                 print "~~~~~~~"
                 print "limswitch", bool(self.limSwitch.val)
                 print "encoder base, current", self.encval, self.encoder.val
