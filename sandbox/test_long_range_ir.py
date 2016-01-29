@@ -3,11 +3,11 @@
 # A sketch to test and calibrate the IR sensor.
 
 from tamproxy import SyncedSketch, Timer
-from short_range_ir import IR
+from long_range_ir import LRIR
 
 class TestIRBR(SyncedSketch):
     def setup(self):
-        self.ir = IR(self.tamp, 16)
+        self.ir = LRIR(self.tamp, 15)
         self.sum = 0
         self.timer = Timer()
         self.timestep = 0
@@ -28,5 +28,5 @@ class TestIRBR(SyncedSketch):
         return (1.0/raw)*799400-9.119
 
 if __name__ == "__main__":
-    sketch = TestIR(1, -0.00001, 100)
+    sketch = TestIRBR(1, -0.00001, 100)
     sketch.run()

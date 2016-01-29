@@ -117,10 +117,15 @@ class Robot(SyncedSketch):
                 self.stop()
 
             self.updateState(state)
+
+        if self.gameTimer.millis() % 10000 == 0:
+            print "Game Time: ", self.gameTimer.millis()
+
         if self.gameTimer.millis() > GAME_LENGTH - 500:
             self.backDoorServo.write(SERVO_OPEN)
             self.leftMotor.write(0,0)
             self.rightMotor.write(0,0)
+
         if self.gameTimer.millis() > GAME_LENGTH:
             self.module = MODULE_END
             self.stop()

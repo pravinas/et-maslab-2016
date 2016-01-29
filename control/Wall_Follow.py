@@ -31,9 +31,9 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 1.7
-        self.ki = -0.00005
-        self.kd = -0.5
+        self.kp = 0.9
+        self.ki = -1.0 / self.recordLen
+        self.kd = 1.5
 
 
 
@@ -66,9 +66,9 @@ class WallFollow():
     #               speed of the robot.
 
     def followWall(self, distance, speed):
-
         if self.timer.millis() > 100:
             self.timer.reset()
+            print distance
 
             #if (self.ir1.read_ir() + self.ir0.read_ir()) < 80:
             #    self.corner()
@@ -88,7 +88,7 @@ class WallFollow():
                 self.record.pop()
 
             # Take the derivative over recorded history.
-            deriv = self.record[0] - self.record[-1] if len(self.record) > 1 else 0
+            deriv = self.record[0] - self.record[5] if len(self.record) > 5 else 0
 
             power = self.kp * err + self.kd * deriv + self.ki * sum(self.record)
 

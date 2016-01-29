@@ -53,9 +53,9 @@ class CheckModule(Module):
         if self.wrongBlock:
             if self.timer.millis() < self.checkTime + CHECK_TURN_TIME:
                 # turn left to avoid getting back the same block
-                self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
-                self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
-            if self.timer.millis() < self.checkTime + CHECK_TURN_TIME + CHECK_SPIT_TIME:
+                self.leftMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
+                self.rightMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
+            elif self.timer.millis() < self.checkTime + CHECK_TURN_TIME + CHECK_SPIT_TIME:
                 # back up and spit out block
                 self.intakeMotor.write(INTAKE_OUT,INTAKE_POWER + 30)
                 self.leftMotor.write(BACKWARD_DIR, FORWARD_SPEED)

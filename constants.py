@@ -64,23 +64,23 @@ COMPETITION_MODE    = 23
 ############
 
 # time in ms for the conveyor belt to stop at the top.
-PICKUP_STOP_TIME        		= 500
+PICKUP_STOP_TIME                = 500
 # Number of rotations for the conveyor belt motor to make.
-PICKUP_NUM_ROTATIONS    		= 5.2
+PICKUP_NUM_ROTATIONS            = 5.2
 # encoder value at the top of the belt.
-PICKUP_ENCODER_MAX      		= PICKUP_NUM_ROTATIONS * 3200
+PICKUP_ENCODER_MAX              = PICKUP_NUM_ROTATIONS * 3200
 # Power to drive the conveyor belt up.
-PICKUP_CONVEYOR_POWER_RAISE		= 130
+PICKUP_CONVEYOR_POWER_RAISE     = 130
 # Power to drive the conveyor belt down.
-PICKUP_CONVEYOR_POWER_LOWER		= 130
+PICKUP_CONVEYOR_POWER_LOWER     = 130
 # Direction for belt to go up
-PICKUP_BELT_UP          		= False
+PICKUP_BELT_UP                  = False
 # Direction for belt to go down
-PICKUP_BELT_DOWN        		= True
+PICKUP_BELT_DOWN                = True
 # Timeout for entire pickup module
-PICKUP_TIMEOUT          		= 15000
+PICKUP_TIMEOUT                  = 15000
 # The most blocks that the robot can handle
-PICKUP_MAX_BLOCKS       		= 7
+PICKUP_MAX_BLOCKS               = 7
 
 # Pickup internal state machine
 PICKUP_RAISING  = 0
@@ -92,22 +92,24 @@ PICKUP_LOWERING = 2
 #############
 
 # Timeout for entire dropoff module
-DROPOFF_TIMEOUT		= 2000
+DROPOFF_TIMEOUT     = 2000
 # Time in ms to wait for the door to actually open.
-DROPOFF_WAIT_TIME	= 500
+DROPOFF_WAIT_TIME   = 500
 # Encoder value when needing to stop
-DROPOFF_ENC_MAX		= 2500
+DROPOFF_ENC_MAX     = 2500
 
 ############
 ## Follow ##
 ############
 
 # Time in ms to follow the wall
-FOLLOW_WALL_TIME 	= 7000
+FOLLOW_WALL_TIME    = 7000
 # Timestamp at which to stop turning
-FOLLOW_TURN_TIME 	= 500
+FOLLOW_TURN_TIME    = 0 #300
 # Speed at which the robot backs up.
-FOLLOW_BACKUP_SPEED	= 90
+FOLLOW_BACKUP_SPEED = 90
+# Time for which the robot backs up.
+FOLLOW_BACK_TIME    = 0 #500
 
 ###########
 ## Check ##
@@ -129,7 +131,7 @@ GREEN   = False
 
 # Module numbers
 
-MODULE_END		= -1
+MODULE_END      = -1
 MODULE_OFF      = 0
 MODULE_FOLLOW   = 1
 MODULE_CHECK    = 2
