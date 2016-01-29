@@ -31,9 +31,9 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = 0.9
-        self.ki = -1.0 / self.recordLen
-        self.kd = 1.5
+        self.kp = 0.5
+        self.ki = 0.1 / self.recordLen
+        self.kd = 0.3
 
 
 
@@ -45,7 +45,7 @@ class WallFollow():
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
-        return min(self.irFR.read_ir(), self.irBR.read_ir())
+        return self.irFR.read_ir() #, self.irBR.read_ir())
 
         '''
         # issue: drives right when approachin wall and can't follow it

@@ -47,6 +47,7 @@ class FollowModule(Module):
         # reset everything and start over
         else:
             self.timer.reset()
+            self.movement.reset()
             self.leftMotor.write(0,0)
             self.rightMotor.write(0,0)
 
