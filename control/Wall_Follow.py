@@ -19,8 +19,10 @@ class WallFollow():
         self.rightMotor = right
         self.timer = Timer()
         self.timer.reset()
-        self.ir0 = ir0
-        self.ir1 = ir1
+        self.irFL = ir0
+        self.irFR = ir1
+        self.irBL = ir2
+        self.irBR = ir3
 
 
         # Number of values to record
@@ -29,9 +31,9 @@ class WallFollow():
         self.record = []
 
         # Tweak values as needed
-        self.kp = .9
-        self.ki = 0 #-0.00005
-        self.kd = 0 #-0.2
+        self.kp = 1.7
+        self.ki = -0.00005
+        self.kd = -0.5
 
 
 
@@ -43,7 +45,7 @@ class WallFollow():
     def distance(self):
         # TODO: This is hacky. Fix it to be nice, or at least well-docced.
 
-        return self.ir1.read_ir()
+        return min(self.irFR.read_ir(), self.irBR.read_ir())
 
         '''
         # issue: drives right when approachin wall and can't follow it

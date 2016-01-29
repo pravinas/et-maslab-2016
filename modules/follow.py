@@ -33,9 +33,14 @@ class FollowModule(Module):
                 self.rightMotor.write(0,0)
                 return MODULE_CHECK
             self.movement.followWall(self.movement.distance(), FORWARD_SPEED)
-        
+
+        # Back up a little
+        if self.timer.millis() < FOLLOW_WALL_TIME + FOLLOW_BACK_TIME:
+            self.leftMotor.write(BACKWARD_DIR, FOLLOW_BACKUP_SPEED)
+            self.rightMotor.write(BACKWARD_DIR, FOLLOW_BACKUP_SPEED)
+
         # turn aggressively for .3 seconds in case of being stuck
-        elif self.timer.millis() < FOLLOW_TURN_TIME:
+        elif self.timer.millis() < FOLLOW_WALL_TIME + FOLLOW_BACK_TIME + FOLLOW_TURN_TIME:
             print self.timer.millis()
             self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
             self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)

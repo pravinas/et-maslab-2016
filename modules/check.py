@@ -50,13 +50,17 @@ class CheckModule(Module):
                 self.checkTime = self.timer.millis()
 
         # spit out the block
-        if self.wrongBlock:            
-            if self.timer.millis() < self.checkTime + CHECK_SPIT_TIME:
+        if self.wrongBlock:
+            if self.timer.millis() < self.checkTime + CHECK_TURN_TIME:
+                # turn left to avoid getting back the same block
+                self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
+                self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)
+            if self.timer.millis() < self.checkTime + CHECK_TURN_TIME + CHECK_SPIT_TIME:
                 # back up and spit out block
                 self.intakeMotor.write(INTAKE_OUT,INTAKE_POWER + 30)
                 self.leftMotor.write(BACKWARD_DIR, FORWARD_SPEED)
                 self.rightMotor.write(BACKWARD_DIR, FORWARD_SPEED)
-            elif self.timer.millis() < self.checkTime + CHECK_TURN_TIME:
+            elif self.timer.millis() < self.checkTime + CHECK_TURN_TIME + CHECK_SPIT_TIME + CHECK_TURN_TIME:
                 # turn left to avoid getting back the same block
                 self.leftMotor.write(FORWARD_DIR, TURN_FAST_SPEED)
                 self.rightMotor.write(BACKWARD_DIR, TURN_FAST_SPEED)

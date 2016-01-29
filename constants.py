@@ -103,9 +103,11 @@ DROPOFF_ENC_MAX		= 2500
 ############
 
 # Time in ms to follow the wall
-FOLLOW_WALL_TIME = 7000
+FOLLOW_WALL_TIME 	= 7000
 # Timestamp at which to stop turning
-FOLLOW_TURN_TIME = FOLLOW_WALL_TIME + 500
+FOLLOW_TURN_TIME 	= 500
+# Speed at which the robot backs up.
+FOLLOW_BACKUP_SPEED	= 90
 
 ###########
 ## Check ##
@@ -114,7 +116,7 @@ FOLLOW_TURN_TIME = FOLLOW_WALL_TIME + 500
 # Time in ms to run the intakes backwards for an incorrect block.
 CHECK_SPIT_TIME = 500
 # Timestamp at which to stop turning
-CHECK_TURN_TIME = CHECK_SPIT_TIME + 500
+CHECK_TURN_TIME = 500
 
 ##########################
 ####  MISC CONSTANTS  ####
@@ -152,7 +154,7 @@ CAMERA_HEIGHT   = 60
 WHEEL_WIDTH = 12
 
 # Default speed for going forward
-FORWARD_SPEED = 50
+FORWARD_SPEED = 90
 
 # Speed for turning suddenly
 TURN_FAST_SPEED = 145
